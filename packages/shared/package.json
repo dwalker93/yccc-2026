@@ -1,0 +1,44 @@
+{
+  "name": "@workspace/shared",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^10.2.1",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.20",
+    "drizzle-orm": "^0.45.2",
+    "nanoid": "^5.1.11",
+    "zod": "^4.3.6"
+  },
+  "exports": {
+    "./schemas/*": {
+      "types": "./dist/schemas/*.d.ts",
+      "import": "./dist/schemas/*.js"
+    },
+    "./utils/*": {
+      "types": "./dist/utils/*.d.ts",
+      "import": "./dist/utils/*.js"
+    },
+    "./constants/*": {
+      "types": "./dist/constants/*.d.ts",
+      "import": "./dist/constants/*.js"
+    },
+    "./zod-schemas/*": {
+      "types": "./dist/zod-schemas/*.d.ts",
+      "import": "./dist/zod-schemas/*.js"
+    }
+  }
+}

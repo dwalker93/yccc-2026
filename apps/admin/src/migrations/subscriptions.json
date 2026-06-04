@@ -1,0 +1,1722 @@
+[
+  {
+    "id": "SUB1KA2848B74",
+    "memberId": "MEM1KA2848B74",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T12:16:13.812+00:00",
+    "currentPeriodEnd": "2027-02-19T12:16:13.812+00:00",
+    "createdAt": "2026-02-19T15:16:45.076+00:00",
+    "updatedAt": "2026-02-19T15:19:50.542+00:00"
+  },
+  {
+    "id": "SUB1KA28BD891",
+    "memberId": "MEM1KA28BD891",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:08:03.083+00:00",
+    "currentPeriodEnd": "2027-02-19T20:08:03.083+00:00",
+    "createdAt": "2026-02-19T14:40:20.823+00:00",
+    "updatedAt": "2026-02-19T14:40:20.823+00:00"
+  },
+  {
+    "id": "SUB1KA28514CD",
+    "memberId": "MEM1KA28514CD",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:11:33.251+00:00",
+    "currentPeriodEnd": "2027-02-19T20:11:33.251+00:00",
+    "createdAt": "2026-02-19T14:43:58.790+00:00",
+    "updatedAt": "2026-02-19T14:43:58.790+00:00"
+  },
+  {
+    "id": "SUB1KA283FCD8",
+    "memberId": "MEM1KA283FCD8",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:15:34.060+00:00",
+    "currentPeriodEnd": "2027-02-19T20:15:34.060+00:00",
+    "createdAt": "2026-02-19T14:47:08.979+00:00",
+    "updatedAt": "2026-02-19T14:47:08.979+00:00"
+  },
+  {
+    "id": "SUB1KA28AF661",
+    "memberId": "MEM1KA28AF661",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:18:31.390+00:00",
+    "currentPeriodEnd": "2027-02-19T20:18:31.390+00:00",
+    "createdAt": "2026-02-19T14:50:39.195+00:00",
+    "updatedAt": "2026-02-19T14:50:39.195+00:00"
+  },
+  {
+    "id": "SUB1KA2805CC8",
+    "memberId": "MEM1KA2805CC8",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:21:56.109+00:00",
+    "currentPeriodEnd": "2027-02-19T20:21:56.109+00:00",
+    "createdAt": "2026-02-19T14:54:42.019+00:00",
+    "updatedAt": "2026-02-19T14:54:42.019+00:00"
+  },
+  {
+    "id": "SUB1KA2896E44",
+    "memberId": "MEM1KA2896E44",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:25:40.646+00:00",
+    "currentPeriodEnd": "2027-02-19T20:25:40.646+00:00",
+    "createdAt": "2026-02-19T14:57:12.123+00:00",
+    "updatedAt": "2026-02-19T14:57:12.123+00:00"
+  },
+  {
+    "id": "SUB1KA2B6A0F5",
+    "memberId": "MEM1KA2B6A0F5",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T01:58:17.846+00:00",
+    "currentPeriodEnd": "2027-02-20T01:58:17.846+00:00",
+    "createdAt": "2026-02-19T15:00:40.378+00:00",
+    "updatedAt": "2026-02-19T16:17:48.242+00:00"
+  },
+  {
+    "id": "SUB1KA2BDFECF",
+    "memberId": "MEM1KA2BDFECF",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:31:52.707+00:00",
+    "currentPeriodEnd": "2027-02-19T20:31:52.707+00:00",
+    "createdAt": "2026-02-19T15:06:15.225+00:00",
+    "updatedAt": "2026-02-19T15:06:15.225+00:00"
+  },
+  {
+    "id": "SUB1KA285EBE5",
+    "memberId": "MEM1KA285EBE5",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:38:20.805+00:00",
+    "currentPeriodEnd": "2027-02-19T20:38:20.805+00:00",
+    "createdAt": "2026-02-19T15:09:53.193+00:00",
+    "updatedAt": "2026-02-19T15:09:53.193+00:00"
+  },
+  {
+    "id": "SUB1KA2838447",
+    "memberId": "MEM1KA2838447",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T20:41:00.758+00:00",
+    "currentPeriodEnd": "2027-02-19T20:41:00.758+00:00",
+    "createdAt": "2026-02-19T15:12:41.918+00:00",
+    "updatedAt": "2026-02-19T15:12:41.918+00:00"
+  },
+  {
+    "id": "SUB1KA2828780",
+    "memberId": "MEM1KA2828780",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T15:15:36.326+00:00",
+    "currentPeriodEnd": "2027-02-19T15:15:36.326+00:00",
+    "createdAt": "2026-02-19T15:14:42.319+00:00",
+    "updatedAt": "2026-02-19T15:14:42.319+00:00"
+  },
+  {
+    "id": "SUB1KA2BA53AE",
+    "memberId": "MEM1KA2BA53AE",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T21:22:21.754+00:00",
+    "currentPeriodEnd": "2027-02-19T21:22:21.754+00:00",
+    "createdAt": "2026-02-19T15:53:49.317+00:00",
+    "updatedAt": "2026-02-19T15:53:49.317+00:00"
+  },
+  {
+    "id": "SUB1KA282CA69",
+    "memberId": "MEM1KA282CA69",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T21:25:03.489+00:00",
+    "currentPeriodEnd": "2027-02-19T21:25:03.489+00:00",
+    "createdAt": "2026-02-19T15:56:08.349+00:00",
+    "updatedAt": "2026-02-19T15:56:08.349+00:00"
+  },
+  {
+    "id": "SUB1KA2B9C3F0",
+    "memberId": "MEM1KA2B9C3F0",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T21:27:33.545+00:00",
+    "currentPeriodEnd": "2027-02-19T21:27:33.545+00:00",
+    "createdAt": "2026-02-19T15:59:03.281+00:00",
+    "updatedAt": "2026-02-19T15:59:03.281+00:00"
+  },
+  {
+    "id": "SUB1KA2J9A119",
+    "memberId": "MEM1KA2J9A119",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-19T16:45:08.055+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-19T16:45:08.830+00:00",
+    "updatedAt": "2026-02-19T16:45:08.830+00:00"
+  },
+  {
+    "id": "SUB1KA2K06038",
+    "memberId": "MEM1KA2K06038",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:34:34.205+00:00",
+    "currentPeriodEnd": "2027-02-20T05:34:34.205+00:00",
+    "createdAt": "2026-02-20T05:34:35.267+00:00",
+    "updatedAt": "2026-02-20T05:39:19.054+00:00"
+  },
+  {
+    "id": "SUB1KA2K94F25",
+    "memberId": "MEM1KA2K94F25",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:38:54.279+00:00",
+    "currentPeriodEnd": "2027-02-20T05:38:54.279+00:00",
+    "createdAt": "2026-02-20T05:38:55.303+00:00",
+    "updatedAt": "2026-02-20T05:42:12.932+00:00"
+  },
+  {
+    "id": "SUB1KA2K85DA8",
+    "memberId": "MEM1KA2K85DA8",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:41:32.824+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T05:41:32.553+00:00",
+    "updatedAt": "2026-02-20T05:41:32.553+00:00"
+  },
+  {
+    "id": "SUB1KA2KD79BC",
+    "memberId": "MEM1KA2KD79BC",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:46:11.988+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T05:46:13.302+00:00",
+    "updatedAt": "2026-02-20T05:46:13.302+00:00"
+  },
+  {
+    "id": "SUB1KA2K831F1",
+    "memberId": "MEM1KA2K831F1",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:49:26.677+00:00",
+    "currentPeriodEnd": "2027-02-20T05:49:26.677+00:00",
+    "createdAt": "2026-02-20T05:49:28.417+00:00",
+    "updatedAt": "2026-02-20T05:50:21.055+00:00"
+  },
+  {
+    "id": "SUB1KA2K078F9",
+    "memberId": "MEM1KA2K078F9",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:50:57.489+00:00",
+    "currentPeriodEnd": "2027-02-20T05:50:57.489+00:00",
+    "createdAt": "2026-02-20T05:50:59.729+00:00",
+    "updatedAt": "2026-02-20T05:55:00.335+00:00"
+  },
+  {
+    "id": "SUB1KA2K35159",
+    "memberId": "MEM1KA2K35159",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:51:00.104+00:00",
+    "currentPeriodEnd": "2027-02-20T05:51:00.104+00:00",
+    "createdAt": "2026-02-20T05:51:04.707+00:00",
+    "updatedAt": "2026-02-20T05:51:30.883+00:00"
+  },
+  {
+    "id": "SUB1KA2KF1145",
+    "memberId": "MEM1KA2KF1145",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:55:04.282+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T05:55:05.582+00:00",
+    "updatedAt": "2026-02-20T05:55:05.582+00:00"
+  },
+  {
+    "id": "SUB1KA2KC2A3E",
+    "memberId": "MEM1KA2KC2A3E",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:55:42.861+00:00",
+    "currentPeriodEnd": "2027-02-20T05:55:42.861+00:00",
+    "createdAt": "2026-02-20T05:55:45.836+00:00",
+    "updatedAt": "2026-02-20T06:09:13.011+00:00"
+  },
+  {
+    "id": "SUB1KA2K48378",
+    "memberId": "MEM1KA2K48378",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T05:56:53.482+00:00",
+    "currentPeriodEnd": "2027-02-20T05:56:53.482+00:00",
+    "createdAt": "2026-02-20T05:56:54.701+00:00",
+    "updatedAt": "2026-02-20T05:59:32.534+00:00"
+  },
+  {
+    "id": "SUB1KA2K2C599",
+    "memberId": "MEM1KA2K2C599",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:02:39.654+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T06:02:40.978+00:00",
+    "updatedAt": "2026-02-20T06:02:40.978+00:00"
+  },
+  {
+    "id": "SUB1KA2K36CC3",
+    "memberId": "MEM1KA2K36CC3",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:04:46.742+00:00",
+    "currentPeriodEnd": "2027-02-20T06:04:46.742+00:00",
+    "createdAt": "2026-02-20T06:04:48.877+00:00",
+    "updatedAt": "2026-02-20T06:05:46.226+00:00"
+  },
+  {
+    "id": "SUB1KA2K55985",
+    "memberId": "MEM1KA2K55985",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:06:52.884+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T06:06:54.682+00:00",
+    "updatedAt": "2026-02-20T06:06:54.682+00:00"
+  },
+  {
+    "id": "SUB1KA2KEFC45",
+    "memberId": "MEM1KA2KEFC45",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:07:29.406+00:00",
+    "currentPeriodEnd": "2027-02-20T06:07:29.406+00:00",
+    "createdAt": "2026-02-20T06:07:30.831+00:00",
+    "updatedAt": "2026-02-20T06:10:24.795+00:00"
+  },
+  {
+    "id": "SUB1KA2K95213",
+    "memberId": "MEM1KA2K95213",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T11:38:12.779+00:00",
+    "currentPeriodEnd": "2027-02-20T11:38:12.779+00:00",
+    "createdAt": "2026-02-20T06:08:16.266+00:00",
+    "updatedAt": "2026-02-20T20:10:37.432+00:00"
+  },
+  {
+    "id": "SUB1KA2KE70A2",
+    "memberId": "MEM1KA2KE70A2",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:12:49.191+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T06:12:58.285+00:00",
+    "updatedAt": "2026-02-20T06:12:58.285+00:00"
+  },
+  {
+    "id": "SUB1KA2K2CCE1",
+    "memberId": "MEM1KA2K2CCE1",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:17:05.608+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T06:17:08.099+00:00",
+    "updatedAt": "2026-02-20T06:17:08.099+00:00"
+  },
+  {
+    "id": "SUB1KA2KF8D5B",
+    "memberId": "MEM1KA2KF8D5B",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:18:15.414+00:00",
+    "currentPeriodEnd": "2027-02-20T06:18:15.414+00:00",
+    "createdAt": "2026-02-20T06:18:17.659+00:00",
+    "updatedAt": "2026-02-20T06:19:33.333+00:00"
+  },
+  {
+    "id": "SUB1KA2KC6459",
+    "memberId": "MEM1KA2KC6459",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:18:17.726+00:00",
+    "currentPeriodEnd": "2027-02-20T06:18:17.726+00:00",
+    "createdAt": "2026-02-20T06:18:19.149+00:00",
+    "updatedAt": "2026-02-20T06:21:18.482+00:00"
+  },
+  {
+    "id": "SUB1KA2K61AF1",
+    "memberId": "MEM1KA2K61AF1",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T11:58:39.958+00:00",
+    "currentPeriodEnd": "2027-02-20T11:58:39.958+00:00",
+    "createdAt": "2026-02-20T06:28:41.473+00:00",
+    "updatedAt": "2026-02-20T20:13:21.875+00:00"
+  },
+  {
+    "id": "SUB1KA2K3235E",
+    "memberId": "MEM1KA2K3235E",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:28:58.310+00:00",
+    "currentPeriodEnd": "2027-02-20T06:28:58.310+00:00",
+    "createdAt": "2026-02-20T06:28:59.789+00:00",
+    "updatedAt": "2026-02-20T06:33:47.009+00:00"
+  },
+  {
+    "id": "SUB1KA2KB29DA",
+    "memberId": "MEM1KA2KB29DA",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:31:32.383+00:00",
+    "currentPeriodEnd": "2027-02-20T06:31:32.383+00:00",
+    "createdAt": "2026-02-20T06:31:33.404+00:00",
+    "updatedAt": "2026-02-20T06:32:24.647+00:00"
+  },
+  {
+    "id": "SUB1KA2KE1F60",
+    "memberId": "MEM1KA2KE1F60",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:36:30.242+00:00",
+    "currentPeriodEnd": "2027-02-20T06:36:30.242+00:00",
+    "createdAt": "2026-02-20T06:36:41.639+00:00",
+    "updatedAt": "2026-02-20T06:37:52.893+00:00"
+  },
+  {
+    "id": "SUB1KA2KAD1E7",
+    "memberId": "MEM1KA2KAD1E7",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:38:32.542+00:00",
+    "currentPeriodEnd": "2027-02-20T06:38:32.542+00:00",
+    "createdAt": "2026-02-20T06:38:33.844+00:00",
+    "updatedAt": "2026-02-20T06:43:53.851+00:00"
+  },
+  {
+    "id": "SUB1KA2K31BDE",
+    "memberId": "MEM1KA2K31BDE",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:38:43.933+00:00",
+    "currentPeriodEnd": "2027-02-20T06:38:43.933+00:00",
+    "createdAt": "2026-02-20T06:38:45.539+00:00",
+    "updatedAt": "2026-02-20T06:39:30.781+00:00"
+  },
+  {
+    "id": "SUB1KA2K77ED7",
+    "memberId": "MEM1KA2K77ED7",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T12:09:10.650+00:00",
+    "currentPeriodEnd": "2027-02-20T12:09:10.650+00:00",
+    "createdAt": "2026-02-20T06:39:12.636+00:00",
+    "updatedAt": "2026-02-20T20:13:54.599+00:00"
+  },
+  {
+    "id": "SUB1KA2K9C2DD",
+    "memberId": "MEM1KA2K9C2DD",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T12:18:25.758+00:00",
+    "currentPeriodEnd": "2027-02-20T12:18:25.758+00:00",
+    "createdAt": "2026-02-20T06:48:28.508+00:00",
+    "updatedAt": "2026-02-20T20:14:13.035+00:00"
+  },
+  {
+    "id": "SUB1KA2KEC39A",
+    "memberId": "MEM1KA2KEC39A",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:48:43.731+00:00",
+    "currentPeriodEnd": "2027-02-20T06:48:43.731+00:00",
+    "createdAt": "2026-02-20T06:48:45.563+00:00",
+    "updatedAt": "2026-02-21T06:43:25.232+00:00"
+  },
+  {
+    "id": "SUB1KA2K8B63D",
+    "memberId": "MEM1KA2K8B63D",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T06:49:43.818+00:00",
+    "currentPeriodEnd": "2027-02-20T06:49:43.818+00:00",
+    "createdAt": "2026-02-20T06:49:45.067+00:00",
+    "updatedAt": "2026-02-20T06:50:55.196+00:00"
+  },
+  {
+    "id": "SUB1KA2K8E6F1",
+    "memberId": "MEM1KA2K8E6F1",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:03:54.239+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T07:03:55.503+00:00",
+    "updatedAt": "2026-02-20T07:03:55.503+00:00"
+  },
+  {
+    "id": "SUB1KA2K245A9",
+    "memberId": "MEM1KA2K245A9",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:05:06.678+00:00",
+    "currentPeriodEnd": "2027-02-20T07:05:06.678+00:00",
+    "createdAt": "2026-02-20T07:05:08.130+00:00",
+    "updatedAt": "2026-02-20T07:06:44.651+00:00"
+  },
+  {
+    "id": "SUB1KA2KD9E95",
+    "memberId": "MEM1KA2KD9E95",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:05:12.464+00:00",
+    "currentPeriodEnd": "2027-02-20T07:05:12.464+00:00",
+    "createdAt": "2026-02-20T07:05:16.173+00:00",
+    "updatedAt": "2026-02-20T07:12:45.164+00:00"
+  },
+  {
+    "id": "SUB1KA2K769E7",
+    "memberId": "MEM1KA2K769E7",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:06:29.663+00:00",
+    "currentPeriodEnd": "2027-02-20T07:06:29.663+00:00",
+    "createdAt": "2026-02-20T07:06:31.140+00:00",
+    "updatedAt": "2026-02-20T07:07:58.598+00:00"
+  },
+  {
+    "id": "SUB1KA2K5D7E0",
+    "memberId": "MEM1KA2K5D7E0",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T12:37:01.998+00:00",
+    "currentPeriodEnd": "2027-02-20T12:37:01.998+00:00",
+    "createdAt": "2026-02-20T07:07:03.177+00:00",
+    "updatedAt": "2026-02-20T20:15:59.556+00:00"
+  },
+  {
+    "id": "SUB1KA2K202FC",
+    "memberId": "MEM1KA2K202FC",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:15:31.342+00:00",
+    "currentPeriodEnd": "2027-02-20T07:15:31.342+00:00",
+    "createdAt": "2026-02-20T07:15:33.684+00:00",
+    "updatedAt": "2026-02-20T07:16:22.353+00:00"
+  },
+  {
+    "id": "SUB1KA2KF537A",
+    "memberId": "MEM1KA2KF537A",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:21:56.454+00:00",
+    "currentPeriodEnd": "2027-02-20T07:21:56.454+00:00",
+    "createdAt": "2026-02-20T07:21:57.611+00:00",
+    "updatedAt": "2026-02-20T07:22:58.312+00:00"
+  },
+  {
+    "id": "SUB1KA2K92A09",
+    "memberId": "MEM1KA2K92A09",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T12:56:12.394+00:00",
+    "currentPeriodEnd": "2027-02-20T12:56:12.394+00:00",
+    "createdAt": "2026-02-20T07:26:13.726+00:00",
+    "updatedAt": "2026-02-20T20:16:17.890+00:00"
+  },
+  {
+    "id": "SUB1KA2KBDB55",
+    "memberId": "MEM1KA2KBDB55",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T12:58:55.642+00:00",
+    "currentPeriodEnd": "2027-02-20T12:58:55.642+00:00",
+    "createdAt": "2026-02-20T07:28:57.171+00:00",
+    "updatedAt": "2026-02-20T20:16:33.846+00:00"
+  },
+  {
+    "id": "SUB1KA2KD4C95",
+    "memberId": "MEM1KA2KD4C95",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:38:25.628+00:00",
+    "currentPeriodEnd": "2027-02-20T07:38:25.628+00:00",
+    "createdAt": "2026-02-20T07:38:26.801+00:00",
+    "updatedAt": "2026-02-20T07:39:39.802+00:00"
+  },
+  {
+    "id": "SUB1KA2K9D8B9",
+    "memberId": "MEM1KA2K9D8B9",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:42:23.015+00:00",
+    "currentPeriodEnd": "2027-02-20T07:42:23.015+00:00",
+    "createdAt": "2026-02-20T07:42:23.198+00:00",
+    "updatedAt": "2026-02-20T07:45:05.113+00:00"
+  },
+  {
+    "id": "SUB1KA2KA4D28",
+    "memberId": "MEM1KA2KA4D28",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:42:36.789+00:00",
+    "currentPeriodEnd": "2027-02-20T07:42:36.789+00:00",
+    "createdAt": "2026-02-20T07:42:37.994+00:00",
+    "updatedAt": "2026-02-20T07:43:57.974+00:00"
+  },
+  {
+    "id": "SUB1KA2K9A00B",
+    "memberId": "MEM1KA2K9A00B",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T13:15:39.206+00:00",
+    "currentPeriodEnd": "2027-02-20T13:15:39.206+00:00",
+    "createdAt": "2026-02-20T07:45:40.376+00:00",
+    "updatedAt": "2026-02-20T20:17:10.052+00:00"
+  },
+  {
+    "id": "SUB1KA2K5D51D",
+    "memberId": "MEM1KA2K5D51D",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:47:30.898+00:00",
+    "currentPeriodEnd": "2027-02-20T07:47:30.898+00:00",
+    "createdAt": "2026-02-20T07:47:32.171+00:00",
+    "updatedAt": "2026-02-20T07:48:11.971+00:00"
+  },
+  {
+    "id": "SUB1KA2KE9214",
+    "memberId": "MEM1KA2KE9214",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:48:55.097+00:00",
+    "currentPeriodEnd": "2027-02-20T07:48:55.097+00:00",
+    "createdAt": "2026-02-20T07:48:56.952+00:00",
+    "updatedAt": "2026-02-20T07:51:13.530+00:00"
+  },
+  {
+    "id": "SUB1KA2K931BD",
+    "memberId": "MEM1KA2K931BD",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:51:52.350+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T07:51:53.748+00:00",
+    "updatedAt": "2026-02-20T07:51:53.748+00:00"
+  },
+  {
+    "id": "SUB1KA2K23196",
+    "memberId": "MEM1KA2K23196",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:54:35.583+00:00",
+    "currentPeriodEnd": "2027-02-20T07:54:35.583+00:00",
+    "createdAt": "2026-02-20T07:54:37.057+00:00",
+    "updatedAt": "2026-02-20T07:55:25.970+00:00"
+  },
+  {
+    "id": "SUB1KA2K245EE",
+    "memberId": "MEM1KA2K245EE",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:55:00.718+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T07:55:02.180+00:00",
+    "updatedAt": "2026-02-20T07:55:02.180+00:00"
+  },
+  {
+    "id": "SUB1KA2K72DC7",
+    "memberId": "MEM1KA2K72DC7",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:56:19.072+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T07:56:19.714+00:00",
+    "updatedAt": "2026-02-20T07:56:19.714+00:00"
+  },
+  {
+    "id": "SUB1KA2KE07EA",
+    "memberId": "MEM1KA2KE07EA",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T07:58:12.082+00:00",
+    "currentPeriodEnd": "2027-02-20T07:58:12.082+00:00",
+    "createdAt": "2026-02-20T07:58:13.360+00:00",
+    "updatedAt": "2026-02-20T07:59:02.285+00:00"
+  },
+  {
+    "id": "SUB1KA2KCFC7C",
+    "memberId": "MEM1KA2KCFC7C",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:08:37.167+00:00",
+    "currentPeriodEnd": "2027-02-20T08:08:37.167+00:00",
+    "createdAt": "2026-02-20T08:08:38.597+00:00",
+    "updatedAt": "2026-02-20T08:10:09.494+00:00"
+  },
+  {
+    "id": "SUB1KA2K2AD49",
+    "memberId": "MEM1KA2K2AD49",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:09:30.506+00:00",
+    "currentPeriodEnd": "2027-02-20T08:09:30.506+00:00",
+    "createdAt": "2026-02-20T08:09:33.090+00:00",
+    "updatedAt": "2026-02-20T08:10:50.343+00:00"
+  },
+  {
+    "id": "SUB1KA2K2D891",
+    "memberId": "MEM1KA2K2D891",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T13:41:50.876+00:00",
+    "currentPeriodEnd": "2027-02-20T13:41:50.876+00:00",
+    "createdAt": "2026-02-20T08:11:52.701+00:00",
+    "updatedAt": "2026-02-20T20:17:32.017+00:00"
+  },
+  {
+    "id": "SUB1KA2K56A4C",
+    "memberId": "MEM1KA2K56A4C",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T13:41:54.575+00:00",
+    "currentPeriodEnd": "2027-02-20T13:41:54.575+00:00",
+    "createdAt": "2026-02-20T08:11:56.239+00:00",
+    "updatedAt": "2026-02-20T20:17:48.867+00:00"
+  },
+  {
+    "id": "SUB1KA2K13466",
+    "memberId": "MEM1KA2K13466",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:13:57.214+00:00",
+    "currentPeriodEnd": "2027-02-20T08:13:57.214+00:00",
+    "createdAt": "2026-02-20T08:13:58.891+00:00",
+    "updatedAt": "2026-02-20T08:16:17.117+00:00"
+  },
+  {
+    "id": "SUB1KA2K7B61F",
+    "memberId": "MEM1KA2K7B61F",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:42:07.490+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:42:09.140+00:00",
+    "updatedAt": "2026-02-20T08:42:09.140+00:00"
+  },
+  {
+    "id": "SUB1KA2K43D19",
+    "memberId": "MEM1KA2K43D19",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:42:56.342+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:42:58.232+00:00",
+    "updatedAt": "2026-02-20T08:42:58.232+00:00"
+  },
+  {
+    "id": "SUB1KA2K7F19A",
+    "memberId": "MEM1KA2K7F19A",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:43:48.913+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:43:50.953+00:00",
+    "updatedAt": "2026-02-20T08:43:50.953+00:00"
+  },
+  {
+    "id": "SUB1KA2KD97A4",
+    "memberId": "MEM1KA2KD97A4",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:45:00.197+00:00",
+    "currentPeriodEnd": "2027-02-20T08:45:00.197+00:00",
+    "createdAt": "2026-02-20T08:45:04.982+00:00",
+    "updatedAt": "2026-02-20T08:46:48.816+00:00"
+  },
+  {
+    "id": "SUB1KA2K75AD5",
+    "memberId": "MEM1KA2K75AD5",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:45:06.064+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:45:08.261+00:00",
+    "updatedAt": "2026-02-20T08:45:08.261+00:00"
+  },
+  {
+    "id": "SUB1KA2K58483",
+    "memberId": "MEM1KA2K58483",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:45:12.955+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:45:14.865+00:00",
+    "updatedAt": "2026-02-20T08:45:14.865+00:00"
+  },
+  {
+    "id": "SUB1KA2K5D348",
+    "memberId": "MEM1KA2K5D348",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:45:29.015+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:45:32.728+00:00",
+    "updatedAt": "2026-02-20T08:45:32.728+00:00"
+  },
+  {
+    "id": "SUB1KA2KF495C",
+    "memberId": "MEM1KA2KF495C",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:46:06.093+00:00",
+    "currentPeriodEnd": "2027-02-20T08:46:06.093+00:00",
+    "createdAt": "2026-02-20T08:46:07.803+00:00",
+    "updatedAt": "2026-02-20T08:53:00.150+00:00"
+  },
+  {
+    "id": "SUB1KA2K2329D",
+    "memberId": "MEM1KA2K2329D",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:46:03.914+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:46:07.941+00:00",
+    "updatedAt": "2026-02-20T08:46:07.941+00:00"
+  },
+  {
+    "id": "SUB1KA2K9CE00",
+    "memberId": "MEM1KA2K9CE00",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:48:22.530+00:00",
+    "currentPeriodEnd": "2027-02-20T08:48:22.530+00:00",
+    "createdAt": "2026-02-20T08:48:24.360+00:00",
+    "updatedAt": "2026-02-20T08:57:15.892+00:00"
+  },
+  {
+    "id": "SUB1KA2KE88B8",
+    "memberId": "MEM1KA2KE88B8",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:49:00.677+00:00",
+    "currentPeriodEnd": "2027-02-20T08:49:00.677+00:00",
+    "createdAt": "2026-02-20T08:49:03.132+00:00",
+    "updatedAt": "2026-02-20T09:08:32.280+00:00"
+  },
+  {
+    "id": "SUB1KA2K62FF2",
+    "memberId": "MEM1KA2K62FF2",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:49:25.661+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:49:26.658+00:00",
+    "updatedAt": "2026-02-20T08:49:26.658+00:00"
+  },
+  {
+    "id": "SUB1KA2K0028C",
+    "memberId": "MEM1KA2K0028C",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:49:25.959+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:49:29.136+00:00",
+    "updatedAt": "2026-02-20T08:49:29.136+00:00"
+  },
+  {
+    "id": "SUB1KA2K058E5",
+    "memberId": "MEM1KA2K058E5",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:50:28.573+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:50:30.334+00:00",
+    "updatedAt": "2026-02-20T08:50:30.334+00:00"
+  },
+  {
+    "id": "SUB1KA2K36A4C",
+    "memberId": "MEM1KA2K36A4C",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:50:31.924+00:00",
+    "currentPeriodEnd": "2027-02-20T08:50:31.924+00:00",
+    "createdAt": "2026-02-20T08:50:33.485+00:00",
+    "updatedAt": "2026-02-20T09:11:55.816+00:00"
+  },
+  {
+    "id": "SUB1KA2K9EC0E",
+    "memberId": "MEM1KA2K9EC0E",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:52:48.155+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:52:49.961+00:00",
+    "updatedAt": "2026-02-20T08:52:49.961+00:00"
+  },
+  {
+    "id": "SUB1KA2KBCAB0",
+    "memberId": "MEM1KA2KBCAB0",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T14:22:12.689+00:00",
+    "currentPeriodEnd": "2027-02-20T14:22:12.689+00:00",
+    "createdAt": "2026-02-20T08:53:43.425+00:00",
+    "updatedAt": "2026-02-20T20:19:27.888+00:00"
+  },
+  {
+    "id": "SUB1KA2KE7E9F",
+    "memberId": "MEM1KA2KE7E9F",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T14:23:58.214+00:00",
+    "currentPeriodEnd": "2027-02-20T14:23:58.214+00:00",
+    "createdAt": "2026-02-20T08:54:00.117+00:00",
+    "updatedAt": "2026-02-20T20:19:44.366+00:00"
+  },
+  {
+    "id": "SUB1KA2K22B32",
+    "memberId": "MEM1KA2K22B32",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:54:02.675+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:54:04.927+00:00",
+    "updatedAt": "2026-02-20T08:54:04.927+00:00"
+  },
+  {
+    "id": "SUB1KA2K86B99",
+    "memberId": "MEM1KA2K86B99",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T14:24:57.686+00:00",
+    "currentPeriodEnd": "2027-02-20T14:24:57.686+00:00",
+    "createdAt": "2026-02-20T08:54:59.770+00:00",
+    "updatedAt": "2026-02-20T20:19:57.468+00:00"
+  },
+  {
+    "id": "SUB1KA2K9B53C",
+    "memberId": "MEM1KA2K9B53C",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:54:58.556+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:55:00.459+00:00",
+    "updatedAt": "2026-02-20T08:55:00.459+00:00"
+  },
+  {
+    "id": "SUB1KA2KEC99E",
+    "memberId": "MEM1KA2KEC99E",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:54:40.355+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T08:55:32.598+00:00",
+    "updatedAt": "2026-02-20T08:55:32.598+00:00"
+  },
+  {
+    "id": "SUB1KA2K5B75B",
+    "memberId": "MEM1KA2K5B75B",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:57:06.587+00:00",
+    "currentPeriodEnd": "2027-02-20T08:57:06.587+00:00",
+    "createdAt": "2026-02-20T08:57:07.720+00:00",
+    "updatedAt": "2026-02-20T09:02:06.175+00:00"
+  },
+  {
+    "id": "SUB1KA2K5D6F3",
+    "memberId": "MEM1KA2K5D6F3",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:59:39.779+00:00",
+    "currentPeriodEnd": "2027-02-20T08:59:39.779+00:00",
+    "createdAt": "2026-02-20T08:59:40.835+00:00",
+    "updatedAt": "2026-02-20T09:04:56.438+00:00"
+  },
+  {
+    "id": "SUB1KA2K1F129",
+    "memberId": "MEM1KA2K1F129",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T08:59:43.948+00:00",
+    "currentPeriodEnd": "2027-02-20T08:59:43.948+00:00",
+    "createdAt": "2026-02-20T08:59:46.335+00:00",
+    "updatedAt": "2026-02-20T09:07:32.251+00:00"
+  },
+  {
+    "id": "SUB1KA2KF24E4",
+    "memberId": "MEM1KA2KF24E4",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T09:07:01.689+00:00",
+    "currentPeriodEnd": "2027-02-20T09:07:01.689+00:00",
+    "createdAt": "2026-02-20T09:07:03.051+00:00",
+    "updatedAt": "2026-02-20T09:15:01.411+00:00"
+  },
+  {
+    "id": "SUB1KA2K24316",
+    "memberId": "MEM1KA2K24316",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T09:07:56.292+00:00",
+    "currentPeriodEnd": "2027-02-20T09:07:56.292+00:00",
+    "createdAt": "2026-02-20T09:07:57.967+00:00",
+    "updatedAt": "2026-02-20T09:19:46.170+00:00"
+  },
+  {
+    "id": "SUB1KA2KEE12E",
+    "memberId": "MEM1KA2KEE12E",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T09:08:18.570+00:00",
+    "currentPeriodEnd": "2027-02-20T09:08:18.570+00:00",
+    "createdAt": "2026-02-20T09:08:19.718+00:00",
+    "updatedAt": "2026-02-20T09:10:53.318+00:00"
+  },
+  {
+    "id": "SUB1KA2KA3B27",
+    "memberId": "MEM1KA2KA3B27",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T09:09:21.537+00:00",
+    "currentPeriodEnd": "2027-02-20T09:09:21.537+00:00",
+    "createdAt": "2026-02-20T09:09:22.992+00:00",
+    "updatedAt": "2026-02-20T09:13:12.910+00:00"
+  },
+  {
+    "id": "SUB1KA2K0CB98",
+    "memberId": "MEM1KA2K0CB98",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T09:12:47.962+00:00",
+    "currentPeriodEnd": "2027-02-20T09:12:47.962+00:00",
+    "createdAt": "2026-02-20T09:12:49.743+00:00",
+    "updatedAt": "2026-02-20T09:16:28.106+00:00"
+  },
+  {
+    "id": "SUB1KA2K63010",
+    "memberId": "MEM1KA2K63010",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-20T09:13:58.676+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-20T09:14:01.141+00:00",
+    "updatedAt": "2026-02-20T09:14:01.141+00:00"
+  },
+  {
+    "id": "SUB1KA2O8BBA9",
+    "memberId": "MEM1KA2O8BBA9",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-24T04:21:04.585+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-24T04:21:05.697+00:00",
+    "updatedAt": "2026-02-24T04:21:05.697+00:00"
+  },
+  {
+    "id": "SUB1KA2PA5574",
+    "memberId": "MEM1KA2PA5574",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T17:48:43.462+00:00",
+    "currentPeriodEnd": "2027-02-25T17:48:43.462+00:00",
+    "createdAt": "2026-02-25T17:48:44.835+00:00",
+    "updatedAt": "2026-03-03T09:57:37.456+00:00"
+  },
+  {
+    "id": "SUB1KA2PC189D",
+    "memberId": "MEM1KA2PC189D",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T17:54:21.543+00:00",
+    "currentPeriodEnd": "2027-02-25T17:54:21.543+00:00",
+    "createdAt": "2026-02-25T17:54:22.658+00:00",
+    "updatedAt": "2026-03-03T13:42:45.985+00:00"
+  },
+  {
+    "id": "SUB1KA2PC22D1",
+    "memberId": "MEM1KA2PC22D1",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T17:55:11.161+00:00",
+    "currentPeriodEnd": "2027-02-25T17:55:11.161+00:00",
+    "createdAt": "2026-02-25T17:55:12.288+00:00",
+    "updatedAt": "2026-03-04T06:23:25.813+00:00"
+  },
+  {
+    "id": "SUB1KA2P817C9",
+    "memberId": "MEM1KA2P817C9",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T17:57:05.680+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-25T17:57:07.614+00:00",
+    "updatedAt": "2026-02-25T17:57:07.614+00:00"
+  },
+  {
+    "id": "SUB1KA2P4B9CB",
+    "memberId": "MEM1KA2P4B9CB",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T17:57:33.846+00:00",
+    "currentPeriodEnd": "2027-02-25T17:57:33.846+00:00",
+    "createdAt": "2026-02-25T17:57:35.241+00:00",
+    "updatedAt": "2026-03-03T10:56:30.306+00:00"
+  },
+  {
+    "id": "SUB1KA2PB1271",
+    "memberId": "MEM1KA2PB1271",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T17:59:40.523+00:00",
+    "currentPeriodEnd": "2027-02-25T17:59:40.523+00:00",
+    "createdAt": "2026-02-25T17:59:46.769+00:00",
+    "updatedAt": "2026-03-03T09:41:06.307+00:00"
+  },
+  {
+    "id": "SUB1KA2P49E5D",
+    "memberId": "MEM1KA2P49E5D",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:01:38.694+00:00",
+    "currentPeriodEnd": "2027-02-25T18:01:38.694+00:00",
+    "createdAt": "2026-02-25T18:01:40.705+00:00",
+    "updatedAt": "2026-03-03T09:48:10.183+00:00"
+  },
+  {
+    "id": "SUB1KA2PBB76A",
+    "memberId": "MEM1KA2PBB76A",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:07:57.885+00:00",
+    "currentPeriodEnd": "2027-02-25T18:07:57.885+00:00",
+    "createdAt": "2026-02-25T18:07:59.794+00:00",
+    "updatedAt": "2026-03-03T09:37:58.430+00:00"
+  },
+  {
+    "id": "SUB1KA2P93BAE",
+    "memberId": "MEM1KA2P93BAE",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:11:25.682+00:00",
+    "currentPeriodEnd": "2027-02-25T18:11:25.682+00:00",
+    "createdAt": "2026-02-25T18:11:26.137+00:00",
+    "updatedAt": "2026-03-03T09:49:24.012+00:00"
+  },
+  {
+    "id": "SUB1KA2PBA39F",
+    "memberId": "MEM1KA2PBA39F",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:25:42.109+00:00",
+    "currentPeriodEnd": "2027-02-25T18:25:42.109+00:00",
+    "createdAt": "2026-02-25T18:25:43.972+00:00",
+    "updatedAt": "2026-03-03T10:54:55.302+00:00"
+  },
+  {
+    "id": "SUB1KA2PDC4F7",
+    "memberId": "MEM1KA2PDC4F7",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:26:00.073+00:00",
+    "currentPeriodEnd": "2027-02-25T18:26:00.073+00:00",
+    "createdAt": "2026-02-25T18:26:01.330+00:00",
+    "updatedAt": "2026-03-03T09:51:12.375+00:00"
+  },
+  {
+    "id": "SUB1KA2Q6E8D4",
+    "memberId": "MEM1KA2Q6E8D4",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:36:25.226+00:00",
+    "currentPeriodEnd": "2027-02-25T18:36:25.226+00:00",
+    "createdAt": "2026-02-25T18:36:26.606+00:00",
+    "updatedAt": "2026-03-04T06:17:53.123+00:00"
+  },
+  {
+    "id": "SUB1KA2Q8A2D6",
+    "memberId": "MEM1KA2Q8A2D6",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:36:53.622+00:00",
+    "currentPeriodEnd": "2027-02-25T18:36:53.622+00:00",
+    "createdAt": "2026-02-25T18:36:55.978+00:00",
+    "updatedAt": "2026-03-03T10:55:22.431+00:00"
+  },
+  {
+    "id": "SUB1KA2QCDC2C",
+    "memberId": "MEM1KA2QCDC2C",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:40:27.102+00:00",
+    "currentPeriodEnd": "2027-02-25T18:40:27.102+00:00",
+    "createdAt": "2026-02-25T18:40:28.546+00:00",
+    "updatedAt": "2026-03-03T10:57:11.395+00:00"
+  },
+  {
+    "id": "SUB1KA2QB5DB9",
+    "memberId": "MEM1KA2QB5DB9",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:53:53.148+00:00",
+    "currentPeriodEnd": "2027-02-25T18:53:53.148+00:00",
+    "createdAt": "2026-02-25T18:53:55.148+00:00",
+    "updatedAt": "2026-03-03T10:55:58.701+00:00"
+  },
+  {
+    "id": "SUB1KA2QABE1D",
+    "memberId": "MEM1KA2QABE1D",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T18:54:26.914+00:00",
+    "currentPeriodEnd": "2027-02-25T18:54:26.914+00:00",
+    "createdAt": "2026-02-25T18:54:27.973+00:00",
+    "updatedAt": "2026-03-03T09:45:15.000+00:00"
+  },
+  {
+    "id": "SUB1KA2Q802B5",
+    "memberId": "MEM1KA2Q802B5",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T20:44:11.825+00:00",
+    "currentPeriodEnd": "2027-02-25T20:44:11.825+00:00",
+    "createdAt": "2026-02-25T20:44:14.622+00:00",
+    "updatedAt": "2026-03-03T13:41:46.789+00:00"
+  },
+  {
+    "id": "SUB1KA2Q3D9B5",
+    "memberId": "MEM1KA2Q3D9B5",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T22:41:31.529+00:00",
+    "currentPeriodEnd": "2027-02-25T22:41:31.529+00:00",
+    "createdAt": "2026-02-25T22:41:32.881+00:00",
+    "updatedAt": "2026-03-03T10:52:33.014+00:00"
+  },
+  {
+    "id": "SUB1KA2QF0338",
+    "memberId": "MEM1KA2QF0338",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-25T23:23:43.334+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-25T23:23:46.184+00:00",
+    "updatedAt": "2026-02-25T23:23:46.184+00:00"
+  },
+  {
+    "id": "SUB1KA2QFFC01",
+    "memberId": "MEM1KA2QFFC01",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T02:25:36.484+00:00",
+    "currentPeriodEnd": "2027-02-26T02:25:36.484+00:00",
+    "createdAt": "2026-02-26T02:25:37.745+00:00",
+    "updatedAt": "2026-03-03T10:24:09.390+00:00"
+  },
+  {
+    "id": "SUB1KA2Q1E22C",
+    "memberId": "MEM1KA2Q1E22C",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T02:27:30.334+00:00",
+    "currentPeriodEnd": "2027-02-26T02:27:30.334+00:00",
+    "createdAt": "2026-02-26T02:27:31.421+00:00",
+    "updatedAt": "2026-03-22T16:47:39.090+00:00"
+  },
+  {
+    "id": "SUB1KA2Q964D9",
+    "memberId": "MEM1KA2Q964D9",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T02:31:34.741+00:00",
+    "currentPeriodEnd": "2027-02-26T02:31:34.741+00:00",
+    "createdAt": "2026-02-26T02:31:36.183+00:00",
+    "updatedAt": "2026-03-05T14:22:14.199+00:00"
+  },
+  {
+    "id": "SUB1KA2QB7037",
+    "memberId": "MEM1KA2QB7037",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T03:00:23.647+00:00",
+    "currentPeriodEnd": "2027-02-26T03:00:23.647+00:00",
+    "createdAt": "2026-02-26T03:00:25.930+00:00",
+    "updatedAt": "2026-03-03T09:54:40.501+00:00"
+  },
+  {
+    "id": "SUB1KA2QCA404",
+    "memberId": "MEM1KA2QCA404",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T03:14:54.138+00:00",
+    "currentPeriodEnd": "2027-02-26T03:14:54.138+00:00",
+    "createdAt": "2026-02-26T03:15:05.373+00:00",
+    "updatedAt": "2026-03-05T14:27:56.258+00:00"
+  },
+  {
+    "id": "SUB1KA2Q325AB",
+    "memberId": "MEM1KA2Q325AB",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T03:29:13.717+00:00",
+    "currentPeriodEnd": "2027-02-26T03:29:13.717+00:00",
+    "createdAt": "2026-02-26T03:29:15.657+00:00",
+    "updatedAt": "2026-03-03T10:32:38.978+00:00"
+  },
+  {
+    "id": "SUB1KA2Q752BB",
+    "memberId": "MEM1KA2Q752BB",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T03:33:30.243+00:00",
+    "currentPeriodEnd": "2027-02-26T03:33:30.243+00:00",
+    "createdAt": "2026-02-26T03:33:33.500+00:00",
+    "updatedAt": "2026-03-03T10:58:36.635+00:00"
+  },
+  {
+    "id": "SUB1KA2QE581A",
+    "memberId": "MEM1KA2QE581A",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T03:38:51.823+00:00",
+    "currentPeriodEnd": "2027-02-26T03:38:51.823+00:00",
+    "createdAt": "2026-02-26T03:38:54.335+00:00",
+    "updatedAt": "2026-03-03T13:40:14.644+00:00"
+  },
+  {
+    "id": "SUB1KA2QFC505",
+    "memberId": "MEM1KA2QFC505",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T03:50:01.462+00:00",
+    "currentPeriodEnd": "2027-02-26T03:50:01.462+00:00",
+    "createdAt": "2026-02-26T03:50:04.547+00:00",
+    "updatedAt": "2026-03-03T10:57:59.461+00:00"
+  },
+  {
+    "id": "SUB1KA2Q7BB95",
+    "memberId": "MEM1KA2Q7BB95",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T04:31:28.243+00:00",
+    "currentPeriodEnd": "2027-02-26T04:31:28.243+00:00",
+    "createdAt": "2026-02-26T04:31:39.867+00:00",
+    "updatedAt": "2026-03-03T10:21:13.521+00:00"
+  },
+  {
+    "id": "SUB1KA2QB57BF",
+    "memberId": "MEM1KA2QB57BF",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T05:43:26.863+00:00",
+    "currentPeriodEnd": "2027-02-26T05:43:26.863+00:00",
+    "createdAt": "2026-02-26T05:43:28.415+00:00",
+    "updatedAt": "2026-03-03T10:26:26.359+00:00"
+  },
+  {
+    "id": "SUB1KA2Q3135A",
+    "memberId": "MEM1KA2Q3135A",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T07:12:17.765+00:00",
+    "currentPeriodEnd": "2027-02-26T07:12:17.765+00:00",
+    "createdAt": "2026-02-26T07:12:19.028+00:00",
+    "updatedAt": "2026-03-04T05:24:29.516+00:00"
+  },
+  {
+    "id": "SUB1KA2Q7E962",
+    "memberId": "MEM1KA2Q7E962",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T08:51:20.132+00:00",
+    "currentPeriodEnd": "2027-02-26T08:51:20.132+00:00",
+    "createdAt": "2026-02-26T08:51:21.980+00:00",
+    "updatedAt": "2026-03-03T13:49:58.668+00:00"
+  },
+  {
+    "id": "SUB1KA2Q71076",
+    "memberId": "MEM1KA2Q71076",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T09:57:16.796+00:00",
+    "currentPeriodEnd": "2027-02-26T09:57:16.796+00:00",
+    "createdAt": "2026-02-26T09:57:18.154+00:00",
+    "updatedAt": "2026-03-03T13:42:18.360+00:00"
+  },
+  {
+    "id": "SUB1KA2QC2341",
+    "memberId": "MEM1KA2QC2341",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T11:02:16.663+00:00",
+    "currentPeriodEnd": "2027-02-26T11:02:16.663+00:00",
+    "createdAt": "2026-02-26T11:02:18.355+00:00",
+    "updatedAt": "2026-03-03T09:38:35.527+00:00"
+  },
+  {
+    "id": "SUB1KA2Q1426A",
+    "memberId": "MEM1KA2Q1426A",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T11:12:49.083+00:00",
+    "currentPeriodEnd": "2027-02-26T11:12:49.083+00:00",
+    "createdAt": "2026-02-26T11:12:57.124+00:00",
+    "updatedAt": "2026-03-03T13:20:40.792+00:00"
+  },
+  {
+    "id": "SUB1KA2Q3C075",
+    "memberId": "MEM1KA2Q3C075",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T12:26:23.382+00:00",
+    "currentPeriodEnd": "2027-02-26T12:26:23.382+00:00",
+    "createdAt": "2026-02-26T12:26:25.728+00:00",
+    "updatedAt": "2026-03-03T14:49:49.782+00:00"
+  },
+  {
+    "id": "SUB1KA2QB2895",
+    "memberId": "MEM1KA2QB2895",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T14:27:03.392+00:00",
+    "currentPeriodEnd": "2027-02-26T14:27:03.392+00:00",
+    "createdAt": "2026-02-26T14:27:04.576+00:00",
+    "updatedAt": "2026-03-03T10:34:59.781+00:00"
+  },
+  {
+    "id": "SUB1KA2QF1F08",
+    "memberId": "MEM1KA2QF1F08",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-26T16:06:55.553+00:00",
+    "currentPeriodEnd": "2027-02-26T16:06:55.553+00:00",
+    "createdAt": "2026-02-26T16:06:57.737+00:00",
+    "updatedAt": "2026-03-03T14:47:34.210+00:00"
+  },
+  {
+    "id": "SUB1KA2R0363B",
+    "memberId": "MEM1KA2R0363B",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-27T01:19:50.765+00:00",
+    "currentPeriodEnd": "2027-02-27T01:19:50.765+00:00",
+    "createdAt": "2026-02-27T01:19:53.026+00:00",
+    "updatedAt": "2026-03-03T14:53:23.672+00:00"
+  },
+  {
+    "id": "SUB1KA2R3A1B9",
+    "memberId": "MEM1KA2R3A1B9",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-27T07:54:38.581+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-27T07:54:40.769+00:00",
+    "updatedAt": "2026-02-27T07:54:40.769+00:00"
+  },
+  {
+    "id": "SUB1KA2RD8B17",
+    "memberId": "MEM1KA2RD8B17",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-27T09:55:25.304+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-27T09:55:26.505+00:00",
+    "updatedAt": "2026-02-27T09:55:26.505+00:00"
+  },
+  {
+    "id": "SUB1KA2RFE211",
+    "memberId": "MEM1KA2RFE211",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-02-27T12:03:35.710+00:00",
+    "currentPeriodEnd": "2027-02-27T12:03:35.710+00:00",
+    "createdAt": "2026-02-27T12:01:50.471+00:00",
+    "updatedAt": "2026-03-03T09:30:39.996+00:00"
+  },
+  {
+    "id": "SUB1KA2S201E6",
+    "memberId": "MEM1KA2S201E6",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-02-28T14:33:37.221+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-02-28T14:33:40.662+00:00",
+    "updatedAt": "2026-02-28T14:33:40.662+00:00"
+  },
+  {
+    "id": "SUB1KA33545DF",
+    "memberId": "MEM1KA33545DF",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T06:46:25.695+00:00",
+    "currentPeriodEnd": "2027-03-03T06:46:25.695+00:00",
+    "createdAt": "2026-03-03T06:46:26.999+00:00",
+    "updatedAt": "2026-03-03T09:34:19.403+00:00"
+  },
+  {
+    "id": "SUB1KA33340C4",
+    "memberId": "MEM1KA33340C4",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T07:17:51.814+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-03T07:17:54.147+00:00",
+    "updatedAt": "2026-03-03T07:17:54.147+00:00"
+  },
+  {
+    "id": "SUB1KA3378AB2",
+    "memberId": "MEM1KA3378AB2",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T11:00:56.197+00:00",
+    "currentPeriodEnd": "2027-03-03T11:00:56.197+00:00",
+    "createdAt": "2026-03-03T11:00:57.315+00:00",
+    "updatedAt": "2026-03-03T11:05:21.722+00:00"
+  },
+  {
+    "id": "SUB1KA3362B05",
+    "memberId": "MEM1KA3362B05",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T11:15:01.378+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-03T11:15:02.674+00:00",
+    "updatedAt": "2026-03-03T11:15:02.674+00:00"
+  },
+  {
+    "id": "SUB1KA33BAB57",
+    "memberId": "MEM1KA33BAB57",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T11:45:38.992+00:00",
+    "currentPeriodEnd": "2027-03-03T11:45:38.992+00:00",
+    "createdAt": "2026-03-03T11:45:40.705+00:00",
+    "updatedAt": "2026-03-03T15:07:41.125+00:00"
+  },
+  {
+    "id": "SUB1KA33ABB15",
+    "memberId": "MEM1KA33ABB15",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T14:01:35.278+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-03T14:01:36.172+00:00",
+    "updatedAt": "2026-03-03T14:01:36.172+00:00"
+  },
+  {
+    "id": "SUB1KA33B1072",
+    "memberId": "MEM1KA33B1072",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T14:09:35.643+00:00",
+    "currentPeriodEnd": "2027-03-03T14:09:35.643+00:00",
+    "createdAt": "2026-03-03T14:09:40.929+00:00",
+    "updatedAt": "2026-03-04T05:43:52.105+00:00"
+  },
+  {
+    "id": "SUB1KA33F97E4",
+    "memberId": "MEM1KA33F97E4",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T15:12:12.988+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-03T15:12:14.150+00:00",
+    "updatedAt": "2026-03-03T15:12:14.150+00:00"
+  },
+  {
+    "id": "SUB1KA331C534",
+    "memberId": "MEM1KA331C534",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-03T17:00:02.715+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-03T17:00:13.874+00:00",
+    "updatedAt": "2026-03-03T17:00:13.874+00:00"
+  },
+  {
+    "id": "SUB1KA346E733",
+    "memberId": "MEM1KA346E733",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-04T08:13:52.659+00:00",
+    "currentPeriodEnd": "2027-03-04T08:13:52.659+00:00",
+    "createdAt": "2026-03-04T08:13:53.987+00:00",
+    "updatedAt": "2026-03-05T14:24:27.695+00:00"
+  },
+  {
+    "id": "SUB1KA34DC54F",
+    "memberId": "MEM1KA34DC54F",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-04T09:04:39.771+00:00",
+    "currentPeriodEnd": "2027-03-04T09:04:39.771+00:00",
+    "createdAt": "2026-03-04T09:04:40.961+00:00",
+    "updatedAt": "2026-03-05T14:43:07.208+00:00"
+  },
+  {
+    "id": "SUB1KA34855A5",
+    "memberId": "MEM1KA34855A5",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-04T09:22:25.768+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-04T09:22:27.806+00:00",
+    "updatedAt": "2026-03-04T09:22:27.806+00:00"
+  },
+  {
+    "id": "SUB1KA34CB007",
+    "memberId": "MEM1KA34CB007",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-04T12:28:46.684+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-04T12:28:46.684+00:00",
+    "updatedAt": "2026-03-04T12:28:46.684+00:00"
+  },
+  {
+    "id": "SUB1KA34695BB",
+    "memberId": "MEM1KA34695BB",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-04T14:15:16.126+00:00",
+    "currentPeriodEnd": "2027-03-04T14:15:16.126+00:00",
+    "createdAt": "2026-03-04T14:15:17.179+00:00",
+    "updatedAt": "2026-03-05T14:45:40.735+00:00"
+  },
+  {
+    "id": "SUB1KA35FF6C6",
+    "memberId": "MEM1KA35FF6C6",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-05T04:54:00.738+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-05T04:54:01.969+00:00",
+    "updatedAt": "2026-03-05T04:54:01.969+00:00"
+  },
+  {
+    "id": "SUB1KA37F437E",
+    "memberId": "MEM1KA37F437E",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-07T07:00:52.549+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-07T07:00:53.945+00:00",
+    "updatedAt": "2026-03-07T07:00:53.945+00:00"
+  },
+  {
+    "id": "SUB1KA3AE73D8",
+    "memberId": "MEM1KA3AE73D8",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-10T17:10:52.532+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-10T17:10:53.681+00:00",
+    "updatedAt": "2026-03-10T17:10:53.681+00:00"
+  },
+  {
+    "id": "SUB1KA3AF27AF",
+    "memberId": "MEM1KA3AF27AF",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-10T18:09:07.588+00:00",
+    "currentPeriodEnd": "2027-03-10T18:09:07.588+00:00",
+    "createdAt": "2026-03-10T18:09:09.012+00:00",
+    "updatedAt": "2026-03-22T17:04:30.050+00:00"
+  },
+  {
+    "id": "SUB1KA3A683FE",
+    "memberId": "MEM1KA3A683FE",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-10T18:11:24.372+00:00",
+    "currentPeriodEnd": "2027-03-10T18:11:24.372+00:00",
+    "createdAt": "2026-03-10T18:11:25.551+00:00",
+    "updatedAt": "2026-03-22T16:53:01.839+00:00"
+  },
+  {
+    "id": "SUB1KA3B1A24D",
+    "memberId": "MEM1KA3B1A24D",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-10T19:07:20.109+00:00",
+    "currentPeriodEnd": "2027-03-10T19:07:20.109+00:00",
+    "createdAt": "2026-03-10T19:07:24.424+00:00",
+    "updatedAt": "2026-03-22T16:55:20.732+00:00"
+  },
+  {
+    "id": "SUB1KA3B56C5F",
+    "memberId": "MEM1KA3B56C5F",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-10T20:16:29.051+00:00",
+    "currentPeriodEnd": "2027-03-10T20:16:29.051+00:00",
+    "createdAt": "2026-03-10T20:15:14.923+00:00",
+    "updatedAt": "2026-03-22T17:09:09.178+00:00"
+  },
+  {
+    "id": "SUB1KA3CB06C6",
+    "memberId": "MEM1KA3CB06C6",
+    "planId": "PLN0002",
+    "status": "active",
+    "currentPeriodStart": "2026-03-12T17:09:47.333+00:00",
+    "currentPeriodEnd": "2027-03-12T17:09:47.333+00:00",
+    "createdAt": "2026-03-12T17:09:48.478+00:00",
+    "updatedAt": "2026-03-22T17:11:28.581+00:00"
+  },
+  {
+    "id": "SUB1KA3Q75F66",
+    "memberId": "MEM1KA3Q75F66",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-03-26T16:33:22.062+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-03-26T16:33:22.987+00:00",
+    "updatedAt": "2026-03-26T16:33:22.987+00:00"
+  },
+  {
+    "id": "SUB1KA5I30A02",
+    "memberId": "MEM1KA5I30A02",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-05-18T01:44:36.239+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-05-18T01:44:49.593+00:00",
+    "updatedAt": "2026-05-18T01:44:49.593+00:00"
+  },
+  {
+    "id": "SUB1KA5LD144A",
+    "memberId": "MEM1KA5LD144A",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-05-21T05:57:22.451+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-05-21T05:57:23.449+00:00",
+    "updatedAt": "2026-05-21T05:57:23.449+00:00"
+  },
+  {
+    "id": "SUB1KA5V6877B",
+    "memberId": "MEM1KA5V6877B",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-05-31T02:13:51.986+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-05-31T02:13:53.134+00:00",
+    "updatedAt": "2026-05-31T02:13:53.134+00:00"
+  },
+  {
+    "id": "SUB1KA6117947",
+    "memberId": "MEM1KA6117947",
+    "planId": "PLN0001",
+    "status": "active",
+    "currentPeriodStart": "2026-06-01T08:48:26.926+00:00",
+    "currentPeriodEnd": "2099-12-31T00:00:00.000Z",
+    "createdAt": "2026-06-01T08:48:28.159+00:00",
+    "updatedAt": "2026-06-01T08:48:28.159+00:00"
+  }
+]

@@ -1,0 +1,41 @@
+CREATE TABLE "member" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"date_of_birth" timestamp NOT NULL,
+	"nic" text NOT NULL,
+	"gender" "gender" NOT NULL,
+	"phone" text NOT NULL,
+	"whatsapp" text,
+	"address_line_1" text NOT NULL,
+	"address_line_2" text,
+	"city" text NOT NULL,
+	"district" text NOT NULL,
+	"photo" text,
+	"membership_status" "member_status" DEFAULT 'pending' NOT NULL,
+	"remarks" text,
+	"education" json,
+	"profession" json,
+	"membership_start_date" timestamp DEFAULT now() NOT NULL,
+	"current_subscription_plan" "subscription_plan" DEFAULT 'free' NOT NULL,
+	"subscribed_at" timestamp DEFAULT now() NOT NULL,
+	"subscription_expiry_date" timestamp NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "member_email_unique" UNIQUE("email"),
+	CONSTRAINT "member_nic_unique" UNIQUE("nic")
+);
+--> statement-breakpoint
+CREATE TABLE "metadata" (
+	"id" text PRIMARY KEY NOT NULL,
+	"total_members" integer DEFAULT 0 NOT NULL,
+	"total_approved_members" integer DEFAULT 0 NOT NULL,
+	"total_rejected_members" integer DEFAULT 0 NOT NULL,
+	"total_banned_members" integer DEFAULT 0 NOT NULL,
+	"total_pending_members" integer DEFAULT 0 NOT NULL,
+	"total_active_members" integer DEFAULT 0 NOT NULL,
+	"this_month_new_members" integer DEFAULT 0 NOT NULL,
+	"last_three_months_new_members" json DEFAULT '[{"month":"3","count":0},{"month":"2","count":0},{"month":"1","count":0}]'::json NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
