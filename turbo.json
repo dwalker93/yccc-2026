@@ -1,14 +1,33 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "NODE_ENV",
+    "AUTH_DATABASE_URL",
+    "APP_DATABASE_URL",
+    "BREVO_API_KEY",
+    "UPSTASH_REDIS_REST_URL",
+    "UPSTASH_REDIS_REST_TOKEN"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": [
+        "NODE_ENV",
+        "AUTH_DATABASE_URL",
+        "APP_DATABASE_URL",
+        "BREVO_API_KEY",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
     },
     "format": {
       "dependsOn": ["^format"]
@@ -17,7 +36,7 @@
       "dependsOn": ["^typecheck"]
     },
     "dev": {
-      "cache": false,
+      "cache": true,
       "persistent": true
     }
   }
