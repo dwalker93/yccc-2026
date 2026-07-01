@@ -9,7 +9,6 @@ import { useFieldContext } from "@workspace/ui/hooks/form"
 
 export type FormControlProps = {
   label: React.ReactNode
-  required?: boolean
   description?: string
   optionalField?: boolean
 }
@@ -23,7 +22,6 @@ type FormBaseProps = FormControlProps & {
 export function FormBase({
   children,
   label,
-  required,
   description,
   controlFirst = false,
   horizontal,
@@ -35,14 +33,13 @@ export function FormBase({
   const LabelComponent = (
     <FieldLabel htmlFor={field.name}>
       {label}
-      {required && (
-        <span aria-label="required" className="text-destructive">
-          *
-        </span>
-      )}
-      {optionalField && (
+      {optionalField ? (
         <span aria-label="optional" className="text-muted-foreground">
           (optional)
+        </span>
+      ) : (
+        <span aria-label="required" className="text-destructive">
+          *
         </span>
       )}
     </FieldLabel>

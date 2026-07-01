@@ -77,7 +77,6 @@ export function SignupForm() {
               {(field) => (
                 <field.inputGroup
                   label="First name"
-                  required
                   leftAddon={<User aria-hidden="true" className="size-4" />}
                   autoComplete="given-name"
                   placeholder="Kasun"
@@ -101,7 +100,6 @@ export function SignupForm() {
               {(field) => (
                 <field.inputGroup
                   label="Email"
-                  required
                   leftAddon={<Mail aria-hidden="true" className="size-4" />}
                   autoComplete="email"
                   placeholder="kasunperea@gmail.com"
@@ -115,7 +113,6 @@ export function SignupForm() {
               {(field) => (
                 <field.inputGroup
                   label="Password"
-                  required
                   leftAddon={<Lock aria-hidden="true" className="size-4" />}
                   rightAddon={
                     <InputGroupButton
@@ -146,7 +143,6 @@ export function SignupForm() {
               {(field) => (
                 <field.inputGroup
                   label="Confirm Password"
-                  required
                   leftAddon={<Lock aria-hidden="true" className="size-4" />}
                   autoComplete="new-password"
                   placeholder="Confirm password"
@@ -214,7 +210,7 @@ export function SignupForm() {
 
             <Button
               aria-busy={form.state.isSubmitting}
-              className="min-h-[44px] w-full touch-manipulation"
+              className="h-8 w-full touch-manipulation"
               data-loading={form.state.isSubmitting}
               disabled={form.state.isSubmitting}
               type="submit"

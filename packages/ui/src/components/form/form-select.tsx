@@ -17,7 +17,6 @@ type FormSelectProps = FormControlProps & {
 
 export function FormSelect({
   label,
-  required,
   description,
   optionalField,
   placeholder,
@@ -28,7 +27,6 @@ export function FormSelect({
   return (
     <FormBase
       label={label}
-      required={required}
       description={description}
       optionalField={optionalField}
     >

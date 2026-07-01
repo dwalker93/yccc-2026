@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist_Mono, Inter, Manrope } from "next/font/google"
+import { Inter } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 
@@ -9,17 +9,7 @@ import { cn } from "@workspace/ui/lib/utils"
 
 import PageLoader from "@/components/page-loader"
 
-const manropeHeading = Manrope({
-  subsets: ["latin"],
-  variable: "--font-heading",
-})
-
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
 
 export const metadata: Metadata = {
   title: {
@@ -54,13 +44,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(
-        "antialiased",
-        fontMono.variable,
-        "font-sans",
-        inter.variable,
-        manropeHeading.variable
-      )}
+      className={cn("antialiased", "font-sans", inter.variable)}
     >
       <body className="relative">
         <Providers>

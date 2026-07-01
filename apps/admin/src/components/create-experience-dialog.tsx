@@ -26,7 +26,7 @@ import {
 import { SelectItem } from "@workspace/ui/components/select"
 import { useAppForm } from "@workspace/ui/hooks/form"
 
-type ExperienceDialogProps = {
+type CreateExperienceDialogProps = {
   initialValues?: ExperienceInfo | null
   onSave: (data: ExperienceInfo) => void
   dialogTriggerButton: React.ReactNode
@@ -50,11 +50,11 @@ export const defaultFormValues: Omit<
   toMonth: "",
 }
 
-export function ExperienceDialog({
+export function CreateExperienceDialog({
   initialValues,
   onSave,
   dialogTriggerButton,
-}: ExperienceDialogProps) {
+}: CreateExperienceDialogProps) {
   const [open, setOpen] = useState(false)
 
   const form = useAppForm({
@@ -116,11 +116,7 @@ export function ExperienceDialog({
             <div className="grid gap-4 py-4">
               <form.AppField name="title">
                 {(field) => (
-                  <field.input
-                    label="Title"
-                    required
-                    placeholder="Ex. Pastry Chef"
-                  />
+                  <field.input label="Title" placeholder="Ex. Pastry Chef" />
                 )}
               </form.AppField>
 
@@ -128,7 +124,6 @@ export function ExperienceDialog({
                 {(field) => (
                   <field.input
                     label="Organization"
-                    required
                     placeholder="Ex. Hilton Hotel, Colombo"
                   />
                 )}
@@ -138,7 +133,6 @@ export function ExperienceDialog({
                 {(field) => (
                   <field.input
                     label="Location"
-                    required
                     placeholder="Ex. Colombo, Sri Lanka"
                   />
                 )}
@@ -149,7 +143,6 @@ export function ExperienceDialog({
                   <field.select
                     label="Employment Type"
                     placeholder="Select your employment type…"
-                    required
                   >
                     {EMPLOYMENT_TYPES.map((e) => (
                       <SelectItem key={e.value} value={e.value}>
@@ -171,11 +164,7 @@ export function ExperienceDialog({
                 <FieldGroup className="grid grid-cols-2 gap-4">
                   <form.AppField name="fromYear">
                     {(field) => (
-                      <field.select
-                        label="Year"
-                        placeholder="Select a year…"
-                        required
-                      >
+                      <field.select label="Year" placeholder="Select a year…">
                         {YEARS.map((y) => (
                           <SelectItem key={y.value} value={y.value}>
                             {y.label}
@@ -187,11 +176,7 @@ export function ExperienceDialog({
 
                   <form.AppField name="fromMonth">
                     {(field) => (
-                      <field.select
-                        label="Month"
-                        placeholder="Select a month…"
-                        required
-                      >
+                      <field.select label="Month" placeholder="Select a month…">
                         {MONTHS.map((m) => (
                           <SelectItem key={m.value} value={m.value}>
                             {m.label}
@@ -241,11 +226,7 @@ export function ExperienceDialog({
                       }}
                     >
                       {(field) => (
-                        <field.select
-                          label="Year"
-                          placeholder="Select a year…"
-                          required
-                        >
+                        <field.select label="Year" placeholder="Select a year…">
                           {YEARS.map((y) => (
                             <SelectItem key={y.value} value={y.value}>
                               {y.label}
@@ -260,7 +241,6 @@ export function ExperienceDialog({
                         <field.select
                           label="Month"
                           placeholder="Select a month…"
-                          required
                         >
                           {MONTHS.map((m) => (
                             <SelectItem key={m.value} value={m.value}>

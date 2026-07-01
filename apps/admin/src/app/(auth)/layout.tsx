@@ -19,7 +19,7 @@ export default async function AuthLayout({
         className="relative text-center text-sm text-muted-foreground
           sm:absolute sm:bottom-4"
       >
-        Copyright &copy; {new Date().getFullYear()} YCCL. All rights reserved.
+        Copyright &copy; {new Date().getFullYear()} YCCC. All rights reserved.
       </p>
     </div>
   )

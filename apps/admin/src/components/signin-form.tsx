@@ -104,7 +104,6 @@ export function SigninForm() {
               {(field) => (
                 <field.inputGroup
                   label="Email"
-                  required
                   leftAddon={<Mail aria-hidden="true" className="size-4" />}
                   autoComplete="email"
                   placeholder="example@mail.com"
@@ -119,7 +118,6 @@ export function SigninForm() {
               {(field) => (
                 <field.inputGroup
                   label="Password"
-                  required
                   leftAddon={<Lock aria-hidden="true" className="size-4" />}
                   rightAddon={
                     <InputGroupButton
@@ -149,7 +147,7 @@ export function SigninForm() {
 
             <Button
               aria-busy={isPending}
-              className="min-h-[44px] w-full touch-manipulation"
+              className="h-8 w-full touch-manipulation"
               data-loading={isPending}
               disabled={isPending}
               type="submit"

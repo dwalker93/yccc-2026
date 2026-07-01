@@ -6,12 +6,15 @@ import {
   getCoreRowModel,
   useReactTable,
   type ColumnDef,
+  type ColumnFiltersState,
+  type OnChangeFn,
   type SortingState,
+  type Table,
   type VisibilityState,
 } from "@tanstack/react-table"
 
 import {
-  Table,
+  Table as ShadcnTable,
   TableBody,
   TableCell,
   TableHead,
@@ -20,46 +23,65 @@ import {
 } from "@workspace/ui/components/table"
 
 import { DataTablePagination } from "./data-table-pagination"
-import {
-  useFilterSearchParams,
-  usePaginationSearchParams,
-} from "./data-table-state-params-parser"
+import { usePaginationSearchParams } from "./data-table-state-params-parser"
 import {
   DataTableToolbar,
   type FacetedFilterConfig,
 } from "./data-table-toolbar"
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[]
+  columnNameMappings?: Record<string, string>
   data: TData[]
   totalCount: number
+  emptyState?: React.ReactNode
   isLoading: boolean
   searchKey?: string
   searchPlaceholder?: string
   facetedFilters?: FacetedFilterConfig[]
-  actionButton?: {
-    label: string
-    href: string
-  }
+  columnFilters: ColumnFiltersState
+  onColumnFiltersChange: OnChangeFn<ColumnFiltersState>
+  actionButton?: { label: string; hide?: (table: Table<TData>) => boolean } & (
+    | { onClick?: never; href: string; render?: never }
+    | { onClick: (table: Table<TData>) => void; href?: never; render?: never }
+    | {
+        onClick?: never
+        href?: never
+        render: (table: Table<TData>) => React.ReactNode
+      }
+  )
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
-  data,
+  columnNameMappings,
+  data: rawData,
   totalCount,
+  emptyState,
   searchKey,
   searchPlaceholder,
   facetedFilters,
   actionButton,
   isLoading = false,
+  columnFilters,
+  onColumnFiltersChange,
 }: DataTableProps<TData, TValue>) {
+  // Deduplicate data by id to prevent "duplicate key" warnings that can occur
+  // when keepPreviousData provides stale placeholder rows during transitions.
+  const data = React.useMemo(() => {
+    const seen = new Set<string>()
+    return rawData.filter((item) => {
+      if (seen.has(item.id)) return false
+      seen.add(item.id)
+      return true
+    })
+  }, [rawData])
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   // const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
   //   []
   // )
-  const [columnFilters, setColumnFilters] = useFilterSearchParams()
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const [pagination, setPagination] = usePaginationSearchParams()
@@ -78,8 +100,9 @@ export function DataTable<TData, TValue>({
     onPaginationChange: setPagination,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
+    getRowId: (row) => row.id,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: onColumnFiltersChange,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     manualFiltering: true,
@@ -92,13 +115,17 @@ export function DataTable<TData, TValue>({
     <div className="flex flex-col gap-4">
       <DataTableToolbar
         table={table}
+        columnNameMappings={columnNameMappings}
         searchKey={searchKey}
         searchPlaceholder={searchPlaceholder}
         facetedFilters={facetedFilters}
         actionButton={actionButton}
       />
-      <div className="overflow-hidden rounded-md border">
-        <Table>
+      <div
+        className="overflow-hidden rounded-md border bg-table
+          dark:text-muted-foreground"
+      >
+        <ShadcnTable>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -134,20 +161,35 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableRow>
               ))
+            ) : isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Loading...
+                </TableCell>
+              </TableRow>
+            ) : emptyState ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="p-0">
+                  {emptyState}
+                </TableCell>
+              </TableRow>
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {isLoading ? "Loading..." : "No results."}
+                  No results.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </ShadcnTable>
+        <DataTablePagination table={table} />
       </div>
-      <DataTablePagination table={table} />
     </div>
   )
 }

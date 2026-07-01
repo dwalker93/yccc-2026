@@ -12,7 +12,10 @@ import {
 import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent } from "@workspace/ui/components/card"
 
-import { defaultFormValues, EducationDialog } from "./education-dialog"
+import {
+  CreateEducationDialog,
+  defaultFormValues,
+} from "./create-education-dialog"
 
 type EducationCardProps = {
   education: EducationInfo
@@ -96,7 +99,7 @@ export function EducationCard({
             </div>
           </div>
           <div className="flex flex-col md:flex-row">
-            <EducationDialog
+            <CreateEducationDialog
               initialValues={initialEducationParser(education)}
               onSave={onEdit}
               dialogTriggerButton={

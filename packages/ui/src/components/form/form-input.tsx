@@ -9,7 +9,6 @@ type FormInputProps = FormControlProps & React.ComponentProps<"input">
 
 export function FormInput({
   label,
-  required,
   description,
   optionalField,
   ...inputProps
@@ -19,7 +18,6 @@ export function FormInput({
   return (
     <FormBase
       label={label}
-      required={required}
       description={description}
       optionalField={optionalField}
     >

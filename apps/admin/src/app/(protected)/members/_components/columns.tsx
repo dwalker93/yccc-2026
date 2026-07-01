@@ -5,10 +5,16 @@ import { type ColumnDef } from "@tanstack/react-table"
 
 import { ageFromDob } from "@workspace/shared/utils/age-calculator"
 import { Checkbox } from "@workspace/ui/components/checkbox"
+import { cn } from "@workspace/ui/lib/utils"
 
 import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
 
-import { statuses } from "./data"
+import {
+  getExpiryClass,
+  getPlanBadgeClass,
+  getStatusBadgeClass,
+  statuses,
+} from "./data"
 
 export const columns: ColumnDef<Member>[] = [
   {
@@ -97,6 +103,26 @@ export const columns: ColumnDef<Member>[] = [
     enableSorting: false,
   },
   {
+    accessorKey: "plan",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Plan" />
+    ),
+    cell: ({ row }) => {
+      const plan = row.getValue("plan") as string
+      return (
+        <span
+          className={cn(
+            "rounded-sm px-2 py-0.5 font-medium uppercase",
+            getPlanBadgeClass(plan.toLowerCase())
+          )}
+        >
+          {plan}
+        </span>
+      )
+    },
+    enableSorting: false,
+  },
+  {
     accessorKey: "dateOfBirth",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Age" />
@@ -105,20 +131,20 @@ export const columns: ColumnDef<Member>[] = [
       const dateOfBirth = row.getValue<string | null | undefined>("dateOfBirth")
       const age = dateOfBirth ? ageFromDob(dateOfBirth) : "—"
 
-      return <div className="w-[100px] truncate">{age}</div>
+      return age
     },
   },
   {
-    accessorKey: "city",
+    accessorKey: "district",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="City" />
+      <DataTableColumnHeader column={column} title="District" />
     ),
     cell: ({ row }) => {
-      return row.getValue("city")
+      return row.getValue("district")
     },
   },
   {
-    accessorKey: "registeredAt",
+    accessorKey: "memberSince",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Member since" />
     ),
@@ -126,8 +152,8 @@ export const columns: ColumnDef<Member>[] = [
       if (row.getValue("status") !== "approved")
         return <div className="w-[100px] truncate">N/A</div>
 
-      const registeredAt = row.getValue("registeredAt") as string
-      const date = new Date(registeredAt)
+      const memberSince = row.getValue("memberSince") as string
+      const date = new Date(memberSince)
       const formattedDate = date.toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
@@ -135,6 +161,32 @@ export const columns: ColumnDef<Member>[] = [
       })
 
       return <div className="w-[100px] truncate">{formattedDate}</div>
+    },
+  },
+  {
+    accessorKey: "expiry",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Expiry" />
+    ),
+    cell: ({ row }) => {
+      if (row.getValue("status") !== "approved")
+        return <div className="w-[100px] truncate">N/A</div>
+
+      if (window !== undefined) {
+        const expiry = row.getValue("expiry") as string
+        const date = new Date(expiry)
+        const formattedDate = date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+
+        return (
+          <div className={cn("w-[100px] truncate", getExpiryClass(expiry))}>
+            {formattedDate}
+          </div>
+        )
+      }
     },
   },
   {
@@ -152,10 +204,14 @@ export const columns: ColumnDef<Member>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center gap-2">
-          {status.icon && (
-            <status.icon className="size-4 text-muted-foreground" />
+        <div
+          className={cn(
+            `inline-flex items-center gap-1 rounded-sm px-2 py-0.5
+            text-[0.6875rem]`,
+            getStatusBadgeClass(row.getValue("status"))
           )}
+        >
+          {status.icon && <status.icon className="size-2.5" />}
           <span>{status.label}</span>
         </div>
       )

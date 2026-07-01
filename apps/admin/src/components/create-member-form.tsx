@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react"
 
-import { DISTRICTS } from "@workspace/shared/constants/districts"
+import { DistrictsWithProvinces } from "@workspace/shared/constants/districts"
 import {
   memberInputSchema,
   type MemberInputData,
@@ -25,10 +25,10 @@ import {
 } from "@workspace/ui/components/select"
 import { useAppForm } from "@workspace/ui/hooks/form"
 
+import { CreateEducationDialog } from "./create-education-dialog"
+import { CreateExperienceDialog } from "./create-experience-dialog"
 import { EducationCard } from "./education-card"
-import { EducationDialog } from "./education-dialog"
 import { ExperienceCard } from "./experience-card"
-import { ExperienceDialog } from "./experience-dialog"
 
 export function CreateMemberForm() {
   const form = useAppForm({
@@ -81,7 +81,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="First Name"
-                    required
                     placeholder="Enter first name"
                     autoComplete="given-name"
                   />
@@ -92,7 +91,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="Last Name"
-                    required
                     placeholder="Enter last name"
                     autoComplete="family-name"
                   />
@@ -135,7 +133,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="NIC"
-                    required
                     placeholder="Enter NIC"
                     autoComplete="nic"
                   />
@@ -146,7 +143,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="Date of Birth"
-                    required
                     placeholder="Enter date of birth"
                     type="date"
                     autoComplete="bday"
@@ -170,7 +166,6 @@ export function CreateMemberForm() {
               {(field) => (
                 <field.input
                   label="Address Line 1"
-                  required
                   placeholder="Enter address line 1"
                   autoComplete="address-line1"
                 />
@@ -192,7 +187,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="City"
-                    required
                     placeholder="Enter city"
                     autoComplete="city"
                   />
@@ -201,21 +195,19 @@ export function CreateMemberForm() {
 
               <form.AppField name="district">
                 {(field) => (
-                  <field.select
-                    label="District"
-                    required
-                    placeholder="Select district"
-                  >
-                    {Object.entries(DISTRICTS).map(([region, districts]) => (
-                      <SelectGroup key={region}>
-                        <SelectLabel>{region}</SelectLabel>
-                        {districts.map((district) => (
-                          <SelectItem key={district} value={district}>
-                            {district}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    ))}
+                  <field.select label="District" placeholder="Select district">
+                    {Object.entries(DistrictsWithProvinces).map(
+                      ([region, DistrictsWithProvinces]) => (
+                        <SelectGroup key={region}>
+                          <SelectLabel>{region}</SelectLabel>
+                          {DistrictsWithProvinces.map((district) => (
+                            <SelectItem key={district} value={district}>
+                              {district}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      )
+                    )}
                   </field.select>
                 )}
               </form.AppField>
@@ -226,7 +218,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="Phone"
-                    required
                     placeholder="Enter phone number"
                     autoComplete="tel"
                     type="tel"
@@ -239,7 +230,6 @@ export function CreateMemberForm() {
                 {(field) => (
                   <field.input
                     label="WhatsApp"
-                    required
                     placeholder="Enter WhatsApp number"
                     autoComplete="tel"
                     type="tel"
@@ -253,7 +243,6 @@ export function CreateMemberForm() {
               {(field) => (
                 <field.input
                   label="Email"
-                  required
                   placeholder="Enter email"
                   autoComplete="email"
                   type="email"
@@ -299,7 +288,7 @@ export function CreateMemberForm() {
                         )}
                       </div>
                     )}
-                    <EducationDialog
+                    <CreateEducationDialog
                       onSave={(education) => parentField.pushValue(education)}
                       dialogTriggerButton={
                         <Button
@@ -348,7 +337,7 @@ export function CreateMemberForm() {
                         )}
                       </div>
                     )}
-                    <ExperienceDialog
+                    <CreateExperienceDialog
                       onSave={(experience) => parentField.pushValue(experience)}
                       dialogTriggerButton={
                         <Button type="button" variant={"secondary"}>

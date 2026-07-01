@@ -1,27 +1,143 @@
-import { and, count, desc, ilike, inArray, SQL } from "drizzle-orm"
+import { and, count, desc, eq, ilike, inArray, sql, SQL } from "drizzle-orm"
 
-import { members } from "@workspace/shared/schemas/member-schema"
+import {
+  members,
+  memberStatusHistory,
+} from "@workspace/shared/schemas/member-schema"
+import { plans } from "@workspace/shared/schemas/subscription-plans-schema"
+import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
 
-import { appdb } from "@/lib/db"
+import { appdb, DBTransaction } from "@/lib/db"
 import {
   SearchableColumn,
   Status,
 } from "@/app/(protected)/members/_components/data"
 
 const escapeLike = (s: string) => s.replace(/[\\%_]/g, (c) => `\\${c}`)
-export async function getMembersService({
-  pageIndex,
-  pageSize,
-  search,
-  searchBy,
-  status,
-}: {
+
+export const projections = {
+  detailed: {
+    id: members.id,
+    name: members.name,
+    email: members.email,
+    phone: members.phone,
+    dateOfBirth: members.dateOfBirth,
+    nic: members.nic,
+    district: members.district,
+    status: members.membershipStatus,
+    memberSince: members.memberSince,
+    expiry: members.subscriptionCurrentPeriodEnd,
+    plan: plans.name,
+  },
+  pending: {
+    id: members.id,
+    name: members.name,
+    email: members.email,
+    phone: members.phone,
+    nic: members.nic,
+    memberSince: members.memberSince,
+  },
+  rejected: {
+    id: members.id,
+    name: members.name,
+    email: members.email,
+    phone: members.phone,
+    nic: members.nic,
+    reason: memberStatusHistory.reason,
+    note: memberStatusHistory.note,
+  },
+  suspended: {
+    id: members.id,
+    name: members.name,
+    email: members.email,
+    phone: members.phone,
+    nic: members.nic,
+    memberSince: members.memberSince,
+    expiry: members.subscriptionCurrentPeriodEnd,
+    plan: plans.name,
+  },
+  banned: {
+    id: members.id,
+    name: members.name,
+    email: members.email,
+    phone: members.phone,
+    nic: members.nic,
+    memberSince: members.memberSince,
+  },
+} as const
+
+export type ProjectionPreset = keyof typeof projections
+
+type GetMembersParams = {
   pageIndex: number
   pageSize: number
   search?: string | null
   searchBy: SearchableColumn
   status?: Status[]
-}) {
+  plan?: string[]
+  district?: string[]
+}
+
+export async function getMembersService<
+  TProjection extends ProjectionPreset = "detailed",
+>({
+  pageIndex,
+  pageSize,
+  projection = "detailed" as TProjection,
+  search,
+  searchBy,
+  status,
+  plan,
+  district,
+}: GetMembersParams & { projection?: TProjection }): Promise<{
+  members: Array<
+    TProjection extends "pending" | "banned"
+      ? {
+          id: string
+          name: string
+          email: string
+          phone: string | null
+          nic: string | null
+          registeredAt: Date | null
+        }
+      : TProjection extends "rejected"
+        ? {
+            id: string
+            name: string
+            email: string
+            phone: string | null
+            nic: string | null
+            reason: string | null
+            note: string | null
+          }
+        : TProjection extends "suspended"
+          ? {
+              id: string
+              name: string
+              email: string
+              phone: string | null
+              nic: string | null
+              status: string
+              registeredAt: Date | null
+              expiry: Date | null
+              plan: string | null
+            }
+          : {
+              id: string
+              name: string
+              email: string
+              phone: string | null
+              dateOfBirth: string | null
+              nic: string | null
+              district: string | null
+              status: string
+              registeredAt: Date | null
+              expiry: Date | null
+              plan: string | null
+            }
+  >
+  totalCount: number
+}> {
   // Build shared where conditions
   const conditions: SQL[] = []
   if (search) {
@@ -30,22 +146,35 @@ export async function getMembersService({
   if (status?.length) {
     conditions.push(inArray(members.membershipStatus, status))
   }
+  if (plan?.length) {
+    const matchingPlanIds = appdb
+      .select({ id: plans.id })
+      .from(plans)
+      .where(
+        inArray(
+          sql`lower(${plans.name})`,
+          plan.map((p) => p.toLowerCase())
+        )
+      )
+
+    conditions.push(inArray(members.currentPlanId, matchingPlanIds))
+  }
+  if (district?.length) {
+    conditions.push(inArray(members.district, district))
+  }
   const whereClause = conditions.length ? and(...conditions) : undefined
+
+  const selectFields = projections[projection]
 
   const [memberData, countResult] = await Promise.all([
     appdb
-      .select({
-        id: members.id,
-        name: members.name,
-        email: members.email,
-        phone: members.phone,
-        dateOfBirth: members.dateOfBirth,
-        nic: members.nic,
-        city: members.city,
-        status: members.membershipStatus,
-        registeredAt: members.memberSince,
-      })
+      .select(selectFields)
       .from(members)
+      .leftJoin(plans, eq(members.currentPlanId, plans.id))
+      .leftJoin(
+        memberStatusHistory,
+        eq(members.id, memberStatusHistory.memberId)
+      )
       .where(whereClause)
       .orderBy(desc(members.createdAt))
       .limit(Math.max(1, pageSize))
@@ -57,7 +186,7 @@ export async function getMembersService({
   ])
 
   return {
-    members: memberData,
+    members: memberData as any,
     totalCount: countResult[0]?.count ?? 0,
   }
 }
@@ -65,3 +194,196 @@ export async function getMembersService({
 export type Member = Awaited<
   ReturnType<typeof getMembersService>
 >["members"][number]
+
+// ---------------------------------------------------------------------------
+// Approve / Reject / Suspend / Banned statuses change services
+// ---------------------------------------------------------------------------
+
+// core — handles all status transitions
+async function changeMemberStatusService({
+  tx: externalTx,
+  memberId,
+  toStatus,
+  reason,
+  actionedBy,
+  note,
+  suspendedUntil,
+}: {
+  tx?: DBTransaction
+  memberId: string
+  toStatus: Status
+  reason: string
+  actionedBy: string
+  note?: string
+  suspendedUntil?: Date
+}) {
+  const run = async (tx: DBTransaction) => {
+    // read current status — never hardcode fromStatus
+    const [current] = await tx
+      .select({ membershipStatus: members.membershipStatus })
+      .from(members)
+      .where(eq(members.id, memberId))
+      .limit(1)
+
+    if (!current) throw new Error("Member not found")
+
+    await tx
+      .update(members)
+      .set({
+        membershipStatus: toStatus,
+        suspendedUntil:
+          toStatus === "suspended" ? (suspendedUntil ?? null) : null,
+      })
+      .where(eq(members.id, memberId))
+
+    await tx.insert(memberStatusHistory).values({
+      id: generateId(IdPrefix.MEMBER_STATUS_HISTORY),
+      memberId,
+      fromStatus: current.membershipStatus, // ← always read, never hardcode
+      toStatus,
+      reason,
+      note: note ?? null,
+      actionedBy,
+    })
+  }
+
+  // use external transaction if provided, otherwise create own
+  if (externalTx) {
+    await run(externalTx)
+  } else {
+    await appdb.transaction(run)
+  }
+}
+
+export async function approveMemberService({
+  memberId,
+  actionedBy,
+  reason = "Payment confirmed — membership approved",
+  note,
+}: {
+  memberId: string
+  actionedBy: string
+  reason?: string
+  note?: string
+}) {
+  await changeMemberStatusService({
+    memberId,
+    toStatus: "approved",
+    reason,
+    actionedBy,
+    note,
+  })
+}
+
+export async function bulkApproveMemberService({
+  memberIds,
+  actionedBy,
+  reason = "Membership approved",
+  note,
+}: {
+  memberIds: string[]
+  actionedBy: string
+  reason?: string
+  note?: string
+}) {
+  if (memberIds.length === 0) {
+    throw new Error("No members selected")
+  }
+
+  await appdb.transaction(async (tx) => {
+    await Promise.all(
+      memberIds.map((memberId) =>
+        changeMemberStatusService({
+          tx,
+          memberId,
+          toStatus: "approved",
+          reason,
+          actionedBy,
+          note,
+        })
+      )
+    )
+  })
+}
+export async function rejectMemberService({
+  memberId,
+  actionedBy,
+  reason,
+  note,
+}: {
+  memberId: string
+  actionedBy: string
+  reason: string
+  note?: string
+}) {
+  await changeMemberStatusService({
+    memberId,
+    toStatus: "rejected",
+    reason,
+    actionedBy,
+    note,
+  })
+}
+
+export async function suspendMemberService({
+  memberId,
+  actionedBy,
+  reason,
+  note,
+  suspendedUntil,
+}: {
+  memberId: string
+  actionedBy: string
+  reason: string
+  note?: string
+  suspendedUntil?: Date
+}) {
+  await changeMemberStatusService({
+    memberId,
+    toStatus: "suspended",
+    reason,
+    actionedBy,
+    note,
+    suspendedUntil,
+  })
+}
+
+export async function banMemberService({
+  memberId,
+  actionedBy,
+  reason,
+  note,
+}: {
+  memberId: string
+  actionedBy: string
+  reason: string
+  note?: string
+}) {
+  await changeMemberStatusService({
+    memberId,
+    toStatus: "banned",
+    reason,
+    actionedBy,
+    note,
+  })
+}
+
+export async function reinstateMemberService({
+  memberId,
+  actionedBy,
+  reason = "Suspension period expired — auto reinstated",
+  note,
+}: {
+  memberId: string
+  actionedBy: string
+  reason: string
+  note?: string
+}) {
+  await changeMemberStatusService({
+    memberId,
+    toStatus: "approved",
+    reason,
+    actionedBy,
+    note,
+  })
+}
