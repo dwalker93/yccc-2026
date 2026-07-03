@@ -99,6 +99,30 @@ export function DataTableToolbar<TData>({
     return () => clearTimeout(timeout)
   }, [searchInput, searchColumn, table])
 
+  // Reverse sync: URL-driven columnFilters → toolbar local state.
+  // Uses React's render-phase state adjustment pattern to avoid setState in effects.
+  // See: https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const columnFilters = table.getState().columnFilters
+  const externalSearch = columnFilters.find((f) =>
+    searchableColumns.some((col) => col.value === f.id)
+  )
+  const externalValue =
+    typeof externalSearch?.value === "string" ? externalSearch.value : ""
+  const externalColumn = (externalSearch?.id as SearchableColumn) ?? "id"
+
+  const [prevExternal, setPrevExternal] = React.useState({
+    value: externalValue,
+    column: externalColumn,
+  })
+  if (
+    prevExternal.value !== externalValue ||
+    prevExternal.column !== externalColumn
+  ) {
+    setPrevExternal({ value: externalValue, column: externalColumn })
+    setSearchInput(externalValue)
+    setSearchColumn(externalColumn)
+  }
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center gap-2">

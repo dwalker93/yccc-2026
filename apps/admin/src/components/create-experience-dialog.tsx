@@ -73,13 +73,11 @@ export function CreateExperienceDialog({
     },
   })
 
-  const isEditing = initialValues !== null
+  const isEditing = initialValues != null
   const isCurrentlyWorking = useStore(
     form.store,
     (state) => state.values.currentlyWorking
   )
-
-  console.log(useStore(form.store, (state) => state.errors))
 
   return (
     <Dialog

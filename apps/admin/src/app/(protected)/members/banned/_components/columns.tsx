@@ -6,6 +6,7 @@ import { type ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@workspace/ui/components/checkbox"
 
 import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
+import { formatMemberId } from "@/utils/member"
 
 export const columns: ColumnDef<Member>[] = [
   {
@@ -39,7 +40,7 @@ export const columns: ColumnDef<Member>[] = [
     ),
     cell: ({ row }) => (
       <div className="w-[80px]">
-        {(row.getValue("id") as string).split("MEM")[1]}
+        {formatMemberId(row.getValue("id"))}
       </div>
     ),
     enableSorting: false,
