@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/neon-http"
+import { drizzle } from "drizzle-orm/neon-serverless"
 
 import * as app_schema from "@workspace/shared/schemas"
 
@@ -17,3 +17,7 @@ export const appdb = drizzle(process.env.APP_DATABASE_URL, {
 export const authdb = drizzle(process.env.AUTH_DATABASE_URL, {
   schema: auth_schema,
 })
+
+export type DBTransaction = Parameters<
+  Parameters<typeof appdb.transaction>[0]
+>[0]

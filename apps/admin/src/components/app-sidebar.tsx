@@ -1,11 +1,9 @@
-import { PlusIcon, SearchIcon } from "lucide-react"
+import Link from "next/link"
 
-import { Button } from "@workspace/ui/components/button"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -21,14 +19,14 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader className="h-14 justify-center">
         <SidebarMenuButton asChild>
-          <a href="#link">
+          <Link href="/">
             <LogoIcon />
             <span className="font-medium">YCCC Admin</span>
-          </a>
+          </Link>
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
               className="min-w-8 bg-primary text-primary-foreground duration-200
@@ -49,7 +47,7 @@ export function AppSidebar() {
               <span className="sr-only">Search conversations</span>
             </Button>
           </SidebarMenuItem>
-        </SidebarGroup>
+        </SidebarGroup> */}
         {navGroups.map((group, index) => (
           <NavGroup key={`sidebar-group-${index}`} {...group} />
         ))}

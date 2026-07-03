@@ -22,28 +22,3 @@ export function FormCheckbox(props: FormControlProps) {
     </FormBase>
   )
 }
-
-// I agree to the{" "}
-//                         <a
-//                           className="rounded-sm text-primary underline underline-offset-4 hover:text-primary/80 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none"
-//                           href={"#"}
-//                           rel="noopener noreferrer"
-//                           target="_blank"
-//                         >
-//                           Terms of Service
-//                         </a>{" "}
-//                         and{" "}
-//                         <a
-//                           className="rounded-sm text-primary underline underline-offset-4 hover:text-primary/80 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none"
-//                           href={"#"}
-//                           rel="noopener noreferrer"
-//                           target="_blank"
-//                         >
-//                           Privacy Policy
-//                         </a>
-//                         <span
-//                           aria-label="required"
-//                           className="text-destructive"
-//                         >
-//                           *
-//                         </span>

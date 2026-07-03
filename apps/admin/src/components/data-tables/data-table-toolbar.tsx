@@ -43,17 +43,24 @@ export interface FacetedFilterConfig {
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
   searchKey?: string
+  columnNameMappings?: Record<string, string>
   searchPlaceholder?: string
   facetedFilters?: FacetedFilterConfig[]
-  actionButton?: {
-    label: string
-    href: string
-  }
+  actionButton?: { label: string; hide?: (table: Table<TData>) => boolean } & (
+    | { onClick?: never; href: string; render?: never }
+    | { onClick: (table: Table<TData>) => void; href?: never; render?: never }
+    | {
+        onClick?: never
+        href?: never
+        render: (table: Table<TData>) => React.ReactNode
+      }
+  )
 }
 
 export function DataTableToolbar<TData>({
   table,
   searchKey,
+  columnNameMappings,
   searchPlaceholder = "Filter...",
   facetedFilters = [],
   actionButton,
@@ -76,11 +83,18 @@ export function DataTableToolbar<TData>({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (!searchInput) {
-        table.getColumn(searchColumn)?.setFilterValue(null)
-        return
-      }
-      table.getColumn(searchColumn)?.setFilterValue(searchInput)
+      table.setColumnFilters((prev) => {
+        const filtered = prev.filter(
+          (f) => !searchableColumns.some((col) => col.value === f.id)
+        )
+        if (searchInput) {
+          filtered.push({
+            id: searchColumn,
+            value: searchInput,
+          })
+        }
+        return filtered
+      })
     }, 300)
     return () => clearTimeout(timeout)
   }, [searchInput, searchColumn, table])
@@ -99,7 +113,7 @@ export function DataTableToolbar<TData>({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <InputGroupButton variant="ghost" className="pr-1.5! text-xs">
-                    Search
+                    Search{" "}
                     {searchableColumns.find((c) => c.value === searchColumn)
                       ?.label ?? searchColumn}{" "}
                     <ChevronDownIcon className="size-3" />
@@ -139,8 +153,8 @@ export function DataTableToolbar<TData>({
         )}
         {isFiltered && (
           <Button
-            variant="ghost"
-            size="sm"
+            variant="destructive"
+            className="h-8"
             onClick={() => {
               setSearchInput("")
               table.resetColumnFilters()
@@ -153,12 +167,29 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center gap-2">
-        <DataTableViewOptions table={table} />
-        {actionButton && (
-          <Button size="sm" asChild>
-            <Link href={actionButton.href}>{actionButton.label}</Link>
-          </Button>
-        )}
+        <DataTableViewOptions
+          table={table}
+          columnNameMappings={columnNameMappings}
+        />
+        {actionButton &&
+          !actionButton.hide?.(table) &&
+          (actionButton.href !== undefined ? (
+            <Button size="sm" asChild>
+              <Link className="h-8" href={actionButton.href}>
+                {actionButton.label}
+              </Link>
+            </Button>
+          ) : actionButton.onClick !== undefined ? (
+            <Button
+              size="sm"
+              className="h-8"
+              onClick={() => actionButton.onClick(table)}
+            >
+              {actionButton.label}
+            </Button>
+          ) : actionButton.render !== undefined ? (
+            actionButton.render(table)
+          ) : null)}
       </div>
     </div>
   )

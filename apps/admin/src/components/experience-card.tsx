@@ -6,7 +6,7 @@ import { type ExperienceInfo } from "@workspace/shared/zod-schemas/member-input-
 import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent } from "@workspace/ui/components/card"
 
-import { ExperienceDialog } from "./experience-dialog"
+import { CreateExperienceDialog } from "./create-experience-dialog"
 
 type ExperienceCardProps = {
   experience: ExperienceInfo
@@ -74,7 +74,7 @@ export function ExperienceCard({
             </div>
           </div>
           <div className="flex flex-col md:flex-row">
-            <ExperienceDialog
+            <CreateExperienceDialog
               initialValues={experience}
               onSave={onEdit}
               dialogTriggerButton={

@@ -30,7 +30,7 @@ import {
 import { SelectItem } from "@workspace/ui/components/select"
 import { useAppForm } from "@workspace/ui/hooks/form"
 
-type EducationDialogProps = {
+type CreateEducationDialogProps = {
   initialValues?: EducationFormData | null
   onSave: (data: EducationInfo) => void
   dialogTriggerButton: React.ReactNode
@@ -48,11 +48,11 @@ export const defaultFormValues: EducationFormData = {
   toMonth: "",
 }
 
-export function EducationDialog({
+export function CreateEducationDialog({
   initialValues,
   onSave,
   dialogTriggerButton,
-}: EducationDialogProps) {
+}: CreateEducationDialogProps) {
   const [open, setOpen] = useState(false)
 
   const form = useAppForm({
@@ -137,7 +137,6 @@ export function EducationDialog({
                   <field.select
                     label="Education/Programme"
                     placeholder="Select your qualification…"
-                    required
                   >
                     {QUALIFICATION_LEVELS.map((q) => (
                       <SelectItem key={q.value} value={q.value}>
@@ -154,7 +153,6 @@ export function EducationDialog({
                     {(field) => (
                       <field.input
                         label="School Name"
-                        required
                         placeholder="e.g. Royal College"
                       />
                     )}
@@ -165,7 +163,6 @@ export function EducationDialog({
                       <field.select
                         label="School Year"
                         placeholder="Select a school year…"
-                        required
                       >
                         {YEARS.map((y) => (
                           <SelectItem key={y.value} value={y.value}>
@@ -185,7 +182,6 @@ export function EducationDialog({
                       <field.select
                         label="Field of Study"
                         placeholder="Select a field…"
-                        required
                       >
                         {FIELDS_OF_STUDY.map((f) => (
                           <SelectItem key={f.value} value={f.value}>
@@ -200,7 +196,6 @@ export function EducationDialog({
                     {(field) => (
                       <field.input
                         label="Institution Name"
-                        required
                         placeholder="e.g. Open University of Sri Lanka"
                       />
                     )}
@@ -231,7 +226,6 @@ export function EducationDialog({
                           <field.select
                             label="Year"
                             placeholder="Select a year…"
-                            required
                           >
                             {YEARS.map((y) => (
                               <SelectItem key={y.value} value={y.value}>
@@ -247,7 +241,6 @@ export function EducationDialog({
                           <field.select
                             label="Month"
                             placeholder="Select a month…"
-                            required
                           >
                             {MONTHS.map((m) => (
                               <SelectItem key={m.value} value={m.value}>
@@ -297,7 +290,6 @@ export function EducationDialog({
                           <field.select
                             label="Year"
                             placeholder="Select a year…"
-                            required
                           >
                             {toYearOptions.map((y) => (
                               <SelectItem key={y.value} value={y.value}>
@@ -313,7 +305,6 @@ export function EducationDialog({
                           <field.select
                             label="Month"
                             placeholder="Select a month…"
-                            required
                           >
                             {MONTHS.map((m) => (
                               <SelectItem key={m.value} value={m.value}>

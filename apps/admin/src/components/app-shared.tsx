@@ -1,9 +1,15 @@
 import type { ReactNode } from "react"
 import {
   ActivityIcon,
+  Banknote,
   BarChart3Icon,
+  CreditCardIcon,
   FileTextIcon,
+  HexagonIcon,
   LayoutGridIcon,
+  SettingsIcon,
+  StarIcon,
+  TagIcon,
   UsersIcon,
 } from "lucide-react"
 
@@ -43,10 +49,12 @@ export const navGroups: SidebarNavGroup[] = [
         path: "/members",
         icon: <UsersIcon />,
         subItems: [
-          { title: "All members", path: "/members" },
-          { title: "Pending", path: "/members?status=pending" },
-          { title: "Banned", path: "/members?status=banned" },
           { title: "Create member", path: "/members/create" },
+          { title: "All members", path: "/members" },
+          { title: "Pending", path: "/members/pending" },
+          { title: "Rejected", path: "/members/rejected" },
+          { title: "Suspended", path: "/members/suspended" },
+          { title: "Banned", path: "/members/banned" },
         ],
       },
       {
@@ -57,12 +65,62 @@ export const navGroups: SidebarNavGroup[] = [
     ],
   },
   {
+    label: "Billing",
+    items: [
+      {
+        title: "Invoices",
+        path: "/invoices",
+        icon: <FileTextIcon />,
+      },
+      {
+        title: "Payments",
+        path: "/payments",
+        icon: <Banknote />,
+      },
+      {
+        title: "Subscriptions",
+        path: "/subscriptions",
+        icon: <HexagonIcon />,
+      },
+    ],
+  },
+  {
+    label: "Configurations",
+    items: [
+      {
+        title: "Plans",
+        path: "/plans",
+        icon: <StarIcon />,
+      },
+      {
+        title: "Payment Methods",
+        path: "/payment-methods",
+        icon: <CreditCardIcon />,
+      },
+      {
+        title: "Coupons",
+        path: "/coupons",
+        icon: <TagIcon />,
+      },
+    ],
+  },
+  {
     label: "Team",
     items: [
       {
         title: "Team members",
         path: "/team-members",
         icon: <UsersIcon />,
+      },
+    ],
+  },
+  {
+    label: "System",
+    items: [
+      {
+        title: "Settings",
+        path: "/settings",
+        icon: <SettingsIcon />,
       },
     ],
   },

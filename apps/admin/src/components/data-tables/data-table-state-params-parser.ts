@@ -8,6 +8,8 @@ import {
   useQueryStates,
 } from "nuqs"
 
+import { Districts } from "@workspace/shared/constants/districts"
+
 import {
   SearchableColumn,
   searchableColumns,
@@ -36,19 +38,47 @@ const SEARCHABLE_COLUMNS = searchableColumns.map(
 
 const STATUS_OPTIONS = statuses.map((s) => s.value) satisfies Status[]
 
+const PLAN_OPTIONS = ["free", "pro"] as const // TODO: replace with actual plan options from plans api response
+
+function getSearchFilter(q: string, searchBy: SearchableColumn) {
+  return q ? { id: searchBy, value: q } : null
+}
+
+function getSearchFilterUpdate(nextFilters: ColumnFiltersState) {
+  const update = {
+    q: null as string | null,
+    searchBy: null as SearchableColumn | null,
+  }
+
+  for (const filter of nextFilters) {
+    if (SEARCHABLE_COLUMNS.includes(filter.id as SearchableColumn)) {
+      update.q = filter.value ? String(filter.value) : null
+      update.searchBy = filter.id as SearchableColumn
+      break
+    }
+  }
+
+  if (!update.q) update.searchBy = null
+  return update
+}
+
 export const filterParsers = {
   q: parseAsString.withDefault(""),
   searchBy: parseAsStringLiteral(SEARCHABLE_COLUMNS).withDefault("id"),
   status: parseAsArrayOf(parseAsStringLiteral(STATUS_OPTIONS)).withDefault([]),
+  plan: parseAsArrayOf(parseAsStringLiteral(PLAN_OPTIONS)).withDefault([]),
+  district: parseAsArrayOf(parseAsStringLiteral(Districts)).withDefault([]),
 }
 
-export function useFilterSearchParams() {
+export function useMemberFilterSearchParams() {
   const [params, setParams] = useQueryStates(filterParsers)
 
   // URL params → ColumnFiltersState
   const columnFilters: ColumnFiltersState = [
-    params.q ? { id: params.searchBy, value: params.q } : null,
+    getSearchFilter(params.q, params.searchBy),
     params.status.length ? { id: "status", value: params.status } : null,
+    params.plan.length ? { id: "plan", value: params.plan } : null,
+    params.district.length ? { id: "district", value: params.district } : null,
   ].filter(Boolean) as ColumnFiltersState
 
   // ColumnFiltersState → URL params
@@ -58,23 +88,16 @@ export function useFilterSearchParams() {
         ? updaterOrValue(columnFilters)
         : updaterOrValue
 
-    const update: {
-      q: string | null
-      searchBy: SearchableColumn | null
-      status: (typeof STATUS_OPTIONS)[number][] | null
-    } = {
-      q: null,
-      searchBy: null,
-      status: null,
+    const searchUpdate = getSearchFilterUpdate(next)
+
+    const update = {
+      ...searchUpdate,
+      status: null as (typeof STATUS_OPTIONS)[number][] | null,
+      plan: null as (typeof PLAN_OPTIONS)[number][] | null,
+      district: null as (typeof Districts)[number][] | null,
     }
 
     for (const filter of next) {
-      if (SEARCHABLE_COLUMNS.includes(filter.id as SearchableColumn)) {
-        update.q = filter.value ? String(filter.value) : null
-        update.searchBy = filter.id as SearchableColumn
-        continue
-      }
-
       if (filter.id === "status") {
         const val = filter.value as string[]
         const filtered = val.filter((v): v is (typeof STATUS_OPTIONS)[number] =>
@@ -83,10 +106,53 @@ export function useFilterSearchParams() {
         update.status = filtered.length ? filtered : null
         continue
       }
+
+      if (filter.id === "plan") {
+        const val = filter.value as string[]
+        const filtered = val.filter((v): v is (typeof PLAN_OPTIONS)[number] =>
+          PLAN_OPTIONS.includes(v as (typeof PLAN_OPTIONS)[number])
+        )
+        update.plan = filtered.length ? filtered : null
+        continue
+      }
+
+      if (filter.id === "district") {
+        const val = filter.value as string[]
+        const filtered = val.filter((v): v is (typeof Districts)[number] =>
+          Districts.includes(v as (typeof Districts)[number])
+        )
+        update.district = filtered.length ? filtered : null
+        continue
+      }
     }
 
-    if (!update.q) update.searchBy = null
+    setParams(update)
+  }
 
+  return [columnFilters, handleChange] as const
+}
+
+export const pendingFilterParsers = {
+  q: parseAsString.withDefault(""),
+  searchBy: parseAsStringLiteral(SEARCHABLE_COLUMNS).withDefault("id"),
+}
+
+export function usePendingMemberFilterSearchParams() {
+  const [params, setParams] = useQueryStates(pendingFilterParsers)
+
+  // URL params → ColumnFiltersState
+  const columnFilters: ColumnFiltersState = [
+    getSearchFilter(params.q, params.searchBy),
+  ].filter(Boolean) as ColumnFiltersState
+
+  // ColumnFiltersState → URL params
+  const handleChange: OnChangeFn<ColumnFiltersState> = (updaterOrValue) => {
+    const next =
+      typeof updaterOrValue === "function"
+        ? updaterOrValue(columnFilters)
+        : updaterOrValue
+
+    const update = getSearchFilterUpdate(next)
     setParams(update)
   }
 

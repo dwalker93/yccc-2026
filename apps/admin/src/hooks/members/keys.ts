@@ -6,12 +6,16 @@ export const memberKeys = {
     searchTerm,
     searchBy,
     status,
+    plan,
+    district,
   }: {
     pageIndex: string
     pageSize: string
     searchTerm?: string
     searchBy?: string
     status?: string
+    plan?: string
+    district?: string
   }) =>
     [
       ...memberKeys.all,
@@ -25,5 +29,9 @@ export const memberKeys = {
       searchBy,
       "status",
       status,
+      "plan",
+      plan,
+      "district",
+      district,
     ] as const,
 }
