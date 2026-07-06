@@ -44,7 +44,7 @@ type SidebarContextProps = {
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
 function useSidebar() {
-  const context = React.useContext(SidebarContext)
+  const context = React.use(SidebarContext)
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider.")
   }
@@ -126,7 +126,7 @@ function SidebarProvider({
   )
 
   return (
-    <SidebarContext.Provider value={contextValue}>
+    <SidebarContext value={contextValue}>
       <div
         data-slot="sidebar-wrapper"
         style={
@@ -145,7 +145,7 @@ function SidebarProvider({
       >
         {children}
       </div>
-    </SidebarContext.Provider>
+    </SidebarContext>
   )
 }
 
@@ -236,9 +236,9 @@ function Sidebar({
           `fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width)
           transition-[left,right,width] duration-200 ease-linear
           data-[side=left]:left-0
-          data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]
+          data-[side=left]:group-data-[collapsible=offcanvas]:-left-(--sidebar-width)
           data-[side=right]:right-0
-          data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]
+          data-[side=right]:group-data-[collapsible=offcanvas]:-right-(--sidebar-width)
           md:flex`,
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
@@ -306,7 +306,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       className={cn(
         `absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear
         group-data-[side=left]:-right-4 group-data-[side=right]:left-0
-        after:absolute after:inset-y-0 after:start-1/2 after:w-[2px]
+        after:absolute after:inset-y-0 after:inset-s-1/2 after:w-[2px]
         hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2
         rtl:-translate-x-1/2`,
         `in-data-[side=left]:cursor-w-resize

@@ -34,7 +34,7 @@ export const auth = betterAuth({
     revokeSessionsOnPasswordReset: true,
   },
   emailVerification: {
-    sendVerificationEmail: async ({ user, url, token }) => {
+    sendVerificationEmail: async ({ user: _ }) => {
       // Send verification email to user
     },
     autoSignInAfterVerification: true,

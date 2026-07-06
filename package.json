@@ -10,7 +10,7 @@
     "prettier-plugin-classnames": "^0.10.1",
     "prettier-plugin-merge": "^0.10.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "turbo": "^2.8.17",
+    "turbo": "^2.10.3",
     "typescript": "6.0.3"
   },
   "engines": {

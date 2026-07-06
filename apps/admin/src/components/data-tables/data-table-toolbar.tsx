@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react"
 import Link from "next/link"
-import { type Table } from "@tanstack/react-table"
+import { type ColumnFiltersState, type Table } from "@tanstack/react-table"
 import { Check, ChevronDownIcon, X } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
@@ -57,6 +57,19 @@ interface DataTableToolbarProps<TData> {
   )
 }
 
+// Single source of truth for "which searchable column currently has a
+// filter value, and what is it" — used for both the initial state and
+// the render-phase reverse-sync below.
+function getExternalSearch(columnFilters: ColumnFiltersState) {
+  const match = columnFilters.find((f) =>
+    searchableColumns.some((col) => col.value === f.id)
+  )
+  return {
+    column: (match?.id as SearchableColumn) ?? "id",
+    value: typeof match?.value === "string" ? match.value : "",
+  }
+}
+
 export function DataTableToolbar<TData>({
   table,
   searchKey,
@@ -68,18 +81,12 @@ export function DataTableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0
 
   const [searchColumn, setSearchColumn] = React.useState<SearchableColumn>(
-    () => {
-      const defaultColumn = searchableColumns.find((column) =>
-        table.getColumn(column.value)?.getFilterValue()
-      )
-      return defaultColumn?.value ?? "id"
-    }
+    () => getExternalSearch(table.getState().columnFilters).column
   )
 
-  const [searchInput, setSearchInput] = React.useState<string>(() => {
-    const v = table.getColumn(searchColumn)?.getFilterValue()
-    return typeof v === "string" ? v : ""
-  })
+  const [searchInput, setSearchInput] = React.useState<string>(
+    () => getExternalSearch(table.getState().columnFilters).value
+  )
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -102,25 +109,16 @@ export function DataTableToolbar<TData>({
   // Reverse sync: URL-driven columnFilters → toolbar local state.
   // Uses React's render-phase state adjustment pattern to avoid setState in effects.
   // See: https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
-  const columnFilters = table.getState().columnFilters
-  const externalSearch = columnFilters.find((f) =>
-    searchableColumns.some((col) => col.value === f.id)
-  )
-  const externalValue =
-    typeof externalSearch?.value === "string" ? externalSearch.value : ""
-  const externalColumn = (externalSearch?.id as SearchableColumn) ?? "id"
+  const external = getExternalSearch(table.getState().columnFilters)
 
-  const [prevExternal, setPrevExternal] = React.useState({
-    value: externalValue,
-    column: externalColumn,
-  })
+  const [prevExternal, setPrevExternal] = React.useState(external)
   if (
-    prevExternal.value !== externalValue ||
-    prevExternal.column !== externalColumn
+    prevExternal.value !== external.value ||
+    prevExternal.column !== external.column
   ) {
-    setPrevExternal({ value: externalValue, column: externalColumn })
-    setSearchInput(externalValue)
-    setSearchColumn(externalColumn)
+    setPrevExternal(external)
+    setSearchInput(external.value)
+    setSearchColumn(external.column)
   }
 
   return (

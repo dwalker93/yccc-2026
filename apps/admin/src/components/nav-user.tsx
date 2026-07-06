@@ -1,15 +1,7 @@
 "use client"
 
 import { useAppGlobal } from "@/providers/app-global-provider"
-import {
-  BellIcon,
-  BookOpenIcon,
-  CommandIcon,
-  CreditCardIcon,
-  LifeBuoyIcon,
-  LogOutIcon,
-  UserIcon,
-} from "lucide-react"
+import { BellIcon, LogOutIcon, UserIcon } from "lucide-react"
 
 import {
   Avatar,

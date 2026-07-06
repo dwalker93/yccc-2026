@@ -3,7 +3,6 @@
 import {
   banMemberAction,
   reinstateMemberAction,
-  rejectMemberAction,
 } from "@/actions/members-actions"
 import { type Member } from "@/services/members-service"
 import { useQueryClient } from "@tanstack/react-query"
