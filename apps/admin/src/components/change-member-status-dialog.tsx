@@ -8,6 +8,7 @@ import {
   suspendMemberSchema,
 } from "@/schemas/member-schema"
 import { Member } from "@/services/members-service"
+import * as z from "zod"
 
 import {
   AlertDialog,
@@ -52,14 +53,6 @@ type StatusFormValues =
   | { memberId: string; reason?: string; note?: string }
   | { memberIds: string[]; reason?: string; note?: string }
   | { memberId: string; reason: string; note?: string; suspendedUntil?: Date }
-
-type AnyStatusSchema =
-  | typeof approveMemberSchema
-  | typeof bulkApproveMemberSchema
-  | typeof rejectMemberSchema
-  | typeof suspendMemberSchema
-  | typeof banMemberSchema
-  | typeof reinstateMemberSchema
 
 const schemas = {
   approve: approveMemberSchema,
@@ -166,7 +159,10 @@ export function ChangeMemberStatusDialog({
   const form = useAppForm({
     defaultValues,
     validators: {
-      onSubmit: schemas[action] as unknown as typeof approveMemberSchema,
+      onSubmit: schemas[action] as unknown as z.ZodType<
+        StatusFormValues,
+        StatusFormValues
+      >,
     },
     onSubmit: ({ value }) => {
       startTransition(async () => {

@@ -1,3 +1,4 @@
+import * as React from "react"
 import type { ColumnFiltersState, OnChangeFn } from "@tanstack/react-table"
 import {
   parseAsArrayOf,
@@ -10,13 +11,13 @@ import {
 
 import { Districts } from "@workspace/shared/constants/districts"
 
+import { usePlans } from "@/hooks/plans/use-plans"
 import {
   SearchableColumn,
   searchableColumns,
   Status,
   statuses,
 } from "@/app/(protected)/members/_components/data"
-import { usePlans } from "@/hooks/plans/use-plans"
 
 const paginationParsers = {
   pageIndex: parseAsIndex.withDefault(0),
@@ -79,12 +80,30 @@ export function useMemberFilterSearchParams() {
     : params.plan
 
   // URL params → ColumnFiltersState
-  const columnFilters: ColumnFiltersState = [
-    getSearchFilter(params.q, params.searchBy),
-    params.status.length ? { id: "status", value: params.status } : null,
-    activePlanParams.length ? { id: "plan", value: activePlanParams } : null,
-    params.district.length ? { id: "district", value: params.district } : null,
-  ].filter(Boolean) as ColumnFiltersState
+  // Memoized so the array reference is stable across renders where the
+  // underlying filter values haven't changed — otherwise any consumer that
+  // depends on `columnFilters` (e.g. an effect resetting row selection)
+  // fires on every unrelated parent rerender.
+  const columnFilters: ColumnFiltersState = React.useMemo(
+    () =>
+      [
+        getSearchFilter(params.q, params.searchBy),
+        params.status.length ? { id: "status", value: params.status } : null,
+        activePlanParams.length
+          ? { id: "plan", value: activePlanParams }
+          : null,
+        params.district.length
+          ? { id: "district", value: params.district }
+          : null,
+      ].filter(Boolean) as ColumnFiltersState,
+    [
+      params.q,
+      params.searchBy,
+      params.status.join(","),
+      activePlanParams.join(","),
+      params.district.join(","),
+    ]
+  )
 
   // ColumnFiltersState → URL params
   const handleChange: OnChangeFn<ColumnFiltersState> = (updaterOrValue) => {
@@ -145,10 +164,14 @@ export const pendingFilterParsers = {
 export function usePendingMemberFilterSearchParams() {
   const [params, setParams] = useQueryStates(pendingFilterParsers)
 
-  // URL params → ColumnFiltersState
-  const columnFilters: ColumnFiltersState = [
-    getSearchFilter(params.q, params.searchBy),
-  ].filter(Boolean) as ColumnFiltersState
+  // URL params → ColumnFiltersState (memoized for reference stability)
+  const columnFilters: ColumnFiltersState = React.useMemo(
+    () =>
+      [getSearchFilter(params.q, params.searchBy)].filter(
+        Boolean
+      ) as ColumnFiltersState,
+    [params.q, params.searchBy]
+  )
 
   // ColumnFiltersState → URL params
   const handleChange: OnChangeFn<ColumnFiltersState> = (updaterOrValue) => {

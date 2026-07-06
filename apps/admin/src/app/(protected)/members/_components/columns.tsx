@@ -173,11 +173,13 @@ export const columns: ColumnDef<Member>[] = [
 
       const expiry = row.getValue("expiry") as string
       const date = new Date(expiry)
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
+      const formattedDate = Number.isNaN(date.getTime())
+        ? "—"
+        : date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
 
       return (
         <div className={cn("w-[100px] truncate", getExpiryClass(expiry))}>

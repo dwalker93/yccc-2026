@@ -1,35 +1,33 @@
 import * as z from "zod"
 
+const optionalTrimmed = z
+  .string()
+  .trim()
+  .optional()
+  .transform((val) => (val === "" ? undefined : val))
+
 export const approveMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z
-    .string()
-    .trim()
-    .optional()
-    .transform((val) => (val === "" ? undefined : val)),
-  note: z.string().trim().optional(),
+  reason: optionalTrimmed,
+  note: optionalTrimmed,
 })
 
 export const bulkApproveMemberSchema = z.object({
   memberIds: z.array(z.string()).min(1, "At least one member ID is required"),
-  reason: z
-    .string()
-    .trim()
-    .optional()
-    .transform((val) => (val === "" ? undefined : val)),
-  note: z.string().trim().optional(),
+  reason: optionalTrimmed,
+  note: optionalTrimmed,
 })
 
 export const rejectMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().min(1, "Reason is required for rejection"),
-  note: z.string().trim().optional(),
+  reason: z.string().trim().min(1, "Reason is required for rejection"),
+  note: optionalTrimmed,
 })
 
 export const suspendMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().min(1, "Reason is required for suspension"),
-  note: z.string().trim().optional(),
+  reason: z.string().trim().min(1, "Reason is required for suspension"),
+  note: optionalTrimmed,
   suspendedUntil: z
     .union([z.date(), z.string()])
     .transform((val) => {
@@ -37,19 +35,22 @@ export const suspendMemberSchema = z.object({
       if (val instanceof Date) return val
       return new Date(val)
     })
+    .refine((val) => val === undefined || !Number.isNaN(val.getTime()), {
+      message: "Invalid date for suspendedUntil",
+    })
     .optional(),
 })
 
 export const banMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().min(1, "Reason is required for ban"),
-  note: z.string().trim().optional(),
+  reason: z.string().trim().min(1, "Reason is required for ban"),
+  note: optionalTrimmed,
 })
 
 export const reinstateMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().min(1, "Reason is required for reinstatement"),
-  note: z.string().trim().optional(),
+  reason: z.string().trim().min(1, "Reason is required for reinstatement"),
+  note: optionalTrimmed,
 })
 
 export type ApproveMemberData = z.infer<typeof approveMemberSchema>

@@ -105,8 +105,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs"
-
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@workspace/ui/hooks/use-mobile"
 
 export const schema = z.object({
   id: z.number(),

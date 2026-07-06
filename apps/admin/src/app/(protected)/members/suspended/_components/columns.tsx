@@ -109,14 +109,15 @@ export const columns: ColumnDef<Member>[] = [
         return <div className="w-[100px] truncate">—</div>
       }
 
-      const formattedDate = new Date(suspendedUntil).toLocaleDateString(
-        "en-US",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }
-      )
+      const suspendedDate = new Date(suspendedUntil)
+      if (Number.isNaN(suspendedDate.getTime())) {
+        return <div className="w-[100px] truncate">—</div>
+      }
+      const formattedDate = suspendedDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
 
       return <div className="w-[100px] truncate">{formattedDate}</div>
     },

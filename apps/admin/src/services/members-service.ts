@@ -5,7 +5,7 @@ import {
   memberStatusHistory,
 } from "@workspace/shared/schemas/member-schema"
 import { plans } from "@workspace/shared/schemas/subscription-plans-schema"
-import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
+import { generateMshId } from "@workspace/shared/utils/generate-id"
 
 import { appdb, DBTransaction } from "@/lib/db"
 import {
@@ -130,39 +130,45 @@ export async function getMembersService<
 
   const selectFields = projections[projection]
 
-  const [memberData, countResult] = await Promise.all([
+  const isHistoryBackedProjection =
     projection === "rejected" ||
     projection === "suspended" ||
     projection === "banned"
-      ? (() => {
-          const latestHistory = appdb
-            .select({
-              memberId: memberStatusHistory.memberId,
-              maxId: sql<string>`max(${memberStatusHistory.id})`.as(
-                "max_history_id"
-              ),
-            })
-            .from(memberStatusHistory)
-            .where(eq(memberStatusHistory.toStatus, projection))
-            .groupBy(memberStatusHistory.memberId)
-            .as("latest_history")
 
-          return appdb
-            .select(selectFields)
-            .from(members)
-            .leftJoin(plans, eq(members.currentPlanId, plans.id))
-            .leftJoin(latestHistory, eq(members.id, latestHistory.memberId))
-            .leftJoin(
-              memberStatusHistory,
-              eq(memberStatusHistory.id, latestHistory.maxId)
-            )
-            .where(whereClause)
-            .orderBy(desc(members.createdAt))
-            .limit(Math.max(1, pageSize))
-            .offset(
-              Math.max(0, (Math.max(1, pageIndex) - 1) * Math.max(1, pageSize))
-            )
-        })()
+  // For history-backed projections, only members with a matching latest
+  // history row (toStatus === projection) should ever appear — both in the
+  // paginated rows and in the total count, or the two will drift apart.
+  const latestHistory = isHistoryBackedProjection
+    ? appdb
+        .select({
+          memberId: memberStatusHistory.memberId,
+          maxId: sql<string>`max(${memberStatusHistory.id})`.as(
+            "max_history_id"
+          ),
+        })
+        .from(memberStatusHistory)
+        .where(eq(memberStatusHistory.toStatus, projection))
+        .groupBy(memberStatusHistory.memberId)
+        .as("latest_history")
+    : undefined
+
+  const [memberData, countResult] = await Promise.all([
+    latestHistory
+      ? appdb
+          .select(selectFields)
+          .from(members)
+          .leftJoin(plans, eq(members.currentPlanId, plans.id))
+          .innerJoin(latestHistory, eq(members.id, latestHistory.memberId))
+          .innerJoin(
+            memberStatusHistory,
+            eq(memberStatusHistory.id, latestHistory.maxId)
+          )
+          .where(whereClause)
+          .orderBy(desc(members.createdAt))
+          .limit(Math.max(1, pageSize))
+          .offset(
+            Math.max(0, (Math.max(1, pageIndex) - 1) * Math.max(1, pageSize))
+          )
       : appdb
           .select(selectFields)
           .from(members)
@@ -174,7 +180,13 @@ export async function getMembersService<
             Math.max(0, (Math.max(1, pageIndex) - 1) * Math.max(1, pageSize))
           ),
 
-    appdb.select({ count: count() }).from(members).where(whereClause),
+    latestHistory
+      ? appdb
+          .select({ count: count() })
+          .from(members)
+          .innerJoin(latestHistory, eq(members.id, latestHistory.memberId))
+          .where(whereClause)
+      : appdb.select({ count: count() }).from(members).where(whereClause),
   ])
 
   return {
@@ -229,7 +241,7 @@ async function changeMemberStatusService({
       .where(eq(members.id, memberId))
 
     await tx.insert(memberStatusHistory).values({
-      id: generateId(IdPrefix.MEMBER_STATUS_HISTORY),
+      id: generateMshId(),
       memberId,
       fromStatus: current.membershipStatus, // ← always read, never hardcode
       toStatus,

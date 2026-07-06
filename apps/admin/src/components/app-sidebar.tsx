@@ -49,7 +49,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarGroup> */}
         {navGroups.map((group, index) => (
-          <NavGroup key={`sidebar-group-${index}`} {...group} />
+          <NavGroup key={`sidebar-group-${group.label}`} {...group} />
         ))}
       </SidebarContent>
       <SidebarFooter>

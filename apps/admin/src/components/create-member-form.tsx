@@ -55,7 +55,7 @@ export function CreateMemberForm() {
     onSubmit: ({ value }) => {
       // Parse the raw form state to apply the Zod .transform()
       const finalData = memberInputSchema.parse(value)
-      //console.log("Transformed data (with gender):", finalData)
+      // TODO: submit finalData to the API
     },
   })
 
