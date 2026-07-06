@@ -8,6 +8,7 @@ export const memberKeys = {
     status,
     plan,
     district,
+    projection,
   }: {
     pageIndex: string
     pageSize: string
@@ -16,6 +17,7 @@ export const memberKeys = {
     status?: string
     plan?: string
     district?: string
+    projection?: string
   }) =>
     [
       ...memberKeys.all,
@@ -33,5 +35,7 @@ export const memberKeys = {
       plan,
       "district",
       district,
+      "projection",
+      projection,
     ] as const,
 }

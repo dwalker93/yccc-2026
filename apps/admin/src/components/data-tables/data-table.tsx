@@ -86,6 +86,10 @@ export function DataTable<TData extends { id: string }, TValue>({
 
   const [pagination, setPagination] = usePaginationSearchParams()
 
+  React.useEffect(() => {
+    setRowSelection({})
+  }, [columnFilters, pagination.pageIndex, pagination.pageSize])
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,

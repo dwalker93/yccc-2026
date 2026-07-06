@@ -1,6 +1,7 @@
 "use client"
 
 import { type Member } from "@/services/members-service"
+import { formatMemberId } from "@/utils/member"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import { ageFromDob } from "@workspace/shared/utils/age-calculator"
@@ -47,9 +48,7 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">
-        {(row.getValue("id") as string).split("MEM")[1]}
-      </div>
+      <div className="w-[80px]">{formatMemberId(row.getValue("id"))}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -172,21 +171,19 @@ export const columns: ColumnDef<Member>[] = [
       if (row.getValue("status") !== "approved")
         return <div className="w-[100px] truncate">N/A</div>
 
-      if (window !== undefined) {
-        const expiry = row.getValue("expiry") as string
-        const date = new Date(expiry)
-        const formattedDate = date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
+      const expiry = row.getValue("expiry") as string
+      const date = new Date(expiry)
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
 
-        return (
-          <div className={cn("w-[100px] truncate", getExpiryClass(expiry))}>
-            {formattedDate}
-          </div>
-        )
-      }
+      return (
+        <div className={cn("w-[100px] truncate", getExpiryClass(expiry))}>
+          {formattedDate}
+        </div>
+      )
     },
   },
   {

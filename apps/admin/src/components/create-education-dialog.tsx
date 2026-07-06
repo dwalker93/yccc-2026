@@ -84,7 +84,7 @@ export function CreateEducationDialog({
     },
   })
 
-  const isEditing = initialValues !== null
+  const isEditing = initialValues != null
   const educationLevel = useStore(
     form.store,
     (state) => state.values.educationLevel

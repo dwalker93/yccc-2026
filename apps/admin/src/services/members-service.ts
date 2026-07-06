@@ -78,6 +78,12 @@ type GetMembersParams = {
   district?: string[]
 }
 
+type InferColumnData<T> = T extends { _: { data: infer D } } ? D : never
+
+type InferProjection<T extends Record<string, any>> = {
+  [K in keyof T]: InferColumnData<T[K]>
+}
+
 export async function getMembersService<
   TProjection extends ProjectionPreset = "detailed",
 >({
@@ -90,52 +96,7 @@ export async function getMembersService<
   plan,
   district,
 }: GetMembersParams & { projection?: TProjection }): Promise<{
-  members: Array<
-    TProjection extends "pending" | "banned"
-      ? {
-          id: string
-          name: string
-          email: string
-          phone: string | null
-          nic: string | null
-          registeredAt: Date | null
-        }
-      : TProjection extends "rejected"
-        ? {
-            id: string
-            name: string
-            email: string
-            phone: string | null
-            nic: string | null
-            reason: string | null
-            note: string | null
-          }
-        : TProjection extends "suspended"
-          ? {
-              id: string
-              name: string
-              email: string
-              phone: string | null
-              nic: string | null
-              status: string
-              registeredAt: Date | null
-              expiry: Date | null
-              plan: string | null
-            }
-          : {
-              id: string
-              name: string
-              email: string
-              phone: string | null
-              dateOfBirth: string | null
-              nic: string | null
-              district: string | null
-              status: string
-              registeredAt: Date | null
-              expiry: Date | null
-              plan: string | null
-            }
-  >
+  members: Array<InferProjection<(typeof projections)[TProjection]>>
   totalCount: number
 }> {
   // Build shared where conditions
@@ -151,9 +112,12 @@ export async function getMembersService<
       .select({ id: plans.id })
       .from(plans)
       .where(
-        inArray(
-          sql`lower(${plans.name})`,
-          plan.map((p) => p.toLowerCase())
+        and(
+          inArray(
+            sql`lower(${plans.name})`,
+            plan.map((p) => p.toLowerCase())
+          ),
+          eq(plans.isActive, true)
         )
       )
 
@@ -167,26 +131,54 @@ export async function getMembersService<
   const selectFields = projections[projection]
 
   const [memberData, countResult] = await Promise.all([
-    appdb
-      .select(selectFields)
-      .from(members)
-      .leftJoin(plans, eq(members.currentPlanId, plans.id))
-      .leftJoin(
-        memberStatusHistory,
-        eq(members.id, memberStatusHistory.memberId)
-      )
-      .where(whereClause)
-      .orderBy(desc(members.createdAt))
-      .limit(Math.max(1, pageSize))
-      .offset(
-        Math.max(0, (Math.max(1, pageIndex) - 1) * Math.max(1, pageSize))
-      ),
+    projection === "rejected" ||
+    projection === "suspended" ||
+    projection === "banned"
+      ? (() => {
+          const latestHistory = appdb
+            .select({
+              memberId: memberStatusHistory.memberId,
+              maxId: sql<string>`max(${memberStatusHistory.id})`.as(
+                "max_history_id"
+              ),
+            })
+            .from(memberStatusHistory)
+            .where(eq(memberStatusHistory.toStatus, projection))
+            .groupBy(memberStatusHistory.memberId)
+            .as("latest_history")
+
+          return appdb
+            .select(selectFields)
+            .from(members)
+            .leftJoin(plans, eq(members.currentPlanId, plans.id))
+            .leftJoin(latestHistory, eq(members.id, latestHistory.memberId))
+            .leftJoin(
+              memberStatusHistory,
+              eq(memberStatusHistory.id, latestHistory.maxId)
+            )
+            .where(whereClause)
+            .orderBy(desc(members.createdAt))
+            .limit(Math.max(1, pageSize))
+            .offset(
+              Math.max(0, (Math.max(1, pageIndex) - 1) * Math.max(1, pageSize))
+            )
+        })()
+      : appdb
+          .select(selectFields)
+          .from(members)
+          .leftJoin(plans, eq(members.currentPlanId, plans.id))
+          .where(whereClause)
+          .orderBy(desc(members.createdAt))
+          .limit(Math.max(1, pageSize))
+          .offset(
+            Math.max(0, (Math.max(1, pageIndex) - 1) * Math.max(1, pageSize))
+          ),
 
     appdb.select({ count: count() }).from(members).where(whereClause),
   ])
 
   return {
-    members: memberData as any,
+    members: memberData as InferProjection<(typeof projections)[TProjection]>[],
     totalCount: countResult[0]?.count ?? 0,
   }
 }

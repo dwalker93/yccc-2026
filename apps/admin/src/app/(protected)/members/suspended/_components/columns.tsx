@@ -1,6 +1,7 @@
 "use client"
 
 import { type Member } from "@/services/members-service"
+import { formatMemberId } from "@/utils/member"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import { Checkbox } from "@workspace/ui/components/checkbox"
@@ -40,9 +41,7 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">
-        {(row.getValue("id") as string).split("MEM")[1]}
-      </div>
+      <div className="w-[80px]">{formatMemberId(row.getValue("id"))}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -101,13 +100,23 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Suspended Until" />
     ),
     cell: ({ row }) => {
-      const suspendedUntil = row.getValue("suspendedUntil") as string
-      const date = new Date(suspendedUntil)
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
+      const suspendedUntil = row.getValue("suspendedUntil") as
+        | string
+        | null
+        | undefined
+
+      if (!suspendedUntil) {
+        return <div className="w-[100px] truncate">—</div>
+      }
+
+      const formattedDate = new Date(suspendedUntil).toLocaleDateString(
+        "en-US",
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }
+      )
 
       return <div className="w-[100px] truncate">{formattedDate}</div>
     },

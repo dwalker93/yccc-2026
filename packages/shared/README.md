@@ -11,6 +11,6 @@ Reusable schemas, utilities, and constants shared across workspace apps.
 ## Example
 
 ```ts
-import { DistrictsWithProvinces } from "@workspace/shared/constants/DistrictsWithProvinces"
+import { DistrictsWithProvinces } from "@workspace/shared/constants/districts"
 import { ageFromDob } from "@workspace/shared/utils/age-calculator"
 ```

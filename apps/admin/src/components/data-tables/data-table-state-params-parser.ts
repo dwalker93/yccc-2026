@@ -16,6 +16,7 @@ import {
   Status,
   statuses,
 } from "@/app/(protected)/members/_components/data"
+import { usePlans } from "@/hooks/plans/use-plans"
 
 const paginationParsers = {
   pageIndex: parseAsIndex.withDefault(0),
@@ -37,8 +38,6 @@ const SEARCHABLE_COLUMNS = searchableColumns.map(
 ) satisfies SearchableColumn[]
 
 const STATUS_OPTIONS = statuses.map((s) => s.value) satisfies Status[]
-
-const PLAN_OPTIONS = ["free", "pro"] as const // TODO: replace with actual plan options from plans api response
 
 function getSearchFilter(q: string, searchBy: SearchableColumn) {
   return q ? { id: searchBy, value: q } : null
@@ -66,18 +65,24 @@ export const filterParsers = {
   q: parseAsString.withDefault(""),
   searchBy: parseAsStringLiteral(SEARCHABLE_COLUMNS).withDefault("id"),
   status: parseAsArrayOf(parseAsStringLiteral(STATUS_OPTIONS)).withDefault([]),
-  plan: parseAsArrayOf(parseAsStringLiteral(PLAN_OPTIONS)).withDefault([]),
+  plan: parseAsArrayOf(parseAsString).withDefault([]),
   district: parseAsArrayOf(parseAsStringLiteral(Districts)).withDefault([]),
 }
 
 export function useMemberFilterSearchParams() {
+  const { data: plans } = usePlans()
+  const planOptions = (plans ?? []).map((p) => p.name.toLowerCase())
   const [params, setParams] = useQueryStates(filterParsers)
+
+  const activePlanParams = plans
+    ? params.plan.filter((p) => planOptions.includes(p))
+    : params.plan
 
   // URL params → ColumnFiltersState
   const columnFilters: ColumnFiltersState = [
     getSearchFilter(params.q, params.searchBy),
     params.status.length ? { id: "status", value: params.status } : null,
-    params.plan.length ? { id: "plan", value: params.plan } : null,
+    activePlanParams.length ? { id: "plan", value: activePlanParams } : null,
     params.district.length ? { id: "district", value: params.district } : null,
   ].filter(Boolean) as ColumnFiltersState
 
@@ -93,7 +98,7 @@ export function useMemberFilterSearchParams() {
     const update = {
       ...searchUpdate,
       status: null as (typeof STATUS_OPTIONS)[number][] | null,
-      plan: null as (typeof PLAN_OPTIONS)[number][] | null,
+      plan: null as string[] | null,
       district: null as (typeof Districts)[number][] | null,
     }
 
@@ -109,9 +114,9 @@ export function useMemberFilterSearchParams() {
 
       if (filter.id === "plan") {
         const val = filter.value as string[]
-        const filtered = val.filter((v): v is (typeof PLAN_OPTIONS)[number] =>
-          PLAN_OPTIONS.includes(v as (typeof PLAN_OPTIONS)[number])
-        )
+        const filtered = plans
+          ? val.filter((v) => planOptions.includes(v))
+          : val
         update.plan = filtered.length ? filtered : null
         continue
       }

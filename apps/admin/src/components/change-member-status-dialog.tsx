@@ -166,7 +166,7 @@ export function ChangeMemberStatusDialog({
   const form = useAppForm({
     defaultValues,
     validators: {
-      onSubmit: schemas[action] as AnyStatusSchema,
+      onSubmit: schemas[action] as unknown as typeof approveMemberSchema,
     },
     onSubmit: ({ value }) => {
       startTransition(async () => {

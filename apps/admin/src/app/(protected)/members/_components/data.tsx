@@ -86,6 +86,9 @@ export const getPlanBadgeClass = (plan: string) => {
 
 export const getExpiryClass = (expiry: string) => {
   const expiryDate = dayjs(expiry)
+  if (!expiryDate.isValid()) {
+    return "text-muted-foreground"
+  }
   const today = dayjs()
   const daysUntilExpiry = expiryDate.diff(today, "day")
 
