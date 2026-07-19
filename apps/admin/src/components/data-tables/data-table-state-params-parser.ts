@@ -11,12 +11,11 @@ import {
 
 import { Districts } from "@workspace/shared/constants/districts"
 
+import { statuses, type Status } from "@/config/data"
 import { usePlans } from "@/hooks/plans/use-plans"
 import {
   SearchableColumn,
   searchableColumns,
-  Status,
-  statuses,
 } from "@/app/(protected)/members/_components/data"
 
 const paginationParsers = {

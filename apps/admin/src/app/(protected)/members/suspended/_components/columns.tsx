@@ -10,7 +10,7 @@ import { DataTableColumnHeader } from "@/components/data-tables/data-table-colum
 
 import { RowActions } from "./row-actions"
 
-export const columns: ColumnDef<Member>[] = [
+export const columns: ColumnDef<Member["suspended"]>[] = [
   {
     id: "select",
     header: ({ table }) => (

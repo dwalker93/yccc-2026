@@ -6,6 +6,9 @@ const optionalTrimmed = z
   .optional()
   .transform((val) => (val === "" ? undefined : val))
 
+const requiredReason = (action: string) =>
+  z.string().trim().min(1, `Reason is required for ${action}`)
+
 export const approveMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
   reason: optionalTrimmed,
@@ -20,13 +23,13 @@ export const bulkApproveMemberSchema = z.object({
 
 export const rejectMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().trim().min(1, "Reason is required for rejection"),
+  reason: requiredReason("rejection"),
   note: optionalTrimmed,
 })
 
 export const suspendMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().trim().min(1, "Reason is required for suspension"),
+  reason: requiredReason("suspension"),
   note: optionalTrimmed,
   suspendedUntil: z
     .union([z.date(), z.string()])
@@ -43,13 +46,13 @@ export const suspendMemberSchema = z.object({
 
 export const banMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().trim().min(1, "Reason is required for ban"),
+  reason: requiredReason("ban"),
   note: optionalTrimmed,
 })
 
 export const reinstateMemberSchema = z.object({
   memberId: z.string().min(1, "Member ID is required"),
-  reason: z.string().trim().min(1, "Reason is required for reinstatement"),
+  reason: requiredReason("reinstatement"),
   note: optionalTrimmed,
 })
 

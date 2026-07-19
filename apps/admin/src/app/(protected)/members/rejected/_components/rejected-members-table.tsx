@@ -11,7 +11,7 @@ import { columnMappings } from "./column-name-mappings"
 import { columns } from "./columns"
 
 export function RejectedMembersTable() {
-  const { data, isLoading } = useMembers({
+  const { data, isLoading } = useMembers<"rejected">({
     status: "rejected",
     projection: "rejected",
   })

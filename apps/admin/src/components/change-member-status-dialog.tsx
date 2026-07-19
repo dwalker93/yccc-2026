@@ -7,7 +7,7 @@ import {
   rejectMemberSchema,
   suspendMemberSchema,
 } from "@/schemas/member-schema"
-import { Member } from "@/services/members-service"
+import { type Member, type ProjectionPreset } from "@/services/members-service"
 import * as z from "zod"
 
 import {
@@ -33,7 +33,7 @@ import {
 } from "@workspace/ui/components/dialog"
 import { useAppForm } from "@workspace/ui/hooks/form"
 
-type Action =
+export type Action =
   | "approve"
   | "bulkApprove"
   | "reject"
@@ -42,11 +42,21 @@ type Action =
   | "reinstate"
 
 type ChangeMemberStatusDialogProps = {
-  trigger: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  trigger?: React.ReactNode
   onSubmit: (data: any) => Promise<{ error?: string; success?: boolean }>
 } & (
-  | { action: Exclude<Action, "bulkApprove">; member: Member; members?: never }
-  | { action: "bulkApprove"; members: Member[]; member?: never }
+  | {
+      action: Exclude<Action, "bulkApprove">
+      member: Member[ProjectionPreset]
+      members?: never
+    }
+  | {
+      action: "bulkApprove"
+      members: Member[ProjectionPreset][]
+      member?: never
+    }
 )
 
 type StatusFormValues =
@@ -132,13 +142,19 @@ const config: Record<
 }
 
 export function ChangeMemberStatusDialog({
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
   trigger,
   member,
   members,
   action,
   onSubmit,
 }: ChangeMemberStatusDialogProps) {
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+
+  const isControlled = controlledOpen !== undefined
+  const open = isControlled ? controlledOpen : internalOpen
+  const setOpen = isControlled ? setControlledOpen! : setInternalOpen
   const [showConfirm, setShowConfirm] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -207,7 +223,7 @@ export function ChangeMemberStatusDialog({
           setOpen(value)
         }}
       >
-        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
         <DialogContent className="sm:max-w-sm">
           <form
@@ -298,18 +314,15 @@ export function ChangeMemberStatusDialog({
             <AlertDialogCancel onClick={() => setShowConfirm(false)}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button
-                type="button"
-                variant={cfg.submitVariant}
-                disabled={isPending}
-                onClick={() => {
-                  setShowConfirm(false)
-                  form.handleSubmit()
-                }}
-              >
-                {isPending ? `${cfg.submitLabel}ing...` : cfg.submitLabel}
-              </Button>
+            <AlertDialogAction
+              variant={cfg.submitVariant}
+              disabled={isPending}
+              onClick={() => {
+                setShowConfirm(false)
+                form.handleSubmit()
+              }}
+            >
+              {isPending ? `${cfg.submitLabel}ing...` : cfg.submitLabel}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

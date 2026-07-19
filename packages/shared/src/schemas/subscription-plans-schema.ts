@@ -35,7 +35,7 @@ export const billingInterval = pgEnum("billing_interval", [
 // =============================================================================
 
 export const plans = pgTable("plans", {
-  id: text("id").primaryKey(), // "free" | "pro" | "pro_plus"
+  id: text("id").primaryKey(),
   name: text("name").notNull(), // "Free" | "Pro" | "Pro Plus"
   description: text("description"),
   price: integer("price").notNull(), // in LKR cents

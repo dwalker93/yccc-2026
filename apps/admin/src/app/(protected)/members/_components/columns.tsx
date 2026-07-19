@@ -1,23 +1,25 @@
 "use client"
 
+import Link from "next/link"
 import { type Member } from "@/services/members-service"
 import { formatMemberId } from "@/utils/member"
+import { formatDate } from "@/utils/utils"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import { ageFromDob } from "@workspace/shared/utils/age-calculator"
 import { Checkbox } from "@workspace/ui/components/checkbox"
 import { cn } from "@workspace/ui/lib/utils"
 
+import {
+  MembershipStatusBadge,
+  SubscriptionPlanBadge,
+} from "@/components/badge"
 import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
 
-import {
-  getExpiryClass,
-  getPlanBadgeClass,
-  getStatusBadgeClass,
-  statuses,
-} from "./data"
+import { getExpiryClass } from "./data"
+import { RowActions } from "./row-actions"
 
-export const columns: ColumnDef<Member>[] = [
+export const columns: ColumnDef<Member["detailed"]>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -61,7 +63,9 @@ export const columns: ColumnDef<Member>[] = [
     cell: ({ row }) => {
       return (
         <span className="max-w-[500px] truncate font-medium">
-          {row.getValue("name")}
+          <Link href={`/members/${formatMemberId(row.getValue("id"))}`}>
+            {row.getValue("name")}
+          </Link>
         </span>
       )
     },
@@ -107,17 +111,8 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Plan" />
     ),
     cell: ({ row }) => {
-      const plan = row.getValue("plan") as string
-      return (
-        <span
-          className={cn(
-            "rounded-sm px-2 py-0.5 font-medium uppercase",
-            getPlanBadgeClass(plan.toLowerCase())
-          )}
-        >
-          {plan}
-        </span>
-      )
+      const plan = row.getValue("plan") as "free" | "pro" | "default"
+      return <SubscriptionPlanBadge plan={plan} />
     },
     enableSorting: false,
   },
@@ -148,18 +143,15 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Member since" />
     ),
     cell: ({ row }) => {
-      if (row.getValue("status") !== "approved")
+      if (
+        row.getValue("status") === "pending" ||
+        row.getValue("status") === "rejected"
+      )
         return <div className="w-[100px] truncate">N/A</div>
 
       const memberSince = row.getValue("memberSince") as string
-      const date = new Date(memberSince)
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
 
-      return <div className="w-[100px] truncate">{formattedDate}</div>
+      return <div className="w-[100px] truncate">{formatDate(memberSince)}</div>
     },
   },
   {
@@ -168,22 +160,17 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Expiry" />
     ),
     cell: ({ row }) => {
-      if (row.getValue("status") !== "approved")
+      if (
+        row.getValue("status") === "pending" ||
+        row.getValue("status") === "rejected"
+      )
         return <div className="w-[100px] truncate">N/A</div>
 
       const expiry = row.getValue("expiry") as string
-      const date = new Date(expiry)
-      const formattedDate = Number.isNaN(date.getTime())
-        ? "—"
-        : date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
 
       return (
         <div className={cn("w-[100px] truncate", getExpiryClass(expiry))}>
-          {formattedDate}
+          {formatDate(expiry)}
         </div>
       )
     },
@@ -194,30 +181,16 @@ export const columns: ColumnDef<Member>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue("status")
-      )
-
-      if (!status) {
-        return null
-      }
-
-      return (
-        <div
-          className={cn(
-            `inline-flex items-center gap-1 rounded-sm px-2 py-0.5
-            text-[0.6875rem]`,
-            getStatusBadgeClass(row.getValue("status"))
-          )}
-        >
-          {status.icon && <status.icon className="size-2.5" />}
-          <span>{status.label}</span>
-        </div>
-      )
+      return <MembershipStatusBadge status={row.getValue("status")} />
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
     },
     enableSorting: false,
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => <RowActions row={row.original} />,
   },
 ]
