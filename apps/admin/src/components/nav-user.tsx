@@ -1,6 +1,7 @@
 "use client"
 
 import { useAppGlobal } from "@/providers/app-global-provider"
+import { avatarFallback } from "@/utils/member"
 import { BellIcon, LogOutIcon, UserIcon } from "lucide-react"
 
 import {
@@ -32,16 +33,12 @@ export function NavUser() {
     return <div className="size-8 rounded-full bg-muted" />
   }
 
-  const avatarFallback =
-    user.name.charAt(0).toUpperCase() +
-    (user.name.split(" ")[1]?.charAt(0).toUpperCase() ?? "")
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-8">
           <AvatarImage src={user.image ?? ""} />
-          <AvatarFallback>{avatarFallback}</AvatarFallback>
+          <AvatarFallback>{avatarFallback(user.name)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
@@ -51,7 +48,7 @@ export function NavUser() {
           <DropdownMenuLabel className="flex items-center gap-3 p-0">
             <Avatar className="size-10">
               <AvatarImage src={user.image ?? ""} />
-              <AvatarFallback>{avatarFallback}</AvatarFallback>
+              <AvatarFallback>{avatarFallback(user.name)}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>

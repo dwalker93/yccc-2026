@@ -18,7 +18,7 @@ import { columnMappings } from "./column-name-mappings"
 import { columns } from "./columns"
 
 export function PendingMembersTable() {
-  const { data, isLoading } = useMembers({
+  const { data, isLoading } = useMembers<"pending">({
     status: "pending",
     projection: "pending",
   })

@@ -1,16 +1,18 @@
 import { headers } from "next/headers"
 import { NextRequest } from "next/server"
-import { getMembersService, type ProjectionPreset } from "@/services/members-service"
+import {
+  getMembersService,
+  type ProjectionPreset,
+} from "@/services/members-service"
 import { getActivePlansService } from "@/services/plans-service"
 
 import { Districts } from "@workspace/shared/constants/districts"
 
+import { statuses, type Status } from "@/config/data"
 import { auth } from "@/lib/auth/auth"
 import {
   SearchableColumn,
   searchableColumns,
-  Status,
-  statuses,
 } from "@/app/(protected)/members/_components/data"
 
 export async function GET(request: NextRequest) {
@@ -94,9 +96,13 @@ export async function GET(request: NextRequest) {
   }
 
   const rawProjection = searchParams.get("projection")
-  const projection = (["detailed", "pending", "rejected", "suspended", "banned"].includes(rawProjection || "")
-    ? rawProjection
-    : "detailed") as ProjectionPreset
+  const projection = (
+    ["detailed", "pending", "rejected", "suspended", "banned"].includes(
+      rawProjection || ""
+    )
+      ? rawProjection
+      : "detailed"
+  ) as ProjectionPreset
 
   try {
     const result = await getMembersService({

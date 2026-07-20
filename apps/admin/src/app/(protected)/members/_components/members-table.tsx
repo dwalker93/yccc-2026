@@ -4,6 +4,7 @@ import { Users } from "lucide-react"
 
 import { Districts } from "@workspace/shared/constants/districts"
 
+import { statuses } from "@/config/data"
 import { useMembers } from "@/hooks/members/use-members"
 import { usePlans } from "@/hooks/plans/use-plans"
 import { DataTable } from "@/components/data-tables/data-table"
@@ -12,7 +13,6 @@ import { useMemberFilterSearchParams } from "@/components/data-tables/data-table
 
 import { columnMappings } from "./column-name-mappings"
 import { columns } from "./columns"
-import { statuses } from "./data"
 
 export function MembersTable() {
   const { data, isLoading } = useMembers()

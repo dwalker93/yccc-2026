@@ -1,4 +1,6 @@
 export const memberKeys = {
+  member: (id: string) => ["member", id] as const,
+  metadata: (id: string) => [...memberKeys.member(id), "metadata"] as const,
   all: ["members"] as const,
   filtered: ({
     pageIndex,

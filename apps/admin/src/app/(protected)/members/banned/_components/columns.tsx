@@ -8,7 +8,7 @@ import { Checkbox } from "@workspace/ui/components/checkbox"
 import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
 import { formatMemberId } from "@/utils/member"
 
-export const columns: ColumnDef<Member>[] = [
+export const columns: ColumnDef<Member["banned"]>[] = [
   {
     id: "select",
     header: ({ table }) => (

@@ -11,7 +11,7 @@ import { columnMappings } from "./column-name-mappings"
 import { columns } from "./columns"
 
 export function SuspendedMembersTable() {
-  const { data, isLoading } = useMembers({
+  const { data, isLoading } = useMembers<"suspended">({
     status: "suspended",
     projection: "suspended",
   })

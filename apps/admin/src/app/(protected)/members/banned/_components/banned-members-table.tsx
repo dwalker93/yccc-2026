@@ -11,7 +11,7 @@ import { columnMappings } from "./column-name-mappings"
 import { columns } from "./columns"
 
 export function BannedMembersTable() {
-  const { data, isLoading } = useMembers({
+  const { data, isLoading } = useMembers<"banned">({
     status: "banned",
     projection: "banned",
   })

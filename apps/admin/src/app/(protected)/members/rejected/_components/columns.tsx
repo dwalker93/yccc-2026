@@ -10,7 +10,7 @@ import { formatMemberId } from "@/utils/member"
 
 import { RowActions } from "./row-actions"
 
-export const columns: ColumnDef<Member>[] = [
+export const columns: ColumnDef<Member["rejected"]>[] = [
   {
     id: "select",
     header: ({ table }) => (

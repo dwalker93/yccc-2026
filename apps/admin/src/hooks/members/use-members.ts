@@ -1,12 +1,12 @@
 import { useSearchParams } from "next/navigation"
-import { Member, type ProjectionPreset } from "@/services/members-service"
+import { type Member, type ProjectionPreset } from "@/services/members-service"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { SearchableColumn } from "@/app/(protected)/members/_components/data"
 
 import { memberKeys } from "./keys"
 
-type MembersParams = {
+type MembersParams<TProjection extends ProjectionPreset = "detailed"> = {
   pageIndex: string
   pageSize: string
   searchTerm: string
@@ -14,15 +14,15 @@ type MembersParams = {
   status: string
   plan: string
   district: string
-  projection?: ProjectionPreset
+  projection?: TProjection
 }
 
-type MembersResponse = {
-  members: Member[]
+type MembersResponse<TProjection extends ProjectionPreset = "detailed"> = {
+  members: Member[TProjection][]
   totalCount: number
 }
 
-function buildMembersUrl(params: MembersParams) {
+function buildMembersUrl(params: MembersParams<ProjectionPreset>) {
   const sp = new URLSearchParams()
   if (params.searchTerm) sp.set("q", params.searchTerm)
   if (params.searchTerm) sp.set("searchBy", params.searchBy)
@@ -35,7 +35,9 @@ function buildMembersUrl(params: MembersParams) {
   return `/api/members?${sp}`
 }
 
-export const useMembers = (defaultParams?: Partial<MembersParams>) => {
+export const useMembers = <TProjection extends ProjectionPreset = "detailed">(
+  defaultParams?: Partial<MembersParams<TProjection>>
+) => {
   const searchParams = useSearchParams()
   const pageIndex = searchParams.get("page") || "1"
   const pageSize = searchParams.get("perPage") || "10"
@@ -47,7 +49,7 @@ export const useMembers = (defaultParams?: Partial<MembersParams>) => {
   const district = searchParams.get("district") || ""
   const projection = defaultParams?.projection
 
-  const params: MembersParams = {
+  const params: MembersParams<TProjection> = {
     pageIndex,
     pageSize,
     searchTerm,
@@ -58,15 +60,16 @@ export const useMembers = (defaultParams?: Partial<MembersParams>) => {
     projection,
   }
 
-  return useQuery<MembersResponse>({
+  return useQuery<MembersResponse<TProjection>>({
     queryKey: memberKeys.filtered(params),
     queryFn: async () => {
       const res = await fetch(buildMembersUrl(params))
       if (!res.ok) {
         throw new Error(`Failed to fetch members (${res.status})`)
       }
-      return res.json() as Promise<MembersResponse>
+      return res.json() as Promise<MembersResponse<TProjection>>
     },
     placeholderData: keepPreviousData,
   })
 }
+

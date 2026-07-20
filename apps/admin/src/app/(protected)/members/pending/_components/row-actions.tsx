@@ -14,7 +14,7 @@ import { memberKeys } from "@/hooks/members/keys"
 import { ChangeMemberStatusDialog } from "@/components/change-member-status-dialog"
 
 interface RowActionsProps {
-  row: Member
+  row: Member["pending"]
 }
 
 export const RowActions = ({ row }: RowActionsProps) => {
