@@ -9,7 +9,7 @@ import {
   rejectMemberAction,
   suspendMemberAction,
 } from "@/actions/members-actions"
-import { type Member } from "@/services/members-service"
+import { type Member } from "@/services/member-service"
 import { formatMemberId } from "@/utils/member"
 import { useQueryClient } from "@tanstack/react-query"
 import { CheckCircle, Ellipsis, XCircle } from "lucide-react"

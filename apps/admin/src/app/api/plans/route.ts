@@ -1,7 +1,7 @@
 import { headers } from "next/headers"
+import { getActivePlansService } from "@/services/plan-service"
 
 import { auth } from "@/lib/auth/auth"
-import { getActivePlansService } from "@/services/plans-service"
 
 export async function GET() {
   const session = await auth.api.getSession({
@@ -17,9 +17,6 @@ export async function GET() {
     return Response.json(plans)
   } catch (error) {
     console.error(error)
-    return Response.json(
-      { error: "Failed to fetch plans" },
-      { status: 500 }
-    )
+    return Response.json({ error: "Failed to fetch plans" }, { status: 500 })
   }
 }

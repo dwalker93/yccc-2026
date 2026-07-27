@@ -1,18 +1,16 @@
 "use client"
 
-import { type Member } from "@/services/members-service"
+import { type Member } from "@/services/member-service"
 import { formatMemberId } from "@/utils/member"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import { Checkbox } from "@workspace/ui/components/checkbox"
 import { cn } from "@workspace/ui/lib/utils"
 
-import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
+import { SubscriptionPlanBadge } from "@/components/badge"
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 
-import {
-  getInvoiceStatusClass,
-  getPlanBadgeClass,
-} from "../../_components/data"
+import { getInvoiceStatusClass } from "../../_components/data"
 import { RowActions } from "./row-actions"
 
 export const columns: ColumnDef<Member["pending"]>[] = [
@@ -122,17 +120,9 @@ export const columns: ColumnDef<Member["pending"]>[] = [
       <DataTableColumnHeader column={column} title="Plan" />
     ),
     cell: ({ row }) => {
-      const plan = row.getValue("plan") as string
-      return (
-        <span
-          className={cn(
-            "rounded-sm px-2 py-0.5 font-medium uppercase",
-            getPlanBadgeClass(plan.toLowerCase())
-          )}
-        >
-          {plan}
-        </span>
-      )
+      const plan = row.getValue("plan") as "free" | "pro" | "default"
+      if (!plan) return null
+      return <SubscriptionPlanBadge plan={plan} />
     },
     enableSorting: false,
   },
@@ -165,6 +155,7 @@ export const columns: ColumnDef<Member["pending"]>[] = [
     ),
     cell: ({ row }) => {
       const invoiceStatus = row.getValue("invoiceStatus") as string
+      if (!invoiceStatus) return null
       return (
         <span
           className={cn(
@@ -185,6 +176,7 @@ export const columns: ColumnDef<Member["pending"]>[] = [
     ),
     cell: ({ row }) => {
       const invoiceDueAt = row.getValue("invoiceDueAt") as string
+      if (!invoiceDueAt) return null
       const date = new Date(invoiceDueAt)
       const formattedDate = date.toLocaleDateString("en-US", {
         year: "numeric",

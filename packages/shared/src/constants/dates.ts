@@ -1,27 +1,30 @@
 export const MONTHS = [
-  { value: "01", label: "January" },
-  { value: "02", label: "February" },
-  { value: "03", label: "March" },
-  { value: "04", label: "April" },
-  { value: "05", label: "May" },
-  { value: "06", label: "June" },
-  { value: "07", label: "July" },
-  { value: "08", label: "August" },
-  { value: "09", label: "September" },
+  { value: "1", label: "January" },
+  { value: "2", label: "February" },
+  { value: "3", label: "March" },
+  { value: "4", label: "April" },
+  { value: "5", label: "May" },
+  { value: "6", label: "June" },
+  { value: "7", label: "July" },
+  { value: "8", label: "August" },
+  { value: "9", label: "September" },
   { value: "10", label: "October" },
   { value: "11", label: "November" },
   { value: "12", label: "December" },
 ] as const
 
-export const YEARS = [
-  ...Array.from({ length: 12 }, (_, i) => {
-    const year = new Date().getFullYear() - i
+const CURRENT_YEAR = new Date().getFullYear()
+
+export const YEARS = Array.from(
+  { length: CURRENT_YEAR - 1990 + 1 },
+  (_, i) => {
+    const year = CURRENT_YEAR - i
     return { value: String(year), label: String(year) }
-  }),
-]
+  }
+)
 
 export const FUTURE_YEARS = Array.from({ length: 10 }, (_, i) => {
-  const year = new Date().getFullYear() + 10 - i
+  const year = CURRENT_YEAR + 10 - i
   return { value: String(year), label: String(year) }
 })
 

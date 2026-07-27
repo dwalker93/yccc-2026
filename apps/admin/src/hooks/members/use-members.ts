@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation"
-import { type Member, type ProjectionPreset } from "@/services/members-service"
+import { type Member, type ProjectionPreset } from "@/services/member-service"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { SearchableColumn } from "@/app/(protected)/members/_components/data"
@@ -72,4 +72,3 @@ export const useMembers = <TProjection extends ProjectionPreset = "detailed">(
     placeholderData: keepPreviousData,
   })
 }
-

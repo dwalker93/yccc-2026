@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { type Member } from "@/services/members-service"
+import { type Member } from "@/services/member-service"
 import { formatMemberId } from "@/utils/member"
 import { formatDate } from "@/utils/utils"
 import { type ColumnDef } from "@tanstack/react-table"
@@ -14,7 +14,7 @@ import {
   MembershipStatusBadge,
   SubscriptionPlanBadge,
 } from "@/components/badge"
-import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 
 import { getExpiryClass } from "./data"
 import { RowActions } from "./row-actions"

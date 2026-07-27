@@ -1,5 +1,6 @@
 import { type Metadata } from "next"
 import { getMemberOverviewService } from "@/services/member-service"
+import { formatMemberId } from "@/utils/member"
 
 import { MemberCurrentRoleCard } from "./_components/member-current-role-card"
 import MemberDetailsCard from "./_components/member-details-card"
@@ -17,7 +18,8 @@ export default async function MemberOverviewPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id } = await params
+  const { id: rawId } = await params
+  const id = formatMemberId(rawId)
   const { profile, subscription, financials, role, remarks } =
     await getMemberOverviewService("MEM" + id)
   return (

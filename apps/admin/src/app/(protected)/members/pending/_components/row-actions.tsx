@@ -4,7 +4,7 @@ import {
   approveMemberAction,
   rejectMemberAction,
 } from "@/actions/members-actions"
-import { type Member } from "@/services/members-service"
+import { type Member } from "@/services/member-service"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 

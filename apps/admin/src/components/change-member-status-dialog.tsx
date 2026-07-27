@@ -7,7 +7,7 @@ import {
   rejectMemberSchema,
   suspendMemberSchema,
 } from "@/schemas/member-schema"
-import { type Member, type ProjectionPreset } from "@/services/members-service"
+import { type Member, type ProjectionPreset } from "@/services/member-service"
 import * as z from "zod"
 
 import {
@@ -154,7 +154,10 @@ export function ChangeMemberStatusDialog({
 
   const isControlled = controlledOpen !== undefined
   const open = isControlled ? controlledOpen : internalOpen
-  const setOpen = isControlled ? setControlledOpen! : setInternalOpen
+  const setOpen = (value: boolean) => {
+    if (!isControlled) setInternalOpen(value)
+    setControlledOpen?.(value)
+  }
   const [showConfirm, setShowConfirm] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
