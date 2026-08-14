@@ -27,7 +27,7 @@ export default async function MemberLayout({
 
   let metadata
   try {
-    metadata = await getMemberMetadata({ id: "MEM" + memberId })
+    metadata = await getMemberMetadata({ id: "MEM" + id })
   } catch (err) {
     if (err instanceof MemberNotFoundError) notFound()
     throw err // rethrow anything else so error.tsx handles it

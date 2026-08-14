@@ -28,7 +28,7 @@ export default function MemberDetailsCard({
   return (
     <Card>
       <CardHeader>
-        <Avatar className="mb-2 h-16 w-16">
+        <Avatar className="mb-2 h-24 w-24">
           <AvatarImage src={profile.photo || ""} alt={profile.name} />
           <AvatarFallback
             className="text-lg font-bold tracking-widest text-muted-foreground

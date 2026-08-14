@@ -1,12 +1,12 @@
 "use client"
 
-import { type Member } from "@/services/members-service"
+import { type Member } from "@/services/member-service"
 import { formatMemberId } from "@/utils/member"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import { Checkbox } from "@workspace/ui/components/checkbox"
 
-import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 
 import { RowActions } from "./row-actions"
 

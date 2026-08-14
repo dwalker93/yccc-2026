@@ -6,7 +6,7 @@ import { payments } from "@workspace/shared/schemas/payments-schema"
 
 import { appdb } from "@/lib/db"
 
-import { rejectMemberService } from "../services/members-service"
+import { rejectMemberService } from "../services/member-service"
 
 // weekly cron — void overdue invoices older than 30 days
 export async function voidAbandonedInvoicesJob() {

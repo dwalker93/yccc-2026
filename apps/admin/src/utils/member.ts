@@ -26,7 +26,7 @@ export function formatMemberId(id: string | null | undefined): string {
  * @param name The name of the member.
  * @returns The fallback avatar text (first letter of first and last name).
  */
-export function avatarFallback(name: string): string {
+export function avatarFallback(name?: string | null): string {
   if (!name) {
     return "??"
   }

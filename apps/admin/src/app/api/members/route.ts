@@ -3,8 +3,8 @@ import { NextRequest } from "next/server"
 import {
   getMembersService,
   type ProjectionPreset,
-} from "@/services/members-service"
-import { getActivePlansService } from "@/services/plans-service"
+} from "@/services/member-service"
+import { getActivePlansService } from "@/services/plan-service"
 
 import { Districts } from "@workspace/shared/constants/districts"
 

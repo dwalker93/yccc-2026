@@ -47,6 +47,31 @@ export const employmentType = pgEnum("employment_type", [
   "self_employed",
 ])
 
+export const qualification = pgEnum("qualification", [
+  "secondary",
+  "vocational",
+  "diploma",
+  "bachelors",
+  "postgrad_diploma",
+  "masters",
+  "doctorate",
+])
+
+export const fieldOfStudy = pgEnum("field_of_study", [
+  "operational_management",
+  "food_beverage_service",
+  "business_marketing",
+  "culinary_arts",
+  "pastry_bakery",
+  "international_cookery",
+  "hospitality_management",
+  "tourism_event_management",
+  "other",
+])
+
+export type Qualification = (typeof qualification.enumValues)[number]
+export type FieldOfStudy = (typeof fieldOfStudy.enumValues)[number]
+
 // =============================================================================
 // TABLE 1 — members
 // Owns identity + a denormalized subscription snapshot for fast reads.
@@ -149,14 +174,16 @@ export const memberEducation = pgTable("member_education", {
   memberId: text("member_id")
     .notNull()
     .references(() => members.id),
-  institution: text("institution").notNull(), // "School name", "SLITHM", "CINEC", "UOC"
-  qualification: text("qualification").notNull(), // "Secondary", "Diploma", "Certificate", "Bachelor's Degree"
-  fieldOfStudy: text("field_of_study"), // "Hotel Management", "Culinary Arts"
+  institution: text("institution").notNull(),
+  qualification: qualification("qualification").notNull(),
+  fieldOfStudy: fieldOfStudy("field_of_study").notNull(),
   startYear: integer("start_year"),
   startMonth: integer("start_month"),
   endYear: integer("end_year"),
   endMonth: integer("end_month"), // nullable = currently studying
   isVerified: boolean("is_verified").default(false).notNull(),
+  verifiedAt: timestamp("verified_at"),
+  verifiedBy: text("verified_by"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -187,6 +214,8 @@ export const memberProfession = pgTable("member_profession", {
   endMonth: integer("end_month"), // nullable = current job
   isCurrent: boolean("is_current").default(false).notNull(),
   isVerified: boolean("is_verified").default(false).notNull(),
+  verifiedAt: timestamp("verified_at"),
+  verifiedBy: text("verified_by"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

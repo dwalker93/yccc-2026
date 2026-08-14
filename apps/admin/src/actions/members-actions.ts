@@ -17,10 +17,16 @@ import {
   reinstateMemberService,
   rejectMemberService,
   suspendMemberService,
-} from "@/services/members-service"
+  verifyMemberEducationService,
+  verifyMemberProfessionService,
+} from "@/services/member-service"
 
 import { auth } from "@/lib/auth/auth"
 
+/**
+ * Server action to create a new member.
+ * Validates session authentication and extracts member data from form input.
+ */
 export async function createMemberAction(formData: FormData) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -55,6 +61,10 @@ export async function createMemberAction(formData: FormData) {
   revalidatePath("/members")
 }
 
+/**
+ * Server action to approve a single member registration.
+ * Validates input parameters, checks authentication, and delegates approval to member service.
+ */
 export async function approveMemberAction(
   memberId: string,
   reason?: string,
@@ -89,6 +99,10 @@ export async function approveMemberAction(
   }
 }
 
+/**
+ * Server action to approve multiple member registrations in bulk (up to 10 members).
+ * Validates input array and batch limit, checks authentication, and delegates approval to member service.
+ */
 export async function bulkApproveMemberAction(
   memberIds: string[],
   reason?: string,
@@ -127,6 +141,10 @@ export async function bulkApproveMemberAction(
   }
 }
 
+/**
+ * Server action to reject a member registration.
+ * Validates input parameters including rejection reason, checks authentication, and updates member status via service.
+ */
 export async function rejectMemberAction(
   memberId: string,
   reason: string,
@@ -161,6 +179,10 @@ export async function rejectMemberAction(
   }
 }
 
+/**
+ * Server action to suspend a member's active status.
+ * Accepts optional suspension end date and reason, checks authentication, and applies suspension via service.
+ */
 export async function suspendMemberAction(
   memberId: string,
   reason: string,
@@ -202,6 +224,10 @@ export async function suspendMemberAction(
   }
 }
 
+/**
+ * Server action to ban a member.
+ * Validates input, checks authentication, and updates member status to banned via service.
+ */
 export async function banMemberAction(
   memberId: string,
   reason: string,
@@ -236,6 +262,10 @@ export async function banMemberAction(
   }
 }
 
+/**
+ * Server action to reinstate a suspended or banned member back to active status.
+ * Validates input parameters, checks authentication, and reinstates member via service.
+ */
 export async function reinstateMemberAction(
   memberId: string,
   reason: string,
@@ -267,5 +297,71 @@ export async function reinstateMemberAction(
   } catch (error) {
     console.error("Failed to reinstate member:", error)
     return { error: "Failed to reinstate member" }
+  }
+}
+
+/**
+ * Server action to verify a member's education record.
+ * Validates session authentication, updates education verification status, and revalidates relevant member paths.
+ *
+ * @param educationId - Unique identifier of the education record to verify.
+ * @param memberId - Optional member ID or path to revalidate (e.g., "mem_123" or "/members/mem_123").
+ */
+export async function verifyMemberEducationAction(
+  educationId: string,
+  memberId?: string
+) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return { error: "Unauthorized" }
+  }
+
+  try {
+    await verifyMemberEducationService(educationId, session.user.id)
+
+    if (memberId) {
+      revalidatePath(`/members/${memberId}/career`)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("Failed to verify member education:", error)
+    return { error: "Failed to verify member education" }
+  }
+}
+
+/**
+ * Server action to verify a member's profession record.
+ * Validates session authentication, updates profession verification status, and revalidates relevant member paths.
+ *
+ * @param professionId - Unique identifier of the profession record to verify.
+ * @param memberId - Optional member ID or path to revalidate (e.g., "mem_123" or "/members/mem_123").
+ */
+export async function verifyMemberProfessionAction(
+  professionId: string,
+  memberId?: string
+) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return { error: "Unauthorized" }
+  }
+
+  try {
+    await verifyMemberProfessionService(professionId, session.user.id)
+
+    if (memberId) {
+      revalidatePath(`/members/${memberId}/career`)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("Failed to verify member profession:", error)
+    return { error: "Failed to verify member profession" }
   }
 }

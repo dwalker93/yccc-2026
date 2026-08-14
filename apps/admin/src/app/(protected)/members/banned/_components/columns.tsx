@@ -1,12 +1,12 @@
 "use client"
 
-import { type Member } from "@/services/members-service"
+import { type Member } from "@/services/member-service"
+import { formatMemberId } from "@/utils/member"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import { Checkbox } from "@workspace/ui/components/checkbox"
 
-import { DataTableColumnHeader } from "@/components/data-tables/data-table-column-header"
-import { formatMemberId } from "@/utils/member"
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 
 export const columns: ColumnDef<Member["banned"]>[] = [
   {
@@ -39,9 +39,7 @@ export const columns: ColumnDef<Member["banned"]>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">
-        {formatMemberId(row.getValue("id"))}
-      </div>
+      <div className="w-[80px]">{formatMemberId(row.getValue("id"))}</div>
     ),
     enableSorting: false,
     enableHiding: false,

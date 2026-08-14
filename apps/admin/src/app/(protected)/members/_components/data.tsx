@@ -38,7 +38,7 @@ export const getInvoiceStatusClass = (invoiceStatus: string) => {
       return "bg-emerald-200 text-emerald-700 border border-emerald-400 dark:bg-green-700/20 dark:text-green-400 dark:border-green-700"
     case "void":
       return "bg-red-200 text-red-700 border border-red-400 dark:bg-red-700/20 dark:text-red-400 dark:border-red-700"
-    case "uncollectable":
+    case "uncollectible":
       return "bg-slate-200 text-slate-700 border border-slate-400 dark:bg-slate-700/20 dark:text-slate-400 dark:border-slate-700"
   }
 }

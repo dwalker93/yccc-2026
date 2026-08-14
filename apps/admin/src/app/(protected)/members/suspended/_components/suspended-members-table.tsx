@@ -3,9 +3,9 @@
 import { ShieldOff } from "lucide-react"
 
 import { useMembers } from "@/hooks/members/use-members"
-import { DataTable } from "@/components/data-tables/data-table"
-import { DataTableEmptyState } from "@/components/data-tables/data-table-empty-state"
-import { usePendingMemberFilterSearchParams } from "@/components/data-tables/data-table-state-params-parser"
+import { DataTable } from "@/components/data-table/data-table"
+import { DataTableEmptyState } from "@/components/data-table/data-table-empty-state"
+import { usePendingMemberFilterSearchParams } from "@/components/data-table/data-table-state-params-parser"
 
 import { columnMappings } from "./column-name-mappings"
 import { columns } from "./columns"

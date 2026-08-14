@@ -1,7 +1,7 @@
 export const QUALIFICATION_LEVELS = [
   { value: "secondary", label: "Secondary / High School" },
   { value: "vocational", label: "Vocational Training" },
-  { value: "diploma", label: "Diploma / Associate Degree" },
+  { value: "diploma", label: "Diploma" },
   { value: "bachelors", label: "Bachelor's Degree" },
   { value: "postgrad_diploma", label: "Postgraduate Diploma" },
   { value: "masters", label: "Master's Degree" },

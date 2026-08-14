@@ -70,10 +70,10 @@ export const contactInfoSchema = z.object({
 
 const MONTH_ENUM = MONTHS.map((m) => m.value)
 const EDUCATION_LEVEL_ENUM = QUALIFICATION_LEVELS.map((l) => l.value)
-const HIGHER_EDUCATION_LEVEL_ENUM = EDUCATION_LEVEL_ENUM.filter(
+export const HIGHER_EDUCATION_LEVEL_ENUM = EDUCATION_LEVEL_ENUM.filter(
   (level) => level !== "secondary"
 )
-const FIELD_OF_STUDY_ENUM = FIELDS_OF_STUDY.map((f) => f.value)
+export const FIELD_OF_STUDY_ENUM = FIELDS_OF_STUDY.map((f) => f.value)
 
 export const secondaryEducationSchema = z.object({
   educationLevel: z.enum(["secondary"], {
@@ -239,3 +239,7 @@ export type ProfessionalQualificationInfo = z.infer<
 export type MemberInputData = z.input<typeof memberInputSchema>
 
 export type EducationFormData = z.input<typeof educationFormSchema>
+
+export type HigherEducationLevel = (typeof HIGHER_EDUCATION_LEVEL_ENUM)[number]
+export type FieldOfStudy = (typeof FIELD_OF_STUDY_ENUM)[number]
+

@@ -36,7 +36,10 @@ export function MembershipStatusBadge({
   className,
   ...props
 }: MembershipStatusBadgeProps) {
-  const { icon: Icon, label } = statuses.find((s) => s.value === status)!
+  const statusConfig = statuses.find((s) => s.value === status)
+  const Icon = statusConfig?.icon
+  const label = statusConfig?.label ?? status
+
   return (
     <Badge
       className={cn(memberShipStatusVariants({ status }), className)}
@@ -126,9 +129,42 @@ export function SubscriptionStatusBadge({
     >
       <span
         data-icon="inline-start"
-        className="inline-block size-[5px] rounded-full bg-current"
+        className="inline-block size-1.25 rounded-full bg-current"
       />
       {status}
+    </Badge>
+  )
+}
+
+export function PendingBadge() {
+  return (
+    <Badge
+      className="rounded-sm bg-yellow-200 text-yellow-700 dark:bg-yellow-700/20
+        dark:text-yellow-400"
+    >
+      ⏳ Pending
+    </Badge>
+  )
+}
+
+export function YesBadge() {
+  return (
+    <Badge
+      className="rounded-sm bg-emerald-200 text-emerald-700 dark:bg-green-700/20
+        dark:text-green-400"
+    >
+      ✓ Yes
+    </Badge>
+  )
+}
+
+export function NoBadge() {
+  return (
+    <Badge
+      className="rounded-sm bg-red-200 text-red-700 dark:bg-red-700/20
+        dark:text-red-400"
+    >
+      ✗ No
     </Badge>
   )
 }

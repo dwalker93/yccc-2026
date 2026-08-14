@@ -1,6 +1,5 @@
+import { PlanOption } from "@/services/plan-service"
 import { useQuery } from "@tanstack/react-query"
-
-import { PlanOption } from "@/services/plans-service"
 
 import { planKeys } from "./keys"
 
