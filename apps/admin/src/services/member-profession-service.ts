@@ -1,8 +1,14 @@
 import { count, desc, eq } from "drizzle-orm"
 
-import { memberProfession } from "@workspace/shared/schemas"
+import {
+  actorType,
+  EmploymentType,
+  memberProfession,
+} from "@workspace/shared/schemas"
+import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
 
 import { appdb } from "@/lib/db"
+import { ProfessionNotFoundError, ServiceError } from "@/services/errors"
 
 /** Projection mapping fields for `getMemberProfessionService`. */
 export const getMemberProfessionProjections = {
@@ -34,24 +40,30 @@ export async function getMemberProfessionService({
   pageIndex: number
   pageSize: number
 }) {
-  const [records, countResult] = await Promise.all([
-    appdb
-      .select(getMemberProfessionProjections)
-      .from(memberProfession)
-      .where(eq(memberProfession.memberId, memberId))
-      .orderBy(desc(memberProfession.startYear))
-      .limit(pageSize)
-      .offset((pageIndex - 1) * pageSize),
+  try {
+    const [records, countResult] = await Promise.all([
+      appdb
+        .select(getMemberProfessionProjections)
+        .from(memberProfession)
+        .where(eq(memberProfession.memberId, memberId))
+        .orderBy(desc(memberProfession.startYear), desc(memberProfession.id))
+        .limit(pageSize)
+        .offset((pageIndex - 1) * pageSize),
 
-    appdb
-      .select({ total: count() })
-      .from(memberProfession)
-      .where(eq(memberProfession.memberId, memberId)),
-  ])
+      appdb
+        .select({ total: count() })
+        .from(memberProfession)
+        .where(eq(memberProfession.memberId, memberId)),
+    ])
 
-  return {
-    records,
-    totalCount: countResult[0]?.total ?? 0,
+    return {
+      records,
+      totalCount: countResult[0]?.total ?? 0,
+    }
+  } catch (error) {
+    console.error("getMemberProfessionService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member profession records")
   }
 }
 
@@ -65,7 +77,7 @@ export type MemberProfession = Awaited<
  *
  * @param professionId - Unique identifier of the profession record to verify.
  * @param actionedBy - ID or identifier of the user/admin performing the verification.
- * @throws {Error} If no profession record is found with the provided ID.
+ * @throws {ProfessionNotFoundError} If no profession record is found with the provided ID.
  */
 export async function verifyMemberProfessionService(
   professionId: string,
@@ -84,10 +96,80 @@ export async function verifyMemberProfessionService(
       .returning({ id: memberProfession.id })
 
     if (!updated) {
-      throw new Error(`Member profession record not found: ${professionId}`)
+      throw new ProfessionNotFoundError(professionId)
     }
   } catch (error) {
     console.error("verifyMemberProfessionService failed", error)
-    throw new Error("Failed to verify member profession")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to verify member profession")
+  }
+}
+
+/**
+ * Adds a new professional background record for a member.
+ *
+ * @param params - Object containing member and profession details.
+ * @returns Created profession record.
+ * @throws {ServiceError} If no profession record is created.
+ */
+export async function addMemberProfessionService({
+  memberId,
+  professionData,
+  createdBy,
+}: {
+  memberId: string
+  professionData: {
+    employer: string
+    jobTitle: string
+    location: string
+    employmentType: string
+    startYear: number
+    startMonth: number
+    endYear: number | null
+    endMonth: number | null
+    isCurrent: boolean
+  }
+  createdBy: string
+}) {
+  const {
+    employer,
+    jobTitle,
+    location,
+    employmentType,
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+    isCurrent,
+  } = professionData
+  try {
+    const [created] = await appdb
+      .insert(memberProfession)
+      .values({
+        id: generateId(IdPrefix.PROFESSION),
+        memberId,
+        employer,
+        jobTitle,
+        location,
+        employmentType: employmentType as EmploymentType,
+        startYear,
+        startMonth,
+        endYear,
+        endMonth,
+        isCurrent,
+        createdBy,
+        createdByType: actorType.enumValues[1],
+      })
+      .returning(getMemberProfessionProjections)
+
+    if (!created) {
+      throw new ServiceError("Failed to create member profession record")
+    }
+
+    return created
+  } catch (error) {
+    console.error("addMemberProfessionService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to add member profession record")
   }
 }

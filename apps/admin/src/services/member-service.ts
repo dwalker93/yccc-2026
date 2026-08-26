@@ -1,4 +1,13 @@
-import { unstable_cache } from "next/cache"
+import {
+  BulkActionLimitExceededError,
+  InvalidStatusTransitionError,
+  InvoiceNotFoundError,
+  MemberNotFoundError,
+  MemberPlanNotAssignedError,
+  NoMembersSelectedError,
+  PlanNotFoundError,
+  ServiceError,
+} from "@/services/errors"
 import { and, count, desc, eq, ilike, inArray, sql, SQL } from "drizzle-orm"
 
 import {
@@ -13,15 +22,17 @@ import {
   refunds,
   subscriptions,
 } from "@workspace/shared/schemas"
+import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
 import {
-  generateId,
-  generateMshId,
-  IdPrefix,
-} from "@workspace/shared/utils/generate-id"
+  MemberPasswordData,
+  MemberPersonalInformationUpdateData,
+} from "@workspace/shared/zod-schemas/member-input-schema"
 
 import { type Status } from "@/config/data"
 import { appdb, DBTransaction } from "@/lib/db"
 import { SearchableColumn } from "@/app/(protected)/members/_components/data"
+
+export { MemberNotFoundError }
 
 /**
  * Escapes special SQL wildcard characters (`%`, `_`, `\`) in search strings for safe `ILIKE` pattern matching.
@@ -214,8 +225,8 @@ export async function getMembersService<
       const latestHistory = appdb
         .select({
           memberId: memberStatusHistory.memberId,
-          maxId: sql<string>`max(${memberStatusHistory.id})`.as(
-            "max_history_id"
+          maxCreatedAt: sql<string>`max(${memberStatusHistory.createdAt})`.as(
+            "max_created_at"
           ),
         })
         .from(memberStatusHistory)
@@ -230,7 +241,10 @@ export async function getMembersService<
         .innerJoin(latestHistory, eq(members.id, latestHistory.memberId))
         .innerJoin(
           memberStatusHistory,
-          eq(memberStatusHistory.id, latestHistory.maxId)
+          and(
+            eq(memberStatusHistory.memberId, latestHistory.memberId),
+            eq(memberStatusHistory.createdAt, latestHistory.maxCreatedAt)
+          )
         )
         .where(whereClause)
         .orderBy(desc(members.createdAt))
@@ -319,7 +333,8 @@ export async function getMembersService<
     }
   } catch (error) {
     console.error("getMembersService failed", error)
-    throw new Error("Failed to get members")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get members")
   }
 }
 
@@ -366,8 +381,9 @@ async function changeMemberStatusService({
         .from(members)
         .where(eq(members.id, memberId))
         .limit(1)
+        .for("update")
 
-      if (!current) throw new Error("Member not found")
+      if (!current) throw new MemberNotFoundError(memberId)
 
       await tx
         .update(members)
@@ -379,7 +395,7 @@ async function changeMemberStatusService({
         .where(eq(members.id, memberId))
 
       await tx.insert(memberStatusHistory).values({
-        id: generateMshId(),
+        id: generateId(IdPrefix.HISTORY),
         memberId,
         fromStatus: current.membershipStatus, // ← always read, never hardcode
         toStatus,
@@ -397,7 +413,8 @@ async function changeMemberStatusService({
     }
   } catch (error) {
     console.error("changeMemberStatusService failed", error)
-    throw new Error("Failed to change member status")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to change member status")
   }
 }
 
@@ -437,15 +454,15 @@ async function approveMemberTx({
       .where(eq(members.id, memberId))
       .limit(1)
 
-    if (!member) throw new Error(`Member not found: ${memberId}`)
+    if (!member) throw new MemberNotFoundError(memberId)
 
     if (!["pending", "rejected"].includes(member.membershipStatus)) {
-      throw new Error(
+      throw new InvalidStatusTransitionError(
         `Cannot approve member with status: ${member.membershipStatus}`
       )
     }
 
-    if (!member.currentPlanId) throw new Error("Member has no plan assigned")
+    if (!member.currentPlanId) throw new MemberPlanNotAssignedError(memberId)
 
     const [plan] = await tx
       .select({ price: plans.price })
@@ -453,7 +470,7 @@ async function approveMemberTx({
       .where(eq(plans.id, member.currentPlanId))
       .limit(1)
 
-    if (!plan) throw new Error(`Plan not found: ${member.currentPlanId}`)
+    if (!plan) throw new PlanNotFoundError(member.currentPlanId)
 
     const now = new Date()
     const isFree = plan.price === 0
@@ -486,8 +503,7 @@ async function approveMemberTx({
         )
         .limit(1)
 
-      if (!existingInvoice)
-        throw new Error(`No open invoice found for member: ${memberId}`)
+      if (!existingInvoice) throw new InvoiceNotFoundError(memberId)
 
       await tx
         .update(invoices)
@@ -527,7 +543,7 @@ async function approveMemberTx({
       // manual-approval-without-a-payment-row isn't a thing in your flow, the throw above
       // is exactly right.
       if (!updatedPayment)
-        throw new Error(
+        throw new ServiceError(
           `No pending payment found for invoice: ${existingInvoice.id}`
         )
     }
@@ -545,7 +561,7 @@ async function approveMemberTx({
 
     // 5. write status history
     await tx.insert(memberStatusHistory).values({
-      id: generateMshId(),
+      id: generateId(IdPrefix.HISTORY),
       memberId,
       fromStatus: member.membershipStatus,
       toStatus: "approved",
@@ -555,7 +571,8 @@ async function approveMemberTx({
     })
   } catch (error) {
     console.error("approveMemberTx failed", error)
-    throw new Error("Failed to approve member")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to approve member")
   }
 }
 
@@ -593,7 +610,8 @@ export async function approveMemberService({
     )
   } catch (error) {
     console.error("approveMemberService failed", error)
-    throw new Error("Failed to approve member")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to approve member")
   }
 }
 
@@ -615,9 +633,8 @@ export async function bulkApproveMemberService({
   note?: string
 }) {
   try {
-    if (memberIds.length === 0) throw new Error("No members selected")
-    if (memberIds.length > 10)
-      throw new Error("Maximum 10 members per bulk approve")
+    if (memberIds.length === 0) throw new NoMembersSelectedError()
+    if (memberIds.length > 10) throw new BulkActionLimitExceededError(10)
 
     await appdb.transaction(async (tx) => {
       for (const memberId of memberIds) {
@@ -626,7 +643,8 @@ export async function bulkApproveMemberService({
     })
   } catch (error) {
     console.error("bulkApproveMemberService failed", error)
-    throw new Error("Failed to bulk approve members")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to bulk approve members")
   }
 }
 
@@ -656,7 +674,8 @@ export async function rejectMemberService({
     })
   } catch (error) {
     console.error("rejectMemberService failed", error)
-    throw new Error("Failed to reject member")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to reject member")
   }
 }
 
@@ -689,7 +708,8 @@ export async function suspendMemberService({
     })
   } catch (error) {
     console.error("suspendMemberService failed", error)
-    throw new Error("Failed to suspend member")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to suspend member")
   }
 }
 
@@ -719,7 +739,8 @@ export async function banMemberService({
     })
   } catch (error) {
     console.error("banMemberService failed", error)
-    throw new Error("Failed to ban member")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to ban member")
   }
 }
 
@@ -753,7 +774,8 @@ export async function reinstateMemberService({
     })
   } catch (error) {
     console.error("reinstateMemberService failed", error)
-    throw new Error("Failed to reinstate member")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to reinstate member")
   }
 }
 
@@ -791,14 +813,6 @@ const getMemberMetadataProjections = {
   )`,
 }
 
-/** Error thrown when a requested member record is not found in the database. */
-export class MemberNotFoundError extends Error {
-  constructor(id: string) {
-    super(`Member not found: ${id}`)
-    this.name = "MemberNotFoundError"
-  }
-}
-
 /**
  * Retrieves cached member metadata including status, unverified education/profession counts, and open invoices.
  *
@@ -810,23 +824,18 @@ export class MemberNotFoundError extends Error {
  */
 export async function getMemberMetadata({ id }: GetMemberMetadataParams) {
   try {
-    return unstable_cache(
-      async () => {
-        const [result] = await appdb
-          .select(getMemberMetadataProjections)
-          .from(members)
-          .where(eq(members.id, id))
-          .limit(1)
+    const [result] = await appdb
+      .select(getMemberMetadataProjections)
+      .from(members)
+      .where(eq(members.id, id))
+      .limit(1)
 
-        if (!result) throw new MemberNotFoundError(id)
-        return result
-      },
-      ["member-metadata", id],
-      { tags: [`member-${id}-metadata`] }
-    )()
+    if (!result) throw new MemberNotFoundError(id)
+    return result
   } catch (error) {
     console.error("getMemberMetadata failed", error)
-    throw new Error("Failed to get member metadata")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member metadata")
   }
 }
 
@@ -858,7 +867,7 @@ const getMemberProfileProjections = {
  * @returns Member profile details object.
  * @throws {MemberNotFoundError} If the member does not exist.
  */
-async function getMemberProfile(id: string) {
+export async function getMemberProfile(id: string) {
   try {
     const [result] = await appdb
       .select(getMemberProfileProjections)
@@ -870,7 +879,8 @@ async function getMemberProfile(id: string) {
     return result
   } catch (error) {
     console.error("getMemberProfile failed", error)
-    throw new Error("Failed to get member profile")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member profile")
   }
 }
 
@@ -900,12 +910,13 @@ async function getActiveSubscription(id: string) {
       .limit(1)
 
     if (!result?.plan)
-      throw new Error(`Subscription plan not found for member: ${id}`)
+      throw new PlanNotFoundError(id)
 
     return result
   } catch (error) {
     console.error("getActiveSubscription failed", error)
-    throw new Error("Failed to get active subscription")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get active subscription")
   }
 }
 
@@ -961,7 +972,8 @@ async function getMemberFinancials(id: string) {
     }
   } catch (error) {
     console.error("getMemberFinancials failed", error)
-    throw new Error("Failed to get member financials")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member financials")
   }
 }
 
@@ -996,7 +1008,8 @@ async function getCurrentRole(id: string) {
     return result
   } catch (error) {
     console.error("getCurrentRole failed", error)
-    throw new Error("Failed to get current role")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get current role")
   }
 }
 
@@ -1017,7 +1030,8 @@ async function getMemberRemarks(id: string) {
     return result
   } catch (error) {
     console.error("getMemberRemarks failed", error)
-    throw new Error("Failed to get member remarks")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member remarks")
   }
 }
 
@@ -1042,11 +1056,9 @@ export async function getMemberOverviewService(id: string) {
 
     return { profile, subscription, financials, role, remarks }
   } catch (error) {
-    if (error instanceof MemberNotFoundError) {
-      throw error
-    }
     console.error("getMemberOverviewService failed", error)
-    throw new Error("Failed to get member overview")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member overview")
   }
 }
 
@@ -1067,8 +1079,189 @@ export type MemberOverview = Awaited<
   ReturnType<typeof getMemberOverviewService>
 >
 
-// ---------------------------------------------------------------------------
-// Re-exported member sub-domain services (Education & Profession)
-// ---------------------------------------------------------------------------
-export * from "./member-education-service"
-export * from "./member-profession-service"
+/**
+ * Updates a member's personal information.
+ *
+ * @param id - Unique member identifier.
+ * @param data - Member personal information.
+ * @throws {MemberNotFoundError} If the member does not exist.
+ * @throws {Error} If updating member personal information fails for other database/system errors.
+ */
+export async function updateMemberPersonalInformationService(
+  id: string,
+  data: MemberPersonalInformationUpdateData
+) {
+  const { firstName, lastName, ...restData } = data
+  const name = [firstName, lastName].filter(Boolean).join(" ").trim()
+
+  try {
+    const [result] = await appdb
+      .update(members)
+      .set({ ...restData, name })
+      .where(eq(members.id, id))
+      .returning()
+
+    if (!result) throw new MemberNotFoundError(id)
+    return result
+  } catch (error) {
+    console.error("updateMemberPersonalInformationService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to update member personal information")
+  }
+}
+
+/**
+ * Deletes a member.
+ *
+ * @param id - Unique member identifier.
+ * @throws {MemberNotFoundError} If the member does not exist.
+ * @throws {Error} If deleting member fails for other database/system errors.
+ */
+export async function deleteMemberService(id: string) {
+  try {
+    return await appdb.transaction(async (tx) => {
+      const [result] = await tx
+        .delete(members)
+        .where(eq(members.id, id))
+        .returning()
+
+      if (!result) throw new MemberNotFoundError(id)
+
+      const clerkUserResponse = await fetch(
+        `${process.env.CLERK_BACKEND_API_URL}/users?email_address=${encodeURIComponent(result.email)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+          },
+        }
+      )
+
+      if (!clerkUserResponse.ok) {
+        throw new ServiceError("Failed to look up user in Clerk")
+      }
+
+      const [clerkUser] = await clerkUserResponse.json()
+
+      if (!clerkUser) throw new MemberNotFoundError(id)
+
+      const clerkUserDeleteResponse = await fetch(
+        `${process.env.CLERK_BACKEND_API_URL}/users/${clerkUser.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+          },
+        }
+      )
+
+      if (!clerkUserDeleteResponse.ok) {
+        const errorBody = await clerkUserDeleteResponse.json().catch(() => null)
+        const detail =
+          errorBody?.errors?.[0]?.long_message ||
+          errorBody?.errors?.[0]?.message
+        throw new ServiceError(detail || "Failed to delete member in Clerk")
+      }
+
+      return result.id
+    })
+  } catch (error) {
+    console.error("deleteMemberService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to delete member")
+  }
+}
+
+/**
+ * soft delete a member.
+ *
+ * @param id - Unique member identifier.
+ * @throws {MemberNotFoundError} If the member does not exist.
+ * @throws {Error} If deleting member fails for other database/system errors.
+ */
+// export async function softDeleteMemberService(id: string) {
+//   try {
+//     const [result] = await appdb
+//       .update(members)
+//       .set({ isDeleted: true })
+//       .where(eq(members.id, id))
+//       .returning()
+
+//     if (!result) throw new MemberNotFoundError(id)
+//     return result
+//   } catch (error) {
+//     console.error("softDeleteMemberService failed", error)
+//     throw new Error("Failed to delete member")
+//   }
+// }
+
+/**
+ * Updates a member's password.
+ *
+ * @param memberId - Unique member identifier.
+ * @param data - Member password data.
+ * @throws {MemberNotFoundError} If the member does not exist.
+ * @throws {Error} If updating member password fails for other database/system errors.
+ */
+export async function updateMemberPasswordService(
+  memberId: string,
+  data: MemberPasswordData
+) {
+  try {
+    const [result] = await appdb
+      .select({ email: members.email })
+      .from(members)
+      .where(eq(members.id, memberId))
+      .limit(1)
+
+    if (!result) throw new MemberNotFoundError(memberId)
+
+    const clerkUserResponse = await fetch(
+      `${process.env.CLERK_BACKEND_API_URL}/users?email_address=${encodeURIComponent(result.email)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+        },
+      }
+    )
+
+    if (!clerkUserResponse.ok) {
+      throw new ServiceError("Failed to look up user in Clerk")
+    }
+
+    const [clerkUser] = await clerkUserResponse.json()
+
+    if (!clerkUser) throw new MemberNotFoundError(memberId)
+
+    const clerkUserPasswordUpdateResponse = await fetch(
+      `${process.env.CLERK_BACKEND_API_URL}/users/${clerkUser.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+        },
+        body: JSON.stringify({
+          password: data.newPassword,
+          sign_out_of_other_sessions: data.signOutOfAllSessions,
+          skip_password_checks: data.skipPasswordChecks,
+        }),
+      }
+    )
+
+    if (!clerkUserPasswordUpdateResponse.ok) {
+      const errorBody = await clerkUserPasswordUpdateResponse
+        .json()
+        .catch(() => null)
+      const detail =
+        errorBody?.errors?.[0]?.long_message || errorBody?.errors?.[0]?.message
+      throw new ServiceError(detail || "Failed to update password in Clerk")
+    }
+
+    return true
+  } catch (error) {
+    console.error("updateMemberPasswordService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to update member password")
+  }
+}

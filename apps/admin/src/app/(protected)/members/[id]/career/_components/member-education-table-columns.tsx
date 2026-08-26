@@ -1,27 +1,27 @@
 import { verifyMemberEducationAction } from "@/actions/members-actions"
-import { MemberEducation } from "@/services/member-service"
+import { MemberEducation } from "@/services/member-education-service"
 import { formatPeriod } from "@/utils/utils"
+import { useQueryClient } from "@tanstack/react-query"
 
 import {
   FIELDS_OF_STUDY,
   QUALIFICATION_LEVELS,
 } from "@workspace/shared/constants/educations"
-import {
-  FieldOfStudy,
-  HigherEducationLevel,
-} from "@workspace/shared/zod-schemas/member-input-schema"
 import { Button } from "@workspace/ui/components/button"
 
+import { useUpdateMemberEducationMutation } from "@/hooks/members/update-member-education-mutaion"
 import { ActionDialog } from "@/components/action-dialog"
 import { PendingBadge } from "@/components/badge"
-import {
-  CreateEducationDialog,
-  defaultFormValues,
-} from "@/components/create-education-dialog"
+import { CreateEducationDialog } from "@/components/create-education-dialog"
 import { createColumns } from "@/components/simple-table/simple-table"
 
-export const getEducationColumns = (memberId: string) =>
-  createColumns<MemberEducation>([
+export const getEducationColumns = (memberId: string) => {
+  const {
+    mutateAsync: updateMemberEducation,
+    isPending: isUpdatingMemberEducation,
+  } = useUpdateMemberEducationMutation({ memberId })
+
+  return createColumns<MemberEducation>([
     { key: "institution", label: "Institution" },
     {
       key: "qualification",
@@ -63,22 +63,6 @@ export const getEducationColumns = (memberId: string) =>
       key: "actions",
       label: "Actions",
       render: (row) => {
-        let initialValues = { ...defaultFormValues }
-        if (row.qualification === "secondary") {
-          initialValues.educationLevel = "secondary"
-          initialValues.schoolName = row.institution
-          initialValues.schoolYear = row.endYear?.toString() ?? ""
-        } else {
-          initialValues.educationLevel =
-            row.qualification as HigherEducationLevel
-          initialValues.institutionName = row.institution
-          initialValues.fieldOfStudy = row.fieldOfStudy as FieldOfStudy
-          initialValues.fromYear = row.startYear?.toString() ?? ""
-          initialValues.fromMonth = row.startMonth?.toString() ?? ""
-          initialValues.toYear = row.endYear?.toString() ?? ""
-          initialValues.toMonth = row.endMonth?.toString() ?? ""
-        }
-
         return (
           <div className="flex gap-2">
             {!row.isVerified && (
@@ -107,13 +91,26 @@ export const getEducationColumns = (memberId: string) =>
                   Edit
                 </Button>
               }
-              initialValues={initialValues}
-              onSave={(data) => {
-                console.log(data)
+              initialValues={row as MemberEducation}
+              onSubmit={async (data) => {
+                const payload =
+                  data.qualification === "secondary"
+                    ? {
+                        qualification: data.qualification,
+                        institution: data.schoolName,
+                        endYear: data.schoolYear,
+                      }
+                    : data
+                await updateMemberEducation({
+                  educationId: row.id,
+                  educationData: payload,
+                })
               }}
+              isSaving={isUpdatingMemberEducation}
             />
           </div>
         )
       },
     },
   ])
+}

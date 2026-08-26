@@ -4,6 +4,7 @@ import { useStore } from "@tanstack/react-form"
 import { MONTHS, YEARS } from "@workspace/shared/constants/dates"
 import { EMPLOYMENT_TYPES } from "@workspace/shared/constants/educations"
 import {
+  ExperienceFormData,
   ExperienceInfo,
   experienceSchema,
 } from "@workspace/shared/zod-schemas/member-input-schema"
@@ -30,30 +31,26 @@ type CreateExperienceDialogProps = {
   initialValues?: ExperienceInfo | null
   onSave: (data: ExperienceInfo) => void
   dialogTriggerButton: React.ReactNode
+  isSaving?: boolean
 }
 
-export const defaultFormValues: Omit<
-  ExperienceInfo,
-  "fromMonth" | "employmentType"
-> & {
-  fromMonth: string
-  employmentType: string
-} = {
-  title: "",
-  organizationName: "",
+export const defaultFormValues: ExperienceFormData = {
+  jobTitle: "",
+  employer: "",
   location: "",
   employmentType: "",
-  currentlyWorking: true,
-  fromYear: "",
-  fromMonth: "",
-  toYear: "",
-  toMonth: "",
+  isCurrent: true,
+  startYear: null,
+  startMonth: null,
+  endYear: null,
+  endMonth: null,
 }
 
 export function CreateExperienceDialog({
   initialValues,
   onSave,
   dialogTriggerButton,
+  isSaving,
 }: CreateExperienceDialogProps) {
   const [open, setOpen] = useState(false)
 
@@ -76,7 +73,7 @@ export function CreateExperienceDialog({
   const isEditing = initialValues != null
   const isCurrentlyWorking = useStore(
     form.store,
-    (state) => state.values.currentlyWorking
+    (state) => state.values.isCurrent
   )
 
   return (
@@ -112,17 +109,22 @@ export function CreateExperienceDialog({
             className="-mx-4 max-h-[50vh] overflow-y-auto px-4 md:max-h-[70vh]"
           >
             <div className="grid gap-4 py-4">
-              <form.AppField name="title">
+              <form.AppField name="jobTitle">
                 {(field) => (
-                  <field.input label="Title" placeholder="Ex. Pastry Chef" />
+                  <field.input
+                    label="Job Title"
+                    placeholder="Ex. Pastry Chef"
+                    disabled={isSaving}
+                  />
                 )}
               </form.AppField>
 
-              <form.AppField name="organizationName">
+              <form.AppField name="employer">
                 {(field) => (
                   <field.input
                     label="Organization"
                     placeholder="Ex. Hilton Hotel, Colombo"
+                    disabled={isSaving}
                   />
                 )}
               </form.AppField>
@@ -132,6 +134,7 @@ export function CreateExperienceDialog({
                   <field.input
                     label="Location"
                     placeholder="Ex. Colombo, Sri Lanka"
+                    disabled={isSaving}
                   />
                 )}
               </form.AppField>
@@ -141,6 +144,7 @@ export function CreateExperienceDialog({
                   <field.select
                     label="Employment Type"
                     placeholder="Select your employment type…"
+                    disabled={isSaving}
                   >
                     {EMPLOYMENT_TYPES.map((e) => (
                       <SelectItem key={e.value} value={e.value}>
@@ -151,8 +155,13 @@ export function CreateExperienceDialog({
                 )}
               </form.AppField>
 
-              <form.AppField name="currentlyWorking">
-                {(field) => <field.checkbox label="Currently working" />}
+              <form.AppField name="isCurrent">
+                {(field) => (
+                  <field.checkbox
+                    label="Currently working"
+                    disabled={isSaving}
+                  />
+                )}
               </form.AppField>
 
               <FieldSet>
@@ -160,11 +169,15 @@ export function CreateExperienceDialog({
                   Start Date
                 </FieldLegend>
                 <FieldGroup className="grid grid-cols-2 gap-4">
-                  <form.AppField name="fromYear">
+                  <form.AppField name="startYear">
                     {(field) => (
-                      <field.select label="Year" placeholder="Select a year…">
+                      <field.select
+                        label="Year"
+                        placeholder="Select a year…"
+                        disabled={isSaving}
+                      >
                         {YEARS.map((y) => (
-                          <SelectItem key={y.value} value={y.value}>
+                          <SelectItem key={y.value} value={y.value.toString()}>
                             {y.label}
                           </SelectItem>
                         ))}
@@ -172,11 +185,15 @@ export function CreateExperienceDialog({
                     )}
                   </form.AppField>
 
-                  <form.AppField name="fromMonth">
+                  <form.AppField name="startMonth">
                     {(field) => (
-                      <field.select label="Month" placeholder="Select a month…">
+                      <field.select
+                        label="Month"
+                        placeholder="Select a month…"
+                        disabled={isSaving}
+                      >
                         {MONTHS.map((m) => (
-                          <SelectItem key={m.value} value={m.value}>
+                          <SelectItem key={m.value} value={m.value.toString()}>
                             {m.label}
                           </SelectItem>
                         ))}
@@ -193,15 +210,19 @@ export function CreateExperienceDialog({
                   </FieldLegend>
                   <FieldGroup className="grid grid-cols-2 gap-4">
                     <form.AppField
-                      name="toYear"
+                      name="endYear"
                       validators={{
-                        onChangeListenTo: ["fromYear", "fromMonth", "toMonth"],
+                        onChangeListenTo: [
+                          "startYear",
+                          "startMonth",
+                          "endMonth",
+                        ],
                         onChange: ({ fieldApi }) => {
                           const formValues = fieldApi.form.state.values
                           if (
-                            !formValues.fromYear ||
-                            !formValues.fromMonth ||
-                            !formValues.toMonth
+                            !formValues.startYear ||
+                            !formValues.startMonth ||
+                            !formValues.endMonth
                           ) {
                             return undefined
                           }
@@ -224,9 +245,16 @@ export function CreateExperienceDialog({
                       }}
                     >
                       {(field) => (
-                        <field.select label="Year" placeholder="Select a year…">
+                        <field.select
+                          label="Year"
+                          placeholder="Select a year…"
+                          disabled={isSaving}
+                        >
                           {YEARS.map((y) => (
-                            <SelectItem key={y.value} value={y.value}>
+                            <SelectItem
+                              key={y.value}
+                              value={y.value.toString()}
+                            >
                               {y.label}
                             </SelectItem>
                           ))}
@@ -234,14 +262,18 @@ export function CreateExperienceDialog({
                       )}
                     </form.AppField>
 
-                    <form.AppField name="toMonth">
+                    <form.AppField name="endMonth">
                       {(field) => (
                         <field.select
                           label="Month"
                           placeholder="Select a month…"
+                          disabled={isSaving}
                         >
                           {MONTHS.map((m) => (
-                            <SelectItem key={m.value} value={m.value}>
+                            <SelectItem
+                              key={m.value}
+                              value={m.value.toString()}
+                            >
                               {m.label}
                             </SelectItem>
                           ))}
@@ -260,11 +292,20 @@ export function CreateExperienceDialog({
                 type="button"
                 variant="outline"
                 onClick={() => form.reset()}
+                disabled={isSaving}
               >
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit">{isEditing ? "Save Changes" : "Add"}</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isEditing
+                ? isSaving
+                  ? "Saving..."
+                  : "Save Changes"
+                : isSaving
+                  ? "Adding..."
+                  : "Add"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

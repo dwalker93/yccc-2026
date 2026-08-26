@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { ChevronRightIcon } from "lucide-react"
 
 import {
@@ -52,10 +53,10 @@ export function NavGroup({ label, items }: SidebarNavGroup) {
                       {item.subItems?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild isActive={false}>
-                            <a href={subItem.path}>
+                            <Link href={subItem.path}>
                               {subItem.icon}
                               <span>{subItem.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -64,10 +65,10 @@ export function NavGroup({ label, items }: SidebarNavGroup) {
                 </>
               ) : (
                 <SidebarMenuButton asChild isActive={false}>
-                  <a href={item.path}>
+                  <Link href={item.path}>
                     {item.icon}
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               )}
             </SidebarMenuItem>

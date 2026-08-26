@@ -1,22 +1,11 @@
-import { headers } from "next/headers"
+import { NextResponse } from "next/server"
 import { getActivePlansService } from "@/services/plan-service"
 
-import { auth } from "@/lib/auth/auth"
+import { withAuth } from "@/lib/auth/with-auth"
 
-export async function GET() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+export const GET = withAuth(async () => {
+  const plans = await getActivePlansService()
+  return NextResponse.json(plans)
+})
 
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 })
-  }
 
-  try {
-    const plans = await getActivePlansService()
-    return Response.json(plans)
-  } catch (error) {
-    console.error(error)
-    return Response.json({ error: "Failed to fetch plans" }, { status: 500 })
-  }
-}

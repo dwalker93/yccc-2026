@@ -3,7 +3,7 @@ import * as z from "zod"
 import { calculateAge } from "@workspace/shared/utils/age-calculator"
 import { nicToDob } from "@workspace/shared/utils/nic-to-dob"
 
-import { MONTHS } from "../constants/dates"
+import { CURRENT_YEAR, FROM_YEAR } from "../constants/dates"
 import {
   EMPLOYMENT_TYPES,
   FIELDS_OF_STUDY,
@@ -68,7 +68,6 @@ export const contactInfoSchema = z.object({
 
 // ── Step 3: Education ──────────────────────────────────────────────────────────
 
-const MONTH_ENUM = MONTHS.map((m) => m.value)
 const EDUCATION_LEVEL_ENUM = QUALIFICATION_LEVELS.map((l) => l.value)
 export const HIGHER_EDUCATION_LEVEL_ENUM = EDUCATION_LEVEL_ENUM.filter(
   (level) => level !== "secondary"
@@ -76,112 +75,157 @@ export const HIGHER_EDUCATION_LEVEL_ENUM = EDUCATION_LEVEL_ENUM.filter(
 export const FIELD_OF_STUDY_ENUM = FIELDS_OF_STUDY.map((f) => f.value)
 
 export const secondaryEducationSchema = z.object({
-  educationLevel: z.enum(["secondary"], {
+  qualification: z.enum(["secondary"], {
     message: "Education level is required.",
   }),
   schoolName: z.string().min(1, "School name is required."),
-  schoolYear: z.string().regex(/^\d{4}$/, "School year is required."),
+  schoolYear: z
+    .int({
+      message: "School year is required.",
+    })
+    .gte(FROM_YEAR)
+    .lte(CURRENT_YEAR),
 })
 
-const higherEducationSchema = z
+export const higherEducationSchema = z
   .object({
-    educationLevel: z.enum(HIGHER_EDUCATION_LEVEL_ENUM, {
+    qualification: z.enum(HIGHER_EDUCATION_LEVEL_ENUM, {
       message: "Education level is required.",
     }),
     fieldOfStudy: z.enum(FIELD_OF_STUDY_ENUM, {
       message: "Field of study is required.",
     }),
-    institutionName: z.string().min(1, "Institution name is required."),
-    fromYear: z.string().regex(/^\d{4}$/, "From year is required."),
-    fromMonth: z.enum(MONTH_ENUM, { message: "From month is required." }),
-    toYear: z.string().regex(/^\d{4}$/, "To year is required."),
-    toMonth: z.enum(MONTH_ENUM, { message: "To month is required." }),
+    institution: z.string().min(1, "Institution name is required."),
+    startYear: z
+      .int({
+        message: "Start year is required.",
+      })
+      .gte(FROM_YEAR)
+      .lte(CURRENT_YEAR),
+    startMonth: z
+      .int({
+        message: "Start month is required.",
+      })
+      .gte(1)
+      .lte(12),
+    endYear: z
+      .int({
+        message: "End year is required.",
+      })
+      .gte(FROM_YEAR)
+      .lte(CURRENT_YEAR + 10),
+    endMonth: z
+      .int({
+        message: "End month is required.",
+      })
+      .gte(1)
+      .lte(12),
   })
   .refine(
     (data) => {
-      const { fromYear, fromMonth, toYear, toMonth } = data
-      if (!fromYear || !toYear) return true
-      const from = parseInt(fromYear) * 100 + parseInt(fromMonth ?? "0")
-      const to = parseInt(toYear) * 100 + parseInt(toMonth ?? "12")
-      return from <= to
+      const { startYear, startMonth, endYear, endMonth } = data
+      if (!startYear || !endYear) return true
+      return startYear * 100 + startMonth <= endYear * 100 + endMonth
     },
     {
       message: "Start date must be on or before the end date.",
-      path: ["toYear"],
+      path: ["endYear"],
     }
   )
 
 export const educationSchema = z.discriminatedUnion(
-  "educationLevel",
+  "qualification",
   [secondaryEducationSchema, higherEducationSchema],
   { message: "Education level/Programme is required." }
 )
 
 export const educationFormSchema = z.object({
-  educationLevel: z.enum(EDUCATION_LEVEL_ENUM).or(z.literal("")),
+  qualification: z.enum(EDUCATION_LEVEL_ENUM).or(z.literal("")),
   fieldOfStudy: z.enum(FIELD_OF_STUDY_ENUM).or(z.literal("")),
   schoolName: z.string(),
-  schoolYear: z.string(),
-  institutionName: z.string(),
-  fromYear: z.string(),
-  fromMonth: z.string(),
-  toYear: z.string(),
-  toMonth: z.string(),
+  schoolYear: z.number().nullable(),
+  institution: z.string(),
+  startYear: z.number().nullable(),
+  startMonth: z.number().nullable(),
+  endYear: z.number().nullable(),
+  endMonth: z.number().nullable(),
+})
+
+export const educationUpdateSchema = z.object({
+  qualification: z.enum(EDUCATION_LEVEL_ENUM).or(z.literal("")).optional(),
+  fieldOfStudy: z.enum(FIELD_OF_STUDY_ENUM).or(z.literal("")).optional(),
+  institution: z.string().optional(),
+  startYear: z.number().optional(),
+  startMonth: z.number().optional(),
+  endYear: z.number().optional(),
+  endMonth: z.number().optional(),
 })
 
 const EMPLOYMENT_TYPE = EMPLOYMENT_TYPES.map((e) => e.value)
 
 export const experienceSchema = z
   .object({
-    title: z.string().min(1, "Title is required."),
-    organizationName: z.string().min(1, "Organization name is required."),
+    jobTitle: z.string().min(1, "Title is required."),
+    employer: z.string().min(1, "Organization name is required."),
     location: z.string(),
     employmentType: z.enum(EMPLOYMENT_TYPE, {
       message: "Employment type is required.",
     }),
-    currentlyWorking: z.boolean(),
-    fromYear: z.string().regex(/^\d{4}$/, "From year is required."),
-    fromMonth: z.enum(MONTH_ENUM, { message: "From month is required." }),
-    toYear: z.string(),
-    toMonth: z.string(),
+    isCurrent: z.boolean(),
+    startYear: z
+      .int({ message: "Start year is required" })
+      .gte(FROM_YEAR)
+      .lte(CURRENT_YEAR),
+    startMonth: z.int({ message: "Start month is required" }).gte(1).lte(12),
+    endYear: z.int().gte(FROM_YEAR).lte(CURRENT_YEAR).nullable(),
+    endMonth: z.int().gte(1).lte(12).nullable(),
   })
   .superRefine((data, ctx) => {
-    if (!data.currentlyWorking) {
-      if (!data.toYear || !/^\d{4}$/.test(data.toYear)) {
+    if (!data.isCurrent) {
+      if (!data.endYear) {
         ctx.addIssue({
           code: "custom",
-          message: "To year is required.",
-          path: ["toYear"],
+          message: "End year is required.",
+          path: ["endYear"],
         })
       }
-      if (!data.toMonth || !/^\d{2}$/.test(data.toMonth)) {
+      if (!data.endMonth) {
         ctx.addIssue({
           code: "custom",
-          message: "To month is required.",
-          path: ["toMonth"],
+          message: "End month is required.",
+          path: ["endMonth"],
         })
       }
     }
   })
   .refine(
     (data) => {
-      if (!data.currentlyWorking && data.fromYear && data.toYear) {
-        const from =
-          parseInt(data.fromYear) * 100 + parseInt(data.fromMonth ?? "0")
-        const to = parseInt(data.toYear) * 100 + parseInt(data.toMonth ?? "12")
+      if (!data.isCurrent && data.startYear && data.endYear) {
+        const from = data.startYear * 100 + (data.startMonth ?? 0)
+        const to = data.endYear * 100 + (data.endMonth ?? 0)
         return from <= to
       } else return true
     },
     {
       message: "Start date must be on or before the end date.",
-      path: ["toYear"],
+      path: ["endYear"],
     }
   )
 
+export const experienceFormSchema = z.object({
+  jobTitle: z.string(),
+  employer: z.string(),
+  location: z.string(),
+  employmentType: z.enum(EMPLOYMENT_TYPE).or(z.literal("")),
+  isCurrent: z.boolean(),
+  startYear: z.number().nullable(),
+  startMonth: z.number().nullable(),
+  endYear: z.number().nullable(),
+  endMonth: z.number().nullable(),
+})
+
 export const professionalQualificationSchema = z.object({
-  educations: z
-    .array(educationSchema)
-    .min(1, "At least 1 education details required."),
+  educations: z.array(educationSchema),
   experience: z.array(experienceSchema),
   // legalDocuments: z
   //   .array(z.string())
@@ -189,45 +233,68 @@ export const professionalQualificationSchema = z.object({
   //   .max(3, "At most 3 legal documents are allowed."),
 })
 
-// ── Combined Schema ──────────────────────────────────────────────────────────
-
-export const memberInputSchema = personalInfoSchema
-  .merge(contactInfoSchema)
-  .merge(professionalQualificationSchema)
-  .superRefine((data, ctx) => {
-    if (data.dateOfBirth) {
-      const result = nicToDob(data.nic)
+/**
+ * Utility function to apply NIC verification and gender transformation
+ * to schemas containing `nic` and `dateOfBirth`.
+ */
+export function withNicValidation<
+  T extends z.ZodType<{
+    nic: string
+    dateOfBirth?: string
+    [key: string]: any
+  }>,
+>(schema: T) {
+  return schema
+    .superRefine((data, ctx) => {
+      if (data.dateOfBirth) {
+        const result = nicToDob(data.nic)
+        if (!result) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Please enter valid NIC.",
+            path: ["nic"],
+          })
+          return
+        }
+        if (result.dob !== data.dateOfBirth) {
+          ctx.addIssue({
+            code: "custom",
+            message:
+              "Date of birth does not match with NIC. Please recheck NIC and Date of Birth.",
+            path: ["dateOfBirth"],
+          })
+        }
+      }
+    })
+    .transform((val, ctx) => {
+      const result = nicToDob(val.nic)
       if (!result) {
         ctx.addIssue({
           code: "custom",
           message: "Please enter valid NIC.",
           path: ["nic"],
         })
-        return
+        return z.NEVER
       }
+      return { ...val, gender: result.gender }
+    })
+}
 
-      if (result.dob !== data.dateOfBirth) {
-        ctx.addIssue({
-          code: "custom",
-          message:
-            "Date of birth does not match with NIC. Please recheck NIC and Date of Birth.",
-          path: ["dateOfBirth"],
-        })
-      }
-    }
-  })
-  .transform((val, ctx) => {
-    const result = nicToDob(val.nic)
-    if (!result) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Please enter valid NIC.",
-        path: ["nic"],
-      })
-      return z.NEVER
-    }
-    return { ...val, gender: result.gender }
-  })
+// ── Combined Schema ──────────────────────────────────────────────────────────
+
+export const memberInputSchema = withNicValidation(
+  personalInfoSchema
+    .extend(contactInfoSchema.shape)
+    .extend(professionalQualificationSchema.shape)
+)
+
+export const memberPersonalInformationUpdateSchema = withNicValidation(
+  personalInfoSchema.extend(contactInfoSchema.omit({ email: true }).shape)
+)
+
+export type MemberPersonalInformationUpdateData = z.input<
+  typeof memberPersonalInformationUpdateSchema
+>
 
 export type PersonalInfo = z.infer<typeof personalInfoSchema>
 export type ContactInfo = z.infer<typeof contactInfoSchema>
@@ -239,7 +306,49 @@ export type ProfessionalQualificationInfo = z.infer<
 export type MemberInputData = z.input<typeof memberInputSchema>
 
 export type EducationFormData = z.input<typeof educationFormSchema>
+export type ExperienceFormData = z.input<typeof experienceFormSchema>
 
 export type HigherEducationLevel = (typeof HIGHER_EDUCATION_LEVEL_ENUM)[number]
 export type FieldOfStudy = (typeof FIELD_OF_STUDY_ENUM)[number]
 
+export const memberPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters long."),
+    confirmPassword: z.string().min(8, "Please confirm the new password."),
+    skipPasswordChecks: z.boolean(),
+    signOutOfAllSessions: z.boolean(),
+  })
+  .refine(
+    (data) => {
+      if (data.skipPasswordChecks) {
+        return true
+      }
+      return Boolean(
+        data.newPassword.match(/[a-z]/) &&
+        data.newPassword.match(/[A-Z]/) &&
+        data.newPassword.match(/[0-9]/) &&
+        data.newPassword.match(/[^a-zA-Z0-9]/)
+      )
+    },
+    {
+      message:
+        "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
+      path: ["newPassword"],
+    }
+  )
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  })
+
+export type MemberPasswordData = z.infer<typeof memberPasswordSchema>
+
+export const memberDeleteConfirmSchema = z.object({
+  confirmText: z.literal("DELETE", {
+    message: "Please type DELETE to confirm.",
+  }),
+})
+
+export type MemberDeleteConfirmData = z.infer<typeof memberDeleteConfirmSchema>

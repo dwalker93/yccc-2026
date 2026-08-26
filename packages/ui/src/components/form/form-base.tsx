@@ -11,6 +11,7 @@ export type FormControlProps = {
   label: React.ReactNode
   description?: string
   optionalField?: boolean
+  requiredIcon?: boolean
 }
 
 type FormBaseProps = FormControlProps & {
@@ -26,6 +27,7 @@ export function FormBase({
   controlFirst = false,
   horizontal,
   optionalField,
+  requiredIcon = true,
 }: FormBaseProps) {
   const field = useFieldContext()
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -37,11 +39,11 @@ export function FormBase({
         <span aria-label="optional" className="text-muted-foreground">
           (optional)
         </span>
-      ) : (
+      ) : requiredIcon ? (
         <span aria-label="required" className="text-destructive">
           *
         </span>
-      )}
+      ) : null}
     </FieldLabel>
   )
 

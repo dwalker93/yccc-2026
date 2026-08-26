@@ -1,0 +1,1 @@
+ALTER TABLE "member_education" ALTER COLUMN "field_of_study" DROP NOT NULL;

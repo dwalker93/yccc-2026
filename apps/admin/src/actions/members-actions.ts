@@ -11,15 +11,22 @@ import {
   suspendMemberSchema,
 } from "@/schemas/member-schema"
 import {
+  addMemberEducationService,
+  verifyMemberEducationService,
+} from "@/services/member-education-service"
+import {
+  addMemberProfessionService,
+  verifyMemberProfessionService,
+} from "@/services/member-profession-service"
+import {
   approveMemberService,
   banMemberService,
   bulkApproveMemberService,
   reinstateMemberService,
   rejectMemberService,
   suspendMemberService,
-  verifyMemberEducationService,
-  verifyMemberProfessionService,
 } from "@/services/member-service"
+import { formatMemberId } from "@/utils/member"
 
 import { auth } from "@/lib/auth/auth"
 
@@ -301,16 +308,68 @@ export async function reinstateMemberAction(
 }
 
 /**
+ * Server action to add a member's education record.
+ * Validates session authentication, adds education record via service, and revalidates relevant member paths.
+ *
+ * @param memberId - ID of the member to add education to.
+ * @param institution - Name of the educational institution.
+ * @param qualification - Qualification obtained.
+ * @param fieldOfStudy - Field of study.
+ * @param startYear - Year when education started.
+ * @param startMonth - Month when education started.
+ * @param endYear - Year when education ended.
+ * @param endMonth - Month when education ended.
+ */
+export async function addMemberEducationAction(
+  memberId: string,
+  educationData: {
+    institution: string
+    qualification: string
+    fieldOfStudy: string | null
+    startYear: number | null
+    startMonth: number | null
+    endYear: number
+    endMonth: number | null
+  }
+) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return { error: "Unauthorized" }
+  }
+
+  try {
+    await addMemberEducationService({
+      memberId,
+      educationData,
+      createdBy: session.user.id,
+    })
+
+    revalidatePath(`/members/${formatMemberId(memberId)}/career`)
+    return { success: true }
+  } catch (error) {
+    console.error("Failed to add member education:", error)
+    return { error: "Failed to add member education" }
+  }
+}
+
+/**
  * Server action to verify a member's education record.
  * Validates session authentication, updates education verification status, and revalidates relevant member paths.
  *
  * @param educationId - Unique identifier of the education record to verify.
- * @param memberId - Optional member ID or path to revalidate (e.g., "mem_123" or "/members/mem_123").
+ * @param memberId - Optional member ID or path to revalidate (e.g., "mem123" or "/members/mem123").
  */
 export async function verifyMemberEducationAction(
   educationId: string,
   memberId?: string
 ) {
+  if (!educationId) {
+    return { error: "Education ID is required" }
+  }
+
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -323,7 +382,7 @@ export async function verifyMemberEducationAction(
     await verifyMemberEducationService(educationId, session.user.id)
 
     if (memberId) {
-      revalidatePath(`/members/${memberId}/career`)
+      revalidatePath(`/members/${formatMemberId(memberId)}/career`)
     }
 
     return { success: true }
@@ -333,17 +392,57 @@ export async function verifyMemberEducationAction(
   }
 }
 
+export async function addMemberProfessionAction(
+  memberId: string,
+  professionData: {
+    employer: string
+    jobTitle: string
+    location: string
+    employmentType: string
+    startYear: number
+    startMonth: number
+    endYear: number | null
+    endMonth: number | null
+    isCurrent: boolean
+  }
+) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return { error: "Unauthorized" }
+  }
+
+  try {
+    await addMemberProfessionService({
+      memberId,
+      professionData,
+      createdBy: session.user.id,
+    })
+
+    revalidatePath(`/members/${formatMemberId(memberId)}/career`)
+    return { success: true }
+  } catch (error) {
+    console.error("Failed to add member profession:", error)
+    return { error: "Failed to add member profession" }
+  }
+}
+
 /**
  * Server action to verify a member's profession record.
  * Validates session authentication, updates profession verification status, and revalidates relevant member paths.
  *
  * @param professionId - Unique identifier of the profession record to verify.
- * @param memberId - Optional member ID or path to revalidate (e.g., "mem_123" or "/members/mem_123").
+ * @param memberId - Optional member ID or path to revalidate (e.g., "mem123" or "/members/mem123").
  */
 export async function verifyMemberProfessionAction(
   professionId: string,
   memberId?: string
 ) {
+  if (!professionId) {
+    return { error: "Profession ID is required" }
+  }
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -356,7 +455,7 @@ export async function verifyMemberProfessionAction(
     await verifyMemberProfessionService(professionId, session.user.id)
 
     if (memberId) {
-      revalidatePath(`/members/${memberId}/career`)
+      revalidatePath(`/members/${formatMemberId(memberId)}/career`)
     }
 
     return { success: true }

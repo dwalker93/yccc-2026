@@ -1,35 +1,14 @@
-import { headers } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
-import {
-  getMemberMetadata,
-  MemberNotFoundError,
-} from "@/services/member-service"
+import { getMemberMetadata } from "@/services/member-service"
 
-import { auth } from "@/lib/auth/auth"
+import { withAuth } from "@/lib/auth/with-auth"
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 })
-  }
-  const { id } = await params
-  try {
+export const GET = withAuth(
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params
     const metadata = await getMemberMetadata({ id })
     return NextResponse.json(metadata)
-  } catch (error) {
-    console.error(error)
-    if (error instanceof MemberNotFoundError) {
-      return NextResponse.json({ error: "Member not found" }, { status: 404 })
-    }
-    return NextResponse.json(
-      { error: "Failed to fetch member metadata" },
-      { status: 500 }
-    )
   }
-}
+)
+
+

@@ -13,26 +13,33 @@ import { useFieldContext } from "@workspace/ui/hooks/form"
 type FormSelectProps = FormControlProps & {
   placeholder?: string
   children: React.ReactNode
+  disabled?: boolean
 }
 
 export function FormSelect({
   label,
   description,
   optionalField,
+  requiredIcon,
   placeholder,
   children,
+  disabled,
 }: FormSelectProps) {
-  const field = useFieldContext<string>()
+  const field = useFieldContext<string | number>()
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+  const isNumber =
+    typeof field.state.value === "number" || field.state.value === null
   return (
     <FormBase
       label={label}
       description={description}
       optionalField={optionalField}
+      requiredIcon={requiredIcon}
     >
       <Select
-        value={field.state.value}
-        onValueChange={(e) => field.handleChange(e)}
+        value={field.state.value?.toString() ?? ""}
+        onValueChange={(e) => field.handleChange(isNumber ? Number(e) : e)}
+        disabled={disabled}
       >
         <SelectTrigger
           id={field.name}

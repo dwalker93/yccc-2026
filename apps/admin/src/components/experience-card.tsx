@@ -41,14 +41,14 @@ export function ExperienceCard({
                 className="text-[15px] leading-snug font-semibold text-zinc-900
                   dark:text-zinc-100"
               >
-                {experience.title}
+                {experience.jobTitle}
               </p>
 
               <p
                 className="mt-0.5 text-[13.5px] text-zinc-700
                   dark:text-zinc-300"
               >
-                {experience.organizationName}
+                {experience.employer}
                 <span
                   className="px-1.5 font-bold text-zinc-500 dark:text-zinc-400"
                 >
@@ -65,11 +65,11 @@ export function ExperienceCard({
                 className="mt-0.5 text-[12.5px] text-zinc-500
                   dark:text-zinc-400"
               >
-                {MONTHS.find((m) => m.value === experience.fromMonth)?.label}{" "}
-                {experience.fromYear} -{" "}
-                {experience.currentlyWorking
+                {MONTHS.find((m) => m.value === experience.startMonth)?.label}{" "}
+                {experience.startYear} -{" "}
+                {experience.isCurrent
                   ? "Present"
-                  : `${MONTHS.find((m) => m.value === experience.toMonth)?.label} ${experience.toYear}`}
+                  : `${MONTHS.find((m) => m.value === experience.endMonth)?.label} ${experience.endYear}`}
               </p>
             </div>
           </div>

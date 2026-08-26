@@ -35,7 +35,7 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   data: TData[]
   totalCount: number
   emptyState?: React.ReactNode
-  isLoading: boolean
+  isLoading?: boolean
   searchKey?: string
   searchPlaceholder?: string
   facetedFilters?: FacetedFilterConfig[]
