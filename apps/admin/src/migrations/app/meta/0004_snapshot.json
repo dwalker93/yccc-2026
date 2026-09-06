@@ -96,7 +96,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "member_education_member_id_idx": {
+          "name": "member_education_member_id_idx",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "member_education_member_id_members_id_fk": {
           "name": "member_education_member_id_members_id_fk",
@@ -224,7 +240,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "member_profession_member_id_idx": {
+          "name": "member_profession_member_id_idx",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "member_profession_member_id_members_id_fk": {
           "name": "member_profession_member_id_members_id_fk",

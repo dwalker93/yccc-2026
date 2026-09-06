@@ -3,10 +3,10 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { cn } from "@workspace/ui/lib/utils"
 import { Badge } from "@workspace/ui/components/badge"
+import { cn } from "@workspace/ui/lib/utils"
 
-type TabKey = "overview" | "career" | "billing" | "history"
+type TabKey = "overview" | "career" | "billing" | "history" | "settings"
 
 type TabItem = {
   key: TabKey
@@ -19,6 +19,7 @@ const TAB_ITEMS: TabItem[] = [
   { key: "career", label: "Career", href: "/career" },
   { key: "billing", label: "Billing", href: "/billing" },
   { key: "history", label: "History", href: "/history" },
+  { key: "settings", label: "Settings", href: "/settings" },
 ]
 
 type PageTabsProps = {
@@ -50,7 +51,11 @@ export default function PageTabs({ id, badges }: PageTabsProps) {
               )}
             >
               {label}
-              {!!badgeCount && <Badge variant={isActive ? "default" : "secondary"}>{badgeCount}</Badge>}
+              {!!badgeCount && (
+                <Badge variant={isActive ? "default" : "secondary"}>
+                  {badgeCount}
+                </Badge>
+              )}
             </Link>
           )
         })}

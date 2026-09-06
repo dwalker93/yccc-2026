@@ -23,22 +23,13 @@ type EducationCardProps = {
   onRemove: () => void
 }
 
-const initialEducationParser = (
-  education: EducationInfo
-): EducationFormData => {
-  return {
-    ...defaultFormValues,
-    ...education,
-  }
-}
-
 export function EducationCard({
   education,
   onEdit,
   onRemove,
 }: EducationCardProps) {
   const fieldOfStudyLabel =
-    education.educationLevel !== "secondary" &&
+    education.qualification !== "secondary" &&
     FIELDS_OF_STUDY.find((f) => f.value === education.fieldOfStudy)?.label
 
   return (
@@ -63,9 +54,9 @@ export function EducationCard({
                 className="text-[15px] leading-snug font-semibold text-zinc-900
                   dark:text-zinc-100"
               >
-                {education.educationLevel === "secondary"
+                {education.qualification === "secondary"
                   ? education.schoolName
-                  : education.institutionName}
+                  : education.institution}
               </p>
 
               <p
@@ -74,12 +65,12 @@ export function EducationCard({
               >
                 {
                   QUALIFICATION_LEVELS.find(
-                    (q) => q.value === education.educationLevel
+                    (q) => q.value === education.qualification
                   )?.label
                 }
                 {fieldOfStudyLabel && ` · ${fieldOfStudyLabel}`}
               </p>
-              {education.educationLevel === "secondary" ? (
+              {education.qualification === "secondary" ? (
                 <p
                   className="mt-0.5 text-[12.5px] text-zinc-500
                     dark:text-zinc-400"
@@ -91,17 +82,17 @@ export function EducationCard({
                   className="mt-0.5 text-[12.5px] text-zinc-500
                     dark:text-zinc-400"
                 >
-                  {MONTHS.find((m) => m.value === education.fromMonth)?.label}{" "}
-                  {education.fromYear} -{" "}
-                  {`${MONTHS.find((m) => m.value === education.toMonth)?.label} ${education.toYear}`}
+                  {MONTHS.find((m) => m.value === education.startMonth)?.label}{" "}
+                  {education.startYear} -{" "}
+                  {`${MONTHS.find((m) => m.value === education.endMonth)?.label} ${education.endYear}`}
                 </p>
               )}
             </div>
           </div>
           <div className="flex flex-col md:flex-row">
             <CreateEducationDialog
-              initialValues={initialEducationParser(education)}
-              onSave={onEdit}
+              initialValues={education}
+              onSubmit={async (data) => onEdit(data)}
               dialogTriggerButton={
                 <Button
                   aria-label="Edit"

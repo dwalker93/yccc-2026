@@ -1,5 +1,4 @@
-import { headers } from "next/headers"
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import {
   getMembersService,
   type ProjectionPreset,
@@ -9,21 +8,13 @@ import { getActivePlansService } from "@/services/plan-service"
 import { Districts } from "@workspace/shared/constants/districts"
 
 import { statuses, type Status } from "@/config/data"
-import { auth } from "@/lib/auth/auth"
+import { withAuth } from "@/lib/auth/with-auth"
 import {
   SearchableColumn,
   searchableColumns,
 } from "@/app/(protected)/members/_components/data"
 
-export async function GET(request: NextRequest) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 })
-  }
-
+export const GET = withAuth(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams
 
   const rawPage = Number(searchParams.get("page"))
@@ -52,7 +43,7 @@ export async function GET(request: NextRequest) {
     )
 
     if (!isValidStatus) {
-      return Response.json(
+      return NextResponse.json(
         { error: "Invalid status parameter" },
         { status: 400 }
       )
@@ -73,7 +64,10 @@ export async function GET(request: NextRequest) {
     )
 
     if (!isValidPlan) {
-      return Response.json({ error: "Invalid plan parameter" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Invalid plan parameter" },
+        { status: 400 }
+      )
     }
     plan = planArray as string[]
   }
@@ -87,7 +81,7 @@ export async function GET(request: NextRequest) {
     )
 
     if (!isValidDistrict) {
-      return Response.json(
+      return NextResponse.json(
         { error: "Invalid district parameter" },
         { status: 400 }
       )
@@ -104,20 +98,17 @@ export async function GET(request: NextRequest) {
       : "detailed"
   ) as ProjectionPreset
 
-  try {
-    const result = await getMembersService({
-      pageIndex,
-      pageSize,
-      projection,
-      search: searchTerm,
-      searchBy: searchBy,
-      status: status,
-      plan,
-      district,
-    })
-    return Response.json(result)
-  } catch (error) {
-    console.error(error)
-    return Response.json({ error: "Failed to fetch members" }, { status: 500 })
-  }
-}
+  const result = await getMembersService({
+    pageIndex,
+    pageSize,
+    projection,
+    search: searchTerm,
+    searchBy: searchBy,
+    status: status,
+    plan,
+    district,
+  })
+  return NextResponse.json(result)
+})
+
+

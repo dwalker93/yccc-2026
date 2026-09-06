@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm"
 import {
   boolean,
   date,
+  index,
   integer,
   pgEnum,
   pgTable,
@@ -68,6 +69,8 @@ export const fieldOfStudy = pgEnum("field_of_study", [
   "tourism_event_management",
   "other",
 ])
+
+export const actorType = pgEnum("actor_type", ["member", "admin", "system"])
 
 export type Qualification = (typeof qualification.enumValues)[number]
 export type FieldOfStudy = (typeof fieldOfStudy.enumValues)[number]
@@ -169,28 +172,38 @@ export const memberStatusHistory = pgTable("member_status_history", {
 // isVerified allows admin to mark credentials as confirmed.
 // =============================================================================
 
-export const memberEducation = pgTable("member_education", {
-  id: text("id").primaryKey(),
-  memberId: text("member_id")
-    .notNull()
-    .references(() => members.id),
-  institution: text("institution").notNull(),
-  qualification: qualification("qualification").notNull(),
-  fieldOfStudy: fieldOfStudy("field_of_study").notNull(),
-  startYear: integer("start_year"),
-  startMonth: integer("start_month"),
-  endYear: integer("end_year"),
-  endMonth: integer("end_month"), // nullable = currently studying
-  isVerified: boolean("is_verified").default(false).notNull(),
-  verifiedAt: timestamp("verified_at"),
-  verifiedBy: text("verified_by"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-})
+export const memberEducation = pgTable(
+  "member_education",
+  {
+    id: text("id").primaryKey(),
+    memberId: text("member_id")
+      .notNull()
+      .references(() => members.id),
+    institution: text("institution").notNull(),
+    qualification: qualification("qualification").notNull(),
+    fieldOfStudy: fieldOfStudy("field_of_study"),
+    startYear: integer("start_year"),
+    startMonth: integer("start_month"),
+    endYear: integer("end_year"),
+    endMonth: integer("end_month"),
 
+    isVerified: boolean("is_verified").default(false).notNull(),
+    verifiedAt: timestamp("verified_at"),
+    verifiedBy: text("verified_by"),
+
+    createdBy: text("created_by"),
+    createdByType: actorType("created_by_type").notNull().default("member"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index("member_education_member_id_idx").on(t.memberId)]
+)
+
+export type EmploymentType = (typeof employmentType.enumValues)[number]
 // =============================================================================
 // TABLE 4 — memberProfession
 // One row per job/role per member.
@@ -199,29 +212,38 @@ export const memberEducation = pgTable("member_education", {
 // isCurrent flags the active role (endDate should be null when isCurrent = true).
 // =============================================================================
 
-export const memberProfession = pgTable("member_profession", {
-  id: text("id").primaryKey(),
-  memberId: text("member_id")
-    .notNull()
-    .references(() => members.id),
-  jobTitle: text("job_title").notNull(), // "Executive Chef", "Front Desk Manager"
-  employer: text("employer").notNull(), // "Galle Face Hotel", "Cinnamon Grand"
-  location: text("location"),
-  employmentType: employmentType("employment_type").notNull(),
-  startYear: integer("start_year").notNull(),
-  startMonth: integer("start_month").notNull(),
-  endYear: integer("end_year"), // nullable = current job
-  endMonth: integer("end_month"), // nullable = current job
-  isCurrent: boolean("is_current").default(false).notNull(),
-  isVerified: boolean("is_verified").default(false).notNull(),
-  verifiedAt: timestamp("verified_at"),
-  verifiedBy: text("verified_by"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-})
+export const memberProfession = pgTable(
+  "member_profession",
+  {
+    id: text("id").primaryKey(),
+    memberId: text("member_id")
+      .notNull()
+      .references(() => members.id),
+    jobTitle: text("job_title").notNull(), // "Executive Chef", "Front Desk Manager"
+    employer: text("employer").notNull(), // "Galle Face Hotel", "Cinnamon Grand"
+    location: text("location"),
+    employmentType: employmentType("employment_type").notNull(),
+    startYear: integer("start_year").notNull(),
+    startMonth: integer("start_month").notNull(),
+    endYear: integer("end_year"), // nullable = current job
+    endMonth: integer("end_month"), // nullable = current job
+    isCurrent: boolean("is_current").default(false).notNull(),
+
+    isVerified: boolean("is_verified").default(false).notNull(),
+    verifiedAt: timestamp("verified_at"),
+    verifiedBy: text("verified_by"),
+
+    createdBy: text("created_by"),
+    createdByType: actorType("created_by_type").notNull().default("member"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index("member_profession_member_id_idx").on(t.memberId)]
+)
 
 // =============================================================================
 // RELATIONS
@@ -257,6 +279,14 @@ export const memberEducationRelations = relations(
       fields: [memberEducation.memberId],
       references: [members.id],
     }),
+    createdBy: one(members, {
+      fields: [memberEducation.createdBy],
+      references: [members.id],
+    }),
+    verifiedBy: one(members, {
+      fields: [memberEducation.verifiedBy],
+      references: [members.id],
+    }),
   })
 )
 
@@ -265,6 +295,14 @@ export const memberProfessionRelations = relations(
   ({ one }) => ({
     member: one(members, {
       fields: [memberProfession.memberId],
+      references: [members.id],
+    }),
+    createdBy: one(members, {
+      fields: [memberProfession.createdBy],
+      references: [members.id],
+    }),
+    verifiedBy: one(members, {
+      fields: [memberProfession.verifiedBy],
       references: [members.id],
     }),
   })

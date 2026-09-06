@@ -4,7 +4,7 @@ import {
   getMemberMetadata,
   MemberNotFoundError,
 } from "@/services/member-service"
-import { formatMemberId } from "@/utils/member"
+import { formatMemberId, toMemberId } from "@/utils/member"
 
 import { Button } from "@workspace/ui/components/button"
 
@@ -21,22 +21,24 @@ export default async function MemberLayout({
   children,
   params,
 }: MemberLayoutProps) {
-  const { id: memberId } = await params
+  const { id: rawSegment } = await params
 
-  const id = formatMemberId(memberId)
+  const memberId = toMemberId(rawSegment)
+  const displayId = formatMemberId(rawSegment)
 
   let metadata
   try {
-    metadata = await getMemberMetadata({ id: "MEM" + id })
+    metadata = await getMemberMetadata({ id: memberId })
   } catch (err) {
     if (err instanceof MemberNotFoundError) notFound()
     throw err // rethrow anything else so error.tsx handles it
   }
+
   return (
     <div className="flex h-full flex-1 flex-col">
       <PageHeader
         title={metadata.name}
-        description={`Member details - ${id}`}
+        description={`Member details - ${displayId}`}
         backHref="/members"
         actions={
           <>
@@ -49,7 +51,7 @@ export default async function MemberLayout({
         }
       />
       <PageTabs
-        id={id}
+        id={displayId}
         badges={{
           career:
             metadata.unverifiedEducationCount +

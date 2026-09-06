@@ -178,6 +178,7 @@ export function CreateMemberForm() {
                   label="Address Line 2"
                   placeholder="Enter address line 2"
                   autoComplete="address-line2"
+                  optionalField
                 />
               )}
             </form.AppField>
@@ -269,15 +270,13 @@ export function CreateMemberForm() {
                   !parentField.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel>
-                      Education <span className="text-destructive">*</span>
-                    </FieldLabel>
+                    <FieldLabel>Education</FieldLabel>
                     {form.state.values.educations?.length > 0 && (
                       <div className="flex flex-col gap-2">
                         {form.state.values.educations.map(
                           (education, index) => (
                             <EducationCard
-                              key={education.educationLevel + index}
+                              key={education.qualification + index}
                               education={education}
                               onEdit={(education) =>
                                 parentField.replaceValue(index, education)
@@ -289,7 +288,9 @@ export function CreateMemberForm() {
                       </div>
                     )}
                     <CreateEducationDialog
-                      onSave={(education) => parentField.pushValue(education)}
+                      onSubmit={async (education) =>
+                        parentField.pushValue(education)
+                      }
                       dialogTriggerButton={
                         <Button
                           type="button"
@@ -323,9 +324,9 @@ export function CreateMemberForm() {
                           (experience, index) => (
                             <ExperienceCard
                               key={
-                                experience.title +
-                                experience.organizationName +
-                                experience.fromYear
+                                experience.jobTitle +
+                                experience.employer +
+                                experience.startYear
                               }
                               experience={experience}
                               onEdit={(experience) =>

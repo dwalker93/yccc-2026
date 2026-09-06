@@ -11,6 +11,7 @@ export function FormDatePicker({
   label,
   description,
   optionalField,
+  requiredIcon,
   ...inputProps
 }: FormInputProps) {
   const field = useFieldContext<string>()
@@ -20,6 +21,7 @@ export function FormDatePicker({
       label={label}
       description={description}
       optionalField={optionalField}
+      requiredIcon={requiredIcon}
     >
       <Input
         {...inputProps}

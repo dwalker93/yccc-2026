@@ -1,4 +1,4 @@
-import { MemberProfession } from "@/services/member-service"
+import { MemberProfession } from "@/services/member-profession-service"
 import { formatPeriod } from "@/utils/utils"
 
 import { EMPLOYMENT_TYPES } from "@workspace/shared/constants/educations"
@@ -39,7 +39,12 @@ export const workHistoryColumns = createColumns<MemberProfession>([
     render: (row) => (
       <div className="flex gap-2">
         {!row.isVerified && (
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-emerald-700 text-emerald-700 dark:border-green-700
+              dark:text-green-400"
+          >
             Verify
           </Button>
         )}

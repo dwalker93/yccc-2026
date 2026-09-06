@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm"
 import { plans } from "@workspace/shared/schemas/subscription-plans-schema"
 
 import { appdb } from "@/lib/db"
+import { ServiceError } from "@/services/errors"
 
 export async function getActivePlansService() {
   try {
@@ -25,9 +26,11 @@ export async function getActivePlansService() {
     })
   } catch (error) {
     console.error("getActivePlansService failed", error)
-    throw new Error("Failed to get active plans")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get active plans")
   }
 }
+
 
 export type PlanOption = Awaited<
   ReturnType<typeof getActivePlansService>

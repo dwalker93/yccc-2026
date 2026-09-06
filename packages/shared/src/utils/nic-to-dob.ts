@@ -44,10 +44,10 @@ export function nicToDob(
     gender = "male"
   }
 
-  if (dayOfYear < 2 || dayOfYear > 367) return null
+  if (dayOfYear < 1 || dayOfYear > 366) return null
 
   const dob = new Date(Date.UTC(year, 0, 1))
-  dob.setUTCDate(dob.getUTCDate() + dayOfYear - 2)
+  dob.setUTCDate(dob.getUTCDate() + dayOfYear - 1)
 
   // Sanity check: day didn't spill into the next year
   if (dob.getUTCFullYear() !== year) return null

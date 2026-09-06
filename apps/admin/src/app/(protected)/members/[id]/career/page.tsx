@@ -1,9 +1,7 @@
 import { type Metadata } from "next"
-import {
-  getMemberEducationService,
-  getMemberProfessionService,
-} from "@/services/member-service"
-import { formatMemberId } from "@/utils/member"
+import { getMemberEducationService } from "@/services/member-education-service"
+import { getMemberProfessionService } from "@/services/member-profession-service"
+import { toMemberId } from "@/utils/member"
 import {
   dehydrate,
   HydrationBoundary,
@@ -17,17 +15,15 @@ export const metadata: Metadata = {
   description: "Member career details.",
 }
 
-export default async function MemberOverviewPage({
+export default async function MemberCareerPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id: rawId } = await params
-  const id = formatMemberId(rawId)
+  const memberId = toMemberId(rawId)
 
   const queryClient = new QueryClient()
-
-  const memberId = "MEM" + id
 
   // prefetch both on server in parallel
   await Promise.all([

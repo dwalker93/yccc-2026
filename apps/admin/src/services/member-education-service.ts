@@ -1,6 +1,7 @@
-import { count, desc, eq } from "drizzle-orm"
+import { count, desc, eq, sql } from "drizzle-orm"
 
 import {
+  actorType,
   FieldOfStudy,
   memberEducation,
   Qualification,
@@ -8,6 +9,7 @@ import {
 import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
 
 import { appdb } from "@/lib/db"
+import { EducationNotFoundError, ServiceError } from "@/services/errors"
 
 /** Projection mapping fields for `getMemberEducationService`. */
 export const getMemberEducationProjections = {
@@ -43,7 +45,10 @@ export async function getMemberEducationService({
         .select(getMemberEducationProjections)
         .from(memberEducation)
         .where(eq(memberEducation.memberId, memberId))
-        .orderBy(desc(memberEducation.startYear))
+        .orderBy(
+          sql`${memberEducation.startYear} DESC NULLS LAST`,
+          desc(memberEducation.id)
+        )
         .limit(pageSize)
         .offset((pageIndex - 1) * pageSize),
 
@@ -59,7 +64,8 @@ export async function getMemberEducationService({
     }
   } catch (error) {
     console.error("getMemberEducationService failed", error)
-    throw new Error("Failed to get member education records")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to get member education records")
   }
 }
 
@@ -73,7 +79,7 @@ export type MemberEducation = Awaited<
  *
  * @param educationId - Unique identifier of the education record to verify.
  * @param actionedBy - ID or identifier of the user/admin performing the verification.
- * @throws {Error} If no education record is found with the provided ID.
+ * @throws {EducationNotFoundError} If no education record is found with the provided ID.
  */
 export async function verifyMemberEducationService(
   educationId: string,
@@ -92,11 +98,12 @@ export async function verifyMemberEducationService(
       .returning({ id: memberEducation.id })
 
     if (!updated) {
-      throw new Error(`Member education record not found: ${educationId}`)
+      throw new EducationNotFoundError(educationId)
     }
   } catch (error) {
     console.error("verifyMemberEducationService failed", error)
-    throw new Error("Failed to verify member education record")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to verify member education record")
   }
 }
 
@@ -105,27 +112,34 @@ export async function verifyMemberEducationService(
  *
  * @param params - Object containing member and education details.
  * @returns Created education record.
- * @throws {Error} If no education record is created.
+ * @throws {ServiceError} If no education record is created.
  */
 export async function addMemberEducationService({
   memberId,
-  institution,
-  qualification,
-  fieldOfStudy,
-  startYear,
-  startMonth,
-  endYear,
-  endMonth,
+  educationData,
+  createdBy,
 }: {
   memberId: string
-  institution: string
-  qualification: string
-  fieldOfStudy: string
-  startYear: number
-  startMonth: number
-  endYear: number
-  endMonth: number
+  educationData: {
+    institution: string
+    qualification: string
+    fieldOfStudy: string | null
+    startYear: number | null
+    startMonth: number | null
+    endYear: number
+    endMonth: number | null
+  }
+  createdBy: string
 }) {
+  const {
+    institution,
+    qualification,
+    fieldOfStudy,
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+  } = educationData
   try {
     const [created] = await appdb
       .insert(memberEducation)
@@ -139,16 +153,107 @@ export async function addMemberEducationService({
         startMonth,
         endYear,
         endMonth,
+        createdBy,
+        createdByType: actorType.enumValues[1],
       })
       .returning(getMemberEducationProjections)
 
     if (!created) {
-      throw new Error("Failed to create member education record")
+      throw new ServiceError("Failed to create member education record")
     }
 
     return created
   } catch (error) {
     console.error("addMemberEducationService failed", error)
-    throw new Error("Failed to add member education record")
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to add member education record")
   }
 }
+
+/**
+ * Updates an existing education history record for a member.
+ *
+ * @param params - Object containing member and education details.
+ * @returns Updated education record.
+ * @throws {EducationNotFoundError} If no education record is updated.
+ */
+export async function updateMemberEducationService({
+  educationId,
+  educationData,
+  updatedBy,
+}: {
+  educationId: string
+  educationData: {
+    institution?: string
+    qualification?: Qualification
+    fieldOfStudy?: FieldOfStudy
+    startYear?: number
+    startMonth?: number
+    endYear?: number
+    endMonth?: number
+  }
+  updatedBy: string
+}) {
+  const {
+    institution,
+    qualification,
+    fieldOfStudy,
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+  } = educationData
+  try {
+    const [updated] = await appdb
+      .update(memberEducation)
+      .set({
+        institution,
+        qualification: qualification,
+        fieldOfStudy: fieldOfStudy,
+        startYear,
+        startMonth,
+        endYear,
+        endMonth,
+        updatedAt: new Date(),
+      })
+      .where(eq(memberEducation.id, educationId))
+      .returning(getMemberEducationProjections)
+
+    if (!updated) {
+      throw new EducationNotFoundError(educationId)
+    }
+
+    return updated
+  } catch (error) {
+    console.error("updateMemberEducationService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to update member education record")
+  }
+}
+
+/**
+ * Deletes an education history record for a member.
+ *
+ * @param educationId - Unique identifier of the education record to delete.
+ * @throws {EducationNotFoundError} If no education record is deleted.
+ */
+export async function deleteMemberEducationService(
+  educationId: string,
+  deletedBy: string
+) {
+  try {
+    const [deleted] = await appdb
+      .delete(memberEducation)
+      .where(eq(memberEducation.id, educationId))
+      .returning({ id: memberEducation.id })
+
+    if (!deleted) {
+      throw new EducationNotFoundError(educationId)
+    }
+  } catch (error) {
+    console.error("deleteMemberEducationService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to delete member education record")
+  }
+}
+

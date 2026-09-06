@@ -104,3 +104,6 @@ export const auth = betterAuth({
     }),
   },
 })
+
+export { withAuth, type Session, type WithAuthOptions } from "./with-auth"
+

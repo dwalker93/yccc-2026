@@ -5,16 +5,21 @@ import {
 } from "@workspace/ui/components/form/form-base"
 import { useFieldContext } from "@workspace/ui/hooks/form"
 
-export function FormCheckbox(props: FormControlProps) {
+type FormCheckboxProps = FormControlProps & {
+  disabled?: boolean
+}
+
+export function FormCheckbox(props: FormCheckboxProps) {
   const field = useFieldContext<boolean>()
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
   return (
     <FormBase {...props} controlFirst horizontal>
       <Checkbox
-        className="mt-[3px] shrink-0"
+        className="mt-0.75 shrink-0"
         aria-describedby={isInvalid ? `${field.name}-error` : undefined}
         aria-invalid={isInvalid}
         id={field.name}
+        disabled={props.disabled}
         checked={field.state.value}
         onCheckedChange={(checked) => field.handleChange(!!checked)}
         onBlur={field.handleBlur}

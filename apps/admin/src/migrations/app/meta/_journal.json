@@ -36,6 +36,20 @@
       "when": 1784822872847,
       "tag": "0004_thin_revanche",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786290539847,
+      "tag": "0005_mighty_bug",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786290648796,
+      "tag": "0006_dazzling_tana_nile",
+      "breakpoints": true
     }
   ]
 }

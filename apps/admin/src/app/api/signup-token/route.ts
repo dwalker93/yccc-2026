@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import dayjs from "dayjs"
 
-import { auth } from "@/lib/auth/auth"
+import { withAuth } from "@/lib/auth/with-auth"
 import { redis } from "@/lib/redis"
 
 const TOKEN_EXPIRY_TIME = 60 * 10
@@ -15,35 +15,29 @@ export async function GET(req: Request) {
   return NextResponse.json({ data })
 }
 
-export async function POST(req: Request) {
-  const session = await auth.api.getSession()
+export const POST = withAuth(
+  async (req: NextRequest) => {
+    const { email } = await req.json()
 
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
-  if (session.user.role !== "super_admin") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
-  const { email } = await req.json()
-
-  if (!email) {
-    return NextResponse.json({ error: "Email is required" }, { status: 400 })
-  }
-
-  const token = crypto.randomUUID()
-
-  await redis.set(
-    `signup-token-${token}`,
-    JSON.stringify({
-      email,
-      expiresIn: dayjs().add(TOKEN_EXPIRY_TIME, "second").toISOString(),
-    }),
-    {
-      ex: TOKEN_EXPIRY_TIME,
+    if (!email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 })
     }
-  )
 
-  return NextResponse.json({ message: "Token created" })
-}
+    const token = crypto.randomUUID()
+
+    await redis.set(
+      `signup-token-${token}`,
+      JSON.stringify({
+        email,
+        expiresIn: dayjs().add(TOKEN_EXPIRY_TIME, "second").toISOString(),
+      }),
+      {
+        ex: TOKEN_EXPIRY_TIME,
+      }
+    )
+
+    return NextResponse.json({ message: "Token created" })
+  },
+  { roles: ["super_admin"] }
+)
+

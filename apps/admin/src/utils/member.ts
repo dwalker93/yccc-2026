@@ -21,6 +21,18 @@ export function formatMemberId(id: string | null | undefined): string {
 }
 
 /**
+ * Normalises a raw URL segment into the canonical `MEM`-prefixed member ID.
+ * Handles segments that already include the prefix as well as bare numeric IDs.
+ *
+ * @param rawSegment - The `[id]` route parameter value (e.g. `"MEM123"` or `"123"`).
+ * @returns The canonical member ID (e.g. `"MEM123"`).
+ */
+export function toMemberId(rawSegment: string): string {
+  const stripped = formatMemberId(rawSegment)
+  return stripped ? `MEM${stripped}` : rawSegment
+}
+
+/**
  * Generates a fallback avatar text for a member.
  *
  * @param name The name of the member.
