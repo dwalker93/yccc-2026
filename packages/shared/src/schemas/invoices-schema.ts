@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm"
+import { InferEnum, relations, sql } from "drizzle-orm"
 import { integer, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
 import { members } from "./member-schema"
@@ -22,6 +22,8 @@ export const invoiceStatus = pgEnum("invoice_status", [
   "void",
   "uncollectible",
 ])
+
+export type InvoiceStatus = InferEnum<typeof invoiceStatus>
 
 // =============================================================================
 // TABLE 8 — invoices
@@ -48,7 +50,7 @@ export const invoices = pgTable("invoices", {
   // set when admin confirms payment and subscription row is inserted
   subscriptionId: text("subscription_id").references(() => subscriptions.id),
 
-  invoiceNumber: text("invoice_number").notNull().unique(), // INV-2026-00001
+  invoiceNumber: text("invoice_number").default(sql`generate_invoice_number()`), // INV-2026-00001
   status: invoiceStatus("invoice_status").default("open").notNull(),
 
   // amounts in LKR cents
@@ -59,10 +61,9 @@ export const invoices = pgTable("invoices", {
   amountDue: integer("amount_due").notNull(), // total - amountPaid (0 when paid)
   currency: text("currency").default("LKR").notNull(),
 
-  // nullable — period is unknown at invoice creation for bank transfers
-  // set when admin confirms payment and subscription period is known
-  periodStart: timestamp("period_start"),
-  periodEnd: timestamp("period_end"),
+  // update when admin confirms payment and subscription period is known
+  periodStart: timestamp("period_start").notNull(),
+  periodEnd: timestamp("period_end").notNull(),
 
   issuedAt: timestamp("issued_at").defaultNow().notNull(),
   dueAt: timestamp("due_at"), // set on creation e.g. now + 7 days

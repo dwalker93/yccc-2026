@@ -1,16 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
-type UpdateMemberEducationPayload = {
+import { memberKeys } from "./keys"
+
+export type UpdateMemberEducationPayload = {
   educationId: string
   educationData: {
     institution?: string
     qualification?: string
-    fieldOfStudy?: string
-    startYear?: number
-    startMonth?: number
-    endYear?: number
-    endMonth?: number
+    fieldOfStudy?: string | null
+    startYear?: number | null
+    startMonth?: number | null
+    endYear?: number | null
+    endMonth?: number | null
   }
 }
 
@@ -25,7 +27,10 @@ async function updateMemberEducation(payload: UpdateMemberEducationPayload) {
   })
 
   if (!response.ok) {
-    throw new Error("Failed to update member education")
+    const body: { error: string } | null = await response
+      .json()
+      .catch(() => null)
+    throw new Error(body?.error ?? "Failed to update member education")
   }
 
   return response.json()
@@ -41,7 +46,7 @@ export function useUpdateMemberEducationMutation({
     mutationFn: updateMemberEducation,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["member-education", memberId],
+        queryKey: memberKeys.education({ id: memberId }),
       })
       toast.success("Member education updated successfully")
     },

@@ -14,10 +14,12 @@ export function formatDate(dateString: string | Date | null | undefined) {
   return formattedDate
 }
 
-export function formatCurrency(amount: number) {
+export function formatCurrency(amount: number, currency: string = "LKR") {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "LKR",
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount / 100)
 }
 

@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { MemberPersonalInformationUpdateData } from "@workspace/shared/zod-schemas/member-input-schema"
@@ -24,7 +24,14 @@ export async function updateMemberPersonalInformation(
   })
 
   if (!response.ok) {
-    throw new Error("Failed to update member")
+    let errorMessage = "Failed to update member"
+    try {
+      const errorData = await response.json()
+      errorMessage = errorData.error || errorData.message || errorMessage
+    } catch {
+      // Response may not be JSON (e.g. plain text "Unauthorized")
+    }
+    throw new Error(errorMessage)
   }
 
   return response.json()

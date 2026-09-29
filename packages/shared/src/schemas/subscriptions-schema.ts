@@ -27,6 +27,7 @@ import { plans } from "./subscription-plans-schema"
  *   scheduled → cancelled  (when member cancels, ALL scheduled rows cancelled too)
  */
 export const subscriptionStatus = pgEnum("subscription_status", [
+  "inactive",
   "active",
   "scheduled",
   "cancelled",

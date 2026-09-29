@@ -40,10 +40,12 @@ export function MemberDeleteConfirmForm({
       onChange: memberDeleteConfirmSchema,
     },
     onSubmit: async () => {
-      await deleteMember({ memberId })
-      form.reset()
-      setOpen(false)
-      router.push("/members")
+      try {
+        await deleteMember({ memberId })
+        form.reset()
+        setOpen(false)
+        router.push("/members")
+      } catch {}
     },
   })
 
@@ -83,7 +85,12 @@ export function MemberDeleteConfirmForm({
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel
+              disabled={isPending}
+              onClick={() => form.reset()}
+            >
+              Cancel
+            </AlertDialogCancel>
             <form.Subscribe
               selector={(state) => state.values.confirmText}
               children={(confirmText) => (

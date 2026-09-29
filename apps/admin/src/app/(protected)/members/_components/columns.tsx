@@ -30,7 +30,7 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
-        className="translate-y-[2px]"
+        className="translate-y-0.5"
       />
     ),
     cell: ({ row }) => (
@@ -38,7 +38,7 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
-        className="translate-y-[2px]"
+        className="translate-y-0.5"
       />
     ),
     enableSorting: false,
@@ -50,7 +50,7 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
       <DataTableColumnHeader column={column} title="ID" />
     ),
     cell: ({ row }) => (
-      <div className="w-[80px]">{formatMemberId(row.getValue("id"))}</div>
+      <div className="w-20">{formatMemberId(row.getValue("id"))}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className="max-w-[500px] truncate font-medium">
+        <span className="max-w-125 truncate font-medium">
           <Link href={`/members/${formatMemberId(row.getValue("id"))}`}>
             {row.getValue("name")}
           </Link>
@@ -78,7 +78,7 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className="max-w-[500px] truncate font-medium">
+        <span className="max-w-125 truncate font-medium">
           {row.getValue("email")}
         </span>
       )
@@ -112,7 +112,7 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
     ),
     cell: ({ row }) => {
       const plan = row.getValue("plan") as "free" | "pro" | "default"
-      return <SubscriptionPlanBadge plan={plan} />
+      return plan ? <SubscriptionPlanBadge plan={plan} /> : "N/A"
     },
     enableSorting: false,
   },
@@ -147,11 +147,11 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
         row.getValue("status") === "pending" ||
         row.getValue("status") === "rejected"
       )
-        return <div className="w-[100px] truncate">N/A</div>
+        return <div className="w-25 truncate">N/A</div>
 
       const memberSince = row.getValue("memberSince") as string
 
-      return <div className="w-[100px] truncate">{formatDate(memberSince)}</div>
+      return <div className="w-25 truncate">{formatDate(memberSince)}</div>
     },
   },
   {
@@ -164,12 +164,12 @@ export const columns: ColumnDef<Member["detailed"]>[] = [
         row.getValue("status") === "pending" ||
         row.getValue("status") === "rejected"
       )
-        return <div className="w-[100px] truncate">N/A</div>
+        return <div className="w-25 truncate">N/A</div>
 
       const expiry = row.getValue("expiry") as string
 
       return (
-        <div className={cn("w-[100px] truncate", getExpiryClass(expiry))}>
+        <div className={cn("w-25 truncate", getExpiryClass(expiry))}>
           {formatDate(expiry)}
         </div>
       )

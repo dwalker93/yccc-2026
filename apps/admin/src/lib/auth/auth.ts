@@ -2,9 +2,9 @@ import { setPendingVerificationIdentity } from "@/utils/email-verification-ident
 import { withRetry } from "@/utils/with-retry"
 import { dash } from "@better-auth/infra"
 import { waitUntil } from "@vercel/functions"
+import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { APIError, createAuthMiddleware } from "better-auth/api"
-import { betterAuth } from "better-auth/minimal"
 import { nextCookies } from "better-auth/next-js"
 import { emailOTP } from "better-auth/plugins"
 
@@ -23,9 +23,6 @@ export const auth = betterAuth({
         input: false,
       },
     },
-  },
-  experimental: {
-    joins: true, // Enable database joins for better performance
   },
   emailAndPassword: {
     enabled: true,
@@ -69,6 +66,9 @@ export const auth = betterAuth({
   },
 
   advanced: {
+    database: {
+      joins: true,
+    },
     backgroundTasks: { handler: waitUntil },
     ipAddress: {
       // For Vercel
@@ -106,4 +106,3 @@ export const auth = betterAuth({
 })
 
 export { withAuth, type Session, type WithAuthOptions } from "./with-auth"
-

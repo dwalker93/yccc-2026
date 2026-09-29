@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
 import {
+  addMemberEducationActionSchema,
+  addMemberProfessionActionSchema,
   approveMemberSchema,
   banMemberSchema,
   bulkApproveMemberSchema,
@@ -340,10 +342,15 @@ export async function addMemberEducationAction(
     return { error: "Unauthorized" }
   }
 
+  const parsed = addMemberEducationActionSchema.safeParse(educationData)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid education data" }
+  }
+
   try {
     await addMemberEducationService({
       memberId,
-      educationData,
+      educationData: parsed.data,
       createdBy: session.user.id,
     })
 
@@ -414,10 +421,15 @@ export async function addMemberProfessionAction(
     return { error: "Unauthorized" }
   }
 
+  const parsed = addMemberProfessionActionSchema.safeParse(professionData)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid profession data" }
+  }
+
   try {
     await addMemberProfessionService({
       memberId,
-      professionData,
+      professionData: parsed.data,
       createdBy: session.user.id,
     })
 

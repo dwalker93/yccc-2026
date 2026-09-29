@@ -50,6 +50,41 @@
       "when": 1786290648796,
       "tag": "0006_dazzling_tana_nile",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788680053337,
+      "tag": "0007_cooing_ben_parker",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789973513028,
+      "tag": "0008_tricky_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790090477291,
+      "tag": "0009_glorious_sentinels",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790348650914,
+      "tag": "0010_futuristic_dragon_lord",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1790522784773,
+      "tag": "0011_orange_james_howlett",
+      "breakpoints": true
     }
   ]
 }

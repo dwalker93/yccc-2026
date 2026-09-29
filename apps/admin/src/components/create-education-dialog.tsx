@@ -109,9 +109,11 @@ export function CreateEducationDialog({
     },
     onSubmit: async ({ value }) => {
       const data = educationSchema.parse(value)
-      await onSubmit(data)
-      form.reset()
-      setOpen(false)
+      try {
+        await onSubmit(data)
+        form.reset()
+        setOpen(false)
+      } catch {}
     },
   })
 
@@ -316,7 +318,7 @@ export function CreateEducationDialog({
                             const result = educationSchema.safeParse(formValues)
                             if (!result.success) {
                               const err = result.error.issues.find(
-                                (e) => e.path[0] === "toYear"
+                                (e) => e.path[0] === "endYear"
                               )
                               if (
                                 !err?.message.includes(

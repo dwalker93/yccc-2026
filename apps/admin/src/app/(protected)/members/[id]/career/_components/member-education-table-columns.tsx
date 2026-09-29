@@ -1,7 +1,7 @@
 import { verifyMemberEducationAction } from "@/actions/members-actions"
 import { MemberEducation } from "@/services/member-education-service"
 import { formatPeriod } from "@/utils/utils"
-import { useQueryClient } from "@tanstack/react-query"
+import { Trash2 } from "lucide-react"
 
 import {
   FIELDS_OF_STUDY,
@@ -9,18 +9,34 @@ import {
 } from "@workspace/shared/constants/educations"
 import { Button } from "@workspace/ui/components/button"
 
-import { useUpdateMemberEducationMutation } from "@/hooks/members/update-member-education-mutaion"
+import { type UpdateMemberEducationPayload } from "@/hooks/members/update-member-education-mutation"
 import { ActionDialog } from "@/components/action-dialog"
 import { PendingBadge } from "@/components/badge"
 import { CreateEducationDialog } from "@/components/create-education-dialog"
 import { createColumns } from "@/components/simple-table/simple-table"
 
-export const getEducationColumns = (memberId: string) => {
-  const {
-    mutateAsync: updateMemberEducation,
-    isPending: isUpdatingMemberEducation,
-  } = useUpdateMemberEducationMutation({ memberId })
-
+export const getEducationColumns = ({
+  memberId,
+  updateMemberEducation,
+  isUpdatingMemberEducation,
+  deleteMemberEducation,
+}: {
+  memberId: string
+  updateMemberEducation: (
+    payload: UpdateMemberEducationPayload
+  ) => Promise<unknown>
+  isUpdatingMemberEducation: boolean
+  deleteMemberEducation: (payload: { educationId: string }) => Promise<
+    | {
+        error: string
+        success?: undefined
+      }
+    | {
+        success: boolean
+        error?: undefined
+      }
+  >
+}) => {
   return createColumns<MemberEducation>([
     { key: "institution", label: "Institution" },
     {
@@ -98,7 +114,11 @@ export const getEducationColumns = (memberId: string) => {
                     ? {
                         qualification: data.qualification,
                         institution: data.schoolName,
+                        fieldOfStudy: null,
+                        startYear: null,
+                        startMonth: null,
                         endYear: data.schoolYear,
+                        endMonth: null,
                       }
                     : data
                 await updateMemberEducation({
@@ -107,6 +127,20 @@ export const getEducationColumns = (memberId: string) => {
                 })
               }}
               isSaving={isUpdatingMemberEducation}
+            />
+            <ActionDialog
+              trigger={
+                <Button variant="destructive" size="icon">
+                  <Trash2 />
+                </Button>
+              }
+              actionFn={() => deleteMemberEducation({ educationId: row.id })}
+              title="Delete Education"
+              description="Are you sure you want to delete this education record?"
+              cancelText="Cancel"
+              actionText="Delete"
+              actionButtonVariant="destructive"
+              successMessage="Education deleted successfully"
             />
           </div>
         )

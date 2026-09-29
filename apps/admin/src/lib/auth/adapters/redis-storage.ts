@@ -3,6 +3,22 @@ import { type SecondaryStorage } from "better-auth"
 import { redis } from "../../redis"
 
 export const redisSecondaryStorage: SecondaryStorage = {
+  async increment(key, ttl) {
+    if (!Number.isInteger(ttl) || ttl <= 0) {
+      throw new TypeError("Redis increment TTL must be a positive integer")
+    }
+    // Multi ensures: 1) increment happens first, 2) expire only if key is new (NX)
+    const [value] = await redis.multi().incr(key).expire(key, ttl, "NX").exec()
+    return value
+  },
+  async getAndDelete(key: string) {
+    try {
+      return await redis.getdel(key)
+    } catch (error) {
+      console.error("Redis getAndDelete error:", error)
+      throw error
+    }
+  },
   async get(key: string) {
     try {
       const value = await redis.get(key)

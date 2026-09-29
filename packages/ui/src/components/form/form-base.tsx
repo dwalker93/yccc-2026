@@ -8,10 +8,11 @@ import {
 import { useFieldContext } from "@workspace/ui/hooks/form"
 
 export type FormControlProps = {
-  label: React.ReactNode
+  label?: React.ReactNode
   description?: string
   optionalField?: boolean
   requiredIcon?: boolean
+  optionalLabel?: boolean
 }
 
 type FormBaseProps = FormControlProps & {
@@ -28,24 +29,25 @@ export function FormBase({
   horizontal,
   optionalField,
   requiredIcon = true,
+  optionalLabel = true,
 }: FormBaseProps) {
   const field = useFieldContext()
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
-  const LabelComponent = (
+  const LabelComponent = label ? (
     <FieldLabel htmlFor={field.name}>
       {label}
-      {optionalField ? (
+      {optionalField && optionalLabel ? (
         <span aria-label="optional" className="text-muted-foreground">
           (optional)
         </span>
-      ) : requiredIcon ? (
+      ) : !optionalField && requiredIcon ? (
         <span aria-label="required" className="text-destructive">
           *
         </span>
       ) : null}
     </FieldLabel>
-  )
+  ) : null
 
   const DescriptionComponent = description ? (
     <FieldDescription>{description}</FieldDescription>

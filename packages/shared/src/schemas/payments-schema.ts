@@ -19,6 +19,7 @@ export const paymentStatus = pgEnum("payment_status", [
   "refunded",
 ])
 
+export type PaymentStatus = (typeof paymentStatus.enumValues)[number]
 // =============================================================================
 // TABLE 9 — payments
 // Each payment attempt against an invoice.
@@ -45,6 +46,8 @@ export const payments = pgTable("payments", {
   paymentMethodId: text("payment_method_id")
     .notNull()
     .references(() => paymentMethods.id),
+
+  reference: text("reference"), // User can add reference when making manual payments (BANK_TRANSFER)
 
   // gateway — null for manual payments (BANK_TRANSFER, CASH)
   gatewayId: text("gateway_id"), // gateway's own transaction ID

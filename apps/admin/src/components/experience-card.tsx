@@ -76,7 +76,7 @@ export function ExperienceCard({
           <div className="flex flex-col md:flex-row">
             <CreateExperienceDialog
               initialValues={experience}
-              onSave={onEdit}
+              onSave={async (data) => onEdit(data)}
               dialogTriggerButton={
                 <Button
                   aria-label="Edit"

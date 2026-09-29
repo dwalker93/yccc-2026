@@ -152,8 +152,8 @@ export const educationFormSchema = z.object({
 })
 
 export const educationUpdateSchema = z.object({
-  qualification: z.enum(EDUCATION_LEVEL_ENUM).or(z.literal("")).optional(),
-  fieldOfStudy: z.enum(FIELD_OF_STUDY_ENUM).or(z.literal("")).optional(),
+  qualification: z.enum(EDUCATION_LEVEL_ENUM).optional(),
+  fieldOfStudy: z.enum(FIELD_OF_STUDY_ENUM).optional(),
   institution: z.string().optional(),
   startYear: z.number().optional(),
   startMonth: z.number().optional(),
@@ -162,6 +162,7 @@ export const educationUpdateSchema = z.object({
 })
 
 const EMPLOYMENT_TYPE = EMPLOYMENT_TYPES.map((e) => e.value)
+export type EmploymentType = (typeof EMPLOYMENT_TYPE)[number]
 
 export const experienceSchema = z
   .object({
@@ -224,6 +225,18 @@ export const experienceFormSchema = z.object({
   endMonth: z.number().nullable(),
 })
 
+export const professionUpdateSchema = z.object({
+  jobTitle: z.string().optional(),
+  employer: z.string().optional(),
+  location: z.string().optional(),
+  employmentType: z.enum(EMPLOYMENT_TYPE).optional(),
+  isCurrent: z.boolean().optional(),
+  startYear: z.number().optional(),
+  startMonth: z.number().optional(),
+  endYear: z.number().nullable().optional(),
+  endMonth: z.number().nullable().optional(),
+})
+
 export const professionalQualificationSchema = z.object({
   educations: z.array(educationSchema),
   experience: z.array(experienceSchema),
@@ -232,6 +245,42 @@ export const professionalQualificationSchema = z.object({
   //   .min(1, "At least 1 legal document is required.")
   //   .max(3, "At most 3 legal documents are allowed."),
 })
+
+/**
+ * The substring used to identify NIC↔DOB mismatch errors in errorMaps.
+ * Kept in sync with the message emitted by `withNicValidation`.
+ */
+const NIC_DOB_MISMATCH_MSG = "Date of birth does not match with NIC"
+
+/**
+ * Filters "Date of birth does not match with NIC" errors from a TanStack Form
+ * `errorMap`. Intended to be called inside `setFieldMeta("dateOfBirth", …)` when
+ * the NIC field changes, so stale cross-field errors are cleared.
+ *
+ * @example
+ * ```ts
+ * form.setFieldMeta("dateOfBirth", (prev) => ({
+ *   ...prev,
+ *   errorMap: clearNicDobMismatchErrors(prev.errorMap),
+ * }))
+ * ```
+ */
+export function clearNicDobMismatchErrors(
+  errorMap: Record<string, unknown> | undefined
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(errorMap ?? {}).map(([event, error]) => [
+      event,
+      Array.isArray(error)
+        ? error.filter((e) => !e?.message?.includes(NIC_DOB_MISMATCH_MSG))
+        : (error as { message?: string } | undefined)?.message?.includes(
+              NIC_DOB_MISMATCH_MSG
+            )
+          ? undefined
+          : error,
+    ])
+  )
+}
 
 /**
  * Utility function to apply NIC verification and gender transformation

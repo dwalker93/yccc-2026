@@ -117,6 +117,9 @@ export const members = pgTable("members", {
   subscriptionStatus: subscriptionStatus("subscription_status"),
   subscriptionCurrentPeriodEnd: timestamp("subscription_current_period_end"),
 
+  createdBy: text("created_by"),
+  createdByType: actorType("created_by_type").notNull().default("member"),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -279,14 +282,6 @@ export const memberEducationRelations = relations(
       fields: [memberEducation.memberId],
       references: [members.id],
     }),
-    createdBy: one(members, {
-      fields: [memberEducation.createdBy],
-      references: [members.id],
-    }),
-    verifiedBy: one(members, {
-      fields: [memberEducation.verifiedBy],
-      references: [members.id],
-    }),
   })
 )
 
@@ -295,14 +290,6 @@ export const memberProfessionRelations = relations(
   ({ one }) => ({
     member: one(members, {
       fields: [memberProfession.memberId],
-      references: [members.id],
-    }),
-    createdBy: one(members, {
-      fields: [memberProfession.createdBy],
-      references: [members.id],
-    }),
-    verifiedBy: one(members, {
-      fields: [memberProfession.verifiedBy],
       references: [members.id],
     }),
   })

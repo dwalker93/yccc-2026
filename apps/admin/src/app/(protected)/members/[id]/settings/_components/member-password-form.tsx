@@ -26,9 +26,11 @@ export function MemberPasswordForm({ memberId }: MemberPasswordFormProps) {
       onSubmit: memberPasswordSchema,
     },
     onSubmit: async ({ value }) => {
-      const finalData = memberPasswordSchema.parse(value)
-      await updateMemberPassword({ memberId, ...finalData })
-      form.reset()
+      try {
+        const finalData = memberPasswordSchema.parse(value)
+        await updateMemberPassword({ memberId, ...finalData })
+        form.reset()
+      } catch {}
     },
   })
 
