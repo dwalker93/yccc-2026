@@ -19,7 +19,7 @@ export function MemberPersonalInformationCard({
     city: member.city,
     district: member.district,
     phone: member.phone,
-    whatsapp: member.whatsapp as string,
+    whatsapp: member.whatsapp ?? "",
   }
 
   return (

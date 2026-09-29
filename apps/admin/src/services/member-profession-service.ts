@@ -1,14 +1,14 @@
+import {
+  ProfessionNotFoundError,
+  ServiceError,
+  ValidationError,
+} from "@/services/errors"
 import { count, desc, eq } from "drizzle-orm"
 
-import {
-  actorType,
-  EmploymentType,
-  memberProfession,
-} from "@workspace/shared/schemas"
+import { EmploymentType, memberProfession } from "@workspace/shared/schemas"
 import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
 
 import { appdb } from "@/lib/db"
-import { ProfessionNotFoundError, ServiceError } from "@/services/errors"
 
 /** Projection mapping fields for `getMemberProfessionService`. */
 export const getMemberProfessionProjections = {
@@ -73,39 +73,6 @@ export type MemberProfession = Awaited<
 >["records"][number]
 
 /**
- * Verifies a member's profession record by updating its verification status.
- *
- * @param professionId - Unique identifier of the profession record to verify.
- * @param actionedBy - ID or identifier of the user/admin performing the verification.
- * @throws {ProfessionNotFoundError} If no profession record is found with the provided ID.
- */
-export async function verifyMemberProfessionService(
-  professionId: string,
-  actionedBy: string
-) {
-  try {
-    const [updated] = await appdb
-      .update(memberProfession)
-      .set({
-        isVerified: true,
-        updatedAt: new Date(),
-        verifiedBy: actionedBy,
-        verifiedAt: new Date(),
-      })
-      .where(eq(memberProfession.id, professionId))
-      .returning({ id: memberProfession.id })
-
-    if (!updated) {
-      throw new ProfessionNotFoundError(professionId)
-    }
-  } catch (error) {
-    console.error("verifyMemberProfessionService failed", error)
-    if (error instanceof ServiceError) throw error
-    throw new ServiceError("Failed to verify member profession")
-  }
-}
-
-/**
  * Adds a new professional background record for a member.
  *
  * @param params - Object containing member and profession details.
@@ -158,7 +125,10 @@ export async function addMemberProfessionService({
         endMonth,
         isCurrent,
         createdBy,
-        createdByType: actorType.enumValues[1],
+        createdByType: "admin",
+        isVerified: true,
+        verifiedBy: createdBy,
+        verifiedAt: new Date(),
       })
       .returning(getMemberProfessionProjections)
 
@@ -171,5 +141,162 @@ export async function addMemberProfessionService({
     console.error("addMemberProfessionService failed", error)
     if (error instanceof ServiceError) throw error
     throw new ServiceError("Failed to add member profession record")
+  }
+}
+
+/**
+ * Verifies a member's profession record by updating its verification status.
+ *
+ * @param professionId - Unique identifier of the profession record to verify.
+ * @param actionedBy - ID or identifier of the user/admin performing the verification.
+ * @throws {ProfessionNotFoundError} If no profession record is found with the provided ID.
+ */
+export async function verifyMemberProfessionService(
+  professionId: string,
+  actionedBy: string
+) {
+  try {
+    const [updated] = await appdb
+      .update(memberProfession)
+      .set({
+        isVerified: true,
+        updatedAt: new Date(),
+        verifiedBy: actionedBy,
+        verifiedAt: new Date(),
+      })
+      .where(eq(memberProfession.id, professionId))
+      .returning({ id: memberProfession.id })
+
+    if (!updated) {
+      throw new ProfessionNotFoundError(professionId)
+    }
+  } catch (error) {
+    console.error("verifyMemberProfessionService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to verify member profession")
+  }
+}
+
+/**
+ * Updates an existing profession history record for a member.
+ *
+ * @param params - Object containing member and profession details.
+ * @returns Updated profession record.
+ * @throws {ProfessionNotFoundError} If no profession record is updated.
+ */
+export async function updateMemberProfessionService({
+  professionId,
+  professionData,
+  updatedBy,
+}: {
+  professionId: string
+  professionData: {
+    employer?: string
+    jobTitle?: string
+    location?: string
+    employmentType?: EmploymentType
+    isCurrent?: boolean
+    startYear?: number
+    startMonth?: number
+    endYear?: number
+    endMonth?: number
+  }
+  updatedBy: string
+}) {
+  const {
+    employer,
+    jobTitle,
+    location,
+    employmentType,
+    isCurrent,
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+  } = professionData
+  try {
+    const [existing] = await appdb
+      .select()
+      .from(memberProfession)
+      .where(eq(memberProfession.id, professionId))
+      .limit(1)
+
+    if (!existing) {
+      throw new ProfessionNotFoundError(professionId)
+    }
+
+    const mergedStartYear =
+      startYear !== undefined ? startYear : existing.startYear
+    const mergedStartMonth =
+      startMonth !== undefined ? startMonth : existing.startMonth
+    const mergedEndYear = endYear !== undefined ? endYear : existing.endYear
+    const mergedEndMonth = endMonth !== undefined ? endMonth : existing.endMonth
+
+    if (mergedStartYear != null && mergedEndYear != null) {
+      const startVal = mergedStartYear * 100 + (mergedStartMonth ?? 1)
+      const endVal = mergedEndYear * 100 + (mergedEndMonth ?? 12)
+      if (startVal > endVal) {
+        throw new ValidationError("Start date cannot be after end date")
+      }
+    }
+
+    let newEndYear: number | null | undefined = endYear
+    let newEndMonth: number | null | undefined = endMonth
+    if (isCurrent) {
+      newEndYear = null
+      newEndMonth = null
+    }
+
+    const [updated] = await appdb
+      .update(memberProfession)
+      .set({
+        ...(employer !== undefined && { employer }),
+        ...(jobTitle !== undefined && { jobTitle }),
+        ...(location !== undefined && { location }),
+        ...(employmentType !== undefined && { employmentType }),
+        ...(isCurrent !== undefined && { isCurrent }),
+        ...(startYear !== undefined && { startYear }),
+        ...(startMonth !== undefined && { startMonth }),
+        endYear: newEndYear,
+        endMonth: newEndMonth,
+        updatedAt: new Date(),
+      })
+      .where(eq(memberProfession.id, professionId))
+      .returning(getMemberProfessionProjections)
+
+    if (!updated) {
+      throw new ProfessionNotFoundError(professionId)
+    }
+
+    return updated
+  } catch (error) {
+    console.error("updateMemberProfessionService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to update member profession record")
+  }
+}
+
+/**
+ * Deletes a member's profession record.
+ * @param professionId - The ID of the profession record to delete.
+ * @throws {ServiceError} If no profession record is deleted.
+ */
+export async function deleteMemberProfessionService(
+  professionId: string,
+  deletedBy: string
+) {
+  try {
+    const [deleted] = await appdb
+      .delete(memberProfession)
+      .where(eq(memberProfession.id, professionId))
+      .returning({ id: memberProfession.id })
+
+    if (!deleted) {
+      throw new ServiceError("Failed to delete member profession record")
+    }
+  } catch (error) {
+    console.error("deleteMemberProfessionService failed", error)
+    if (error instanceof ServiceError) throw error
+    throw new ServiceError("Failed to delete member profession record")
   }
 }

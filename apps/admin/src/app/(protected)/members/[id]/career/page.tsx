@@ -8,6 +8,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query"
 
+import { memberKeys } from "@/hooks/members/keys"
+
 import { MemberCareerTables } from "./_components/member-career-tables"
 
 export const metadata: Metadata = {
@@ -28,7 +30,11 @@ export default async function MemberCareerPage({
   // prefetch both on server in parallel
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: ["member-education", memberId, { page: 1, pageSize: 5 }],
+      queryKey: memberKeys.education({
+        id: memberId,
+        pageIndex: 1,
+        pageSize: 5,
+      }),
       queryFn: () =>
         getMemberEducationService({
           memberId: memberId,
@@ -37,7 +43,11 @@ export default async function MemberCareerPage({
         }),
     }),
     queryClient.prefetchQuery({
-      queryKey: ["member-profession", memberId, { page: 1, pageSize: 5 }],
+      queryKey: memberKeys.professional({
+        id: memberId,
+        pageIndex: 1,
+        pageSize: 5,
+      }),
       queryFn: () =>
         getMemberProfessionService({
           memberId: memberId,

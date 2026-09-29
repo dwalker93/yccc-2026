@@ -2,6 +2,7 @@
 
 import { DistrictsWithProvinces } from "@workspace/shared/constants/districts"
 import {
+  clearNicDobMismatchErrors,
   memberPersonalInformationUpdateSchema,
   type MemberPersonalInformationUpdateData,
 } from "@workspace/shared/zod-schemas/member-input-schema"
@@ -40,11 +41,13 @@ export function MemberPersonalInformationForm({
     },
     onSubmit: async ({ value }) => {
       // Parse the raw form state to apply the Zod .transform()
-      const finalData = memberPersonalInformationUpdateSchema.parse(value)
-      await updateMember({
-        memberId,
-        memberData: finalData,
-      })
+      try {
+        const finalData = memberPersonalInformationUpdateSchema.parse(value)
+        await updateMember({
+          memberId,
+          memberData: finalData,
+        })
+      } catch {}
     },
   })
 
@@ -98,25 +101,7 @@ export function MemberPersonalInformationForm({
                   onChange: () => {
                     form.setFieldMeta("dateOfBirth", (prev) => ({
                       ...prev,
-                      errorMap: Object.fromEntries(
-                        Object.entries(prev.errorMap ?? {}).map(
-                          ([event, error]) => [
-                            event,
-                            Array.isArray(error)
-                              ? error.filter(
-                                  (e) =>
-                                    !e?.message?.includes(
-                                      "Date of birth does not match with NIC"
-                                    )
-                                )
-                              : error?.message?.includes(
-                                    "Date of birth does not match with NIC"
-                                  )
-                                ? undefined
-                                : error,
-                          ]
-                        )
-                      ),
+                      errorMap: clearNicDobMismatchErrors(prev.errorMap),
                     }))
 
                     return undefined
@@ -202,6 +187,7 @@ export function MemberPersonalInformationForm({
                     label="District"
                     placeholder="Select district"
                     requiredIcon={false}
+                    disabled={isPending}
                   >
                     {Object.entries(DistrictsWithProvinces).map(
                       ([region, DistrictsWithProvinces]) => (

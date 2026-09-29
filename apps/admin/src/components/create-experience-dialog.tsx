@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { MemberProfession } from "@/services/member-profession-service"
 import { useStore } from "@tanstack/react-form"
 
 import { MONTHS, YEARS } from "@workspace/shared/constants/dates"
@@ -28,8 +29,8 @@ import { SelectItem } from "@workspace/ui/components/select"
 import { useAppForm } from "@workspace/ui/hooks/form"
 
 type CreateExperienceDialogProps = {
-  initialValues?: ExperienceInfo | null
-  onSave: (data: ExperienceInfo) => void
+  initialValues?: ExperienceInfo | MemberProfession | null
+  onSave: (data: ExperienceInfo) => Promise<void>
   dialogTriggerButton: React.ReactNode
   isSaving?: boolean
 }
@@ -59,14 +60,13 @@ export function CreateExperienceDialog({
     validators: {
       onSubmit: experienceSchema,
     },
-    onSubmit: ({ value }) => {
-      const parsedData = experienceSchema.safeParse(value)
-      if (parsedData.success) {
-        onSave(parsedData.data)
+    onSubmit: async ({ value }) => {
+      const data = experienceSchema.parse(value)
+      try {
+        await onSave(data)
         form.reset()
         setOpen(false)
-      }
-      return null
+      } catch {}
     },
   })
 
@@ -229,7 +229,7 @@ export function CreateExperienceDialog({
                           const result = experienceSchema.safeParse(formValues)
                           if (!result.success) {
                             const err = result.error.issues.find(
-                              (e) => e.path[0] === "toYear"
+                              (e) => e.path[0] === "endYear"
                             )
                             if (
                               !err?.message.includes(

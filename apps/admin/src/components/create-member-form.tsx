@@ -4,6 +4,7 @@ import { Plus } from "lucide-react"
 
 import { DistrictsWithProvinces } from "@workspace/shared/constants/districts"
 import {
+  clearNicDobMismatchErrors,
   memberInputSchema,
   type MemberInputData,
 } from "@workspace/shared/zod-schemas/member-input-schema"
@@ -105,25 +106,7 @@ export function CreateMemberForm() {
                   onChange: () => {
                     form.setFieldMeta("dateOfBirth", (prev) => ({
                       ...prev,
-                      errorMap: Object.fromEntries(
-                        Object.entries(prev.errorMap ?? {}).map(
-                          ([event, error]) => [
-                            event,
-                            Array.isArray(error)
-                              ? error.filter(
-                                  (e) =>
-                                    !e?.message?.includes(
-                                      "Date of birth does not match with NIC"
-                                    )
-                                )
-                              : error?.message?.includes(
-                                    "Date of birth does not match with NIC"
-                                  )
-                                ? undefined
-                                : error,
-                          ]
-                        )
-                      ),
+                      errorMap: clearNicDobMismatchErrors(prev.errorMap),
                     }))
 
                     return undefined
@@ -339,7 +322,9 @@ export function CreateMemberForm() {
                       </div>
                     )}
                     <CreateExperienceDialog
-                      onSave={(experience) => parentField.pushValue(experience)}
+                      onSave={async (experience) =>
+                        parentField.pushValue(experience)
+                      }
                       dialogTriggerButton={
                         <Button type="button" variant={"secondary"}>
                           <Plus className="size-4" />

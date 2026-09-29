@@ -9,7 +9,9 @@ export const useMemberMetadata = (id: string) => {
     queryFn: async () => {
       const res = await fetch(`/api/members/${id}/metadata`)
       if (!res.ok) {
-        throw new Error("Failed to fetch member metadata")
+        const body: { error: string } | null =
+          (await res.json().catch(() => null)) ?? null
+        throw new Error(body?.error ?? "Failed to fetch member metadata")
       }
       return res.json() as Promise<MemberMetadata>
     },

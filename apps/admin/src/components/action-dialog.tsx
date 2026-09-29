@@ -1,4 +1,5 @@
 import { useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import {
@@ -12,7 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@workspace/ui/components/alert-dialog"
-import { Button } from "@workspace/ui/components/button"
+import { Button, ButtonVariants } from "@workspace/ui/components/button"
 
 export function ActionDialog({
   trigger,
@@ -22,6 +23,7 @@ export function ActionDialog({
   cancelText,
   actionText,
   successMessage,
+  actionButtonVariant,
 }: {
   trigger: React.ReactNode | string
   title: string
@@ -38,10 +40,12 @@ export function ActionDialog({
   >
   cancelText?: string
   actionText?: string
+  actionButtonVariant?: ButtonVariants
   successMessage?: string
 }) {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -53,6 +57,7 @@ export function ActionDialog({
         } else {
           toast.success(successMessage || "Action performed successfully")
           setOpen(false)
+          router.refresh()
         }
       } catch (error: any) {
         toast.error(
@@ -80,7 +85,11 @@ export function ActionDialog({
           <AlertDialogCancel disabled={isPending}>
             {cancelText ?? "Cancel"}
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleClick} disabled={isPending}>
+          <AlertDialogAction
+            onClick={handleClick}
+            disabled={isPending}
+            variant={actionButtonVariant}
+          >
             {isPending ? "Please wait..." : (actionText ?? "Continue")}
           </AlertDialogAction>
         </AlertDialogFooter>

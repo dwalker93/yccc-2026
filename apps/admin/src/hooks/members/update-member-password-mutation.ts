@@ -1,7 +1,9 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { type MemberPasswordData } from "@workspace/shared/zod-schemas/member-input-schema"
+
+import { memberKeys } from "./keys"
 
 type UpdateMemberPasswordPayload = MemberPasswordData & {
   memberId: string
@@ -33,9 +35,13 @@ async function updateMemberPassword(payload: UpdateMemberPasswordPayload) {
 }
 
 export function useUpdateMemberPasswordMutation() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: updateMemberPassword,
-    onSuccess: () => {
+    onSuccess: (_, { memberId }) => {
+      queryClient.invalidateQueries({
+        queryKey: memberKeys.member(memberId),
+      })
       toast.success("Member password updated successfully")
     },
     onError: (error) => {

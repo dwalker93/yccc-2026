@@ -1,5 +1,126 @@
 import * as z from "zod"
 
+import { CURRENT_YEAR, FROM_YEAR } from "@workspace/shared/constants/dates"
+import {
+  EMPLOYMENT_TYPES,
+  FIELDS_OF_STUDY,
+  QUALIFICATION_LEVELS,
+} from "@workspace/shared/constants/educations"
+
+const QUALIFICATION_ENUM = QUALIFICATION_LEVELS.map((l) => l.value)
+const HIGHER_QUALIFICATION_ENUM = QUALIFICATION_ENUM.filter(
+  (v) => v !== "secondary"
+)
+const FIELD_OF_STUDY_ENUM = FIELDS_OF_STUDY.map((f) => f.value)
+const EMPLOYMENT_TYPE_ENUM = EMPLOYMENT_TYPES.map((e) => e.value)
+
+// ── Normalized education payload schema (covers both branches) ───────────────
+
+const secondaryEducationActionSchema = z.object({
+  qualification: z.literal("secondary"),
+  institution: z.string().min(1, "School name is required."),
+  fieldOfStudy: z.null(),
+  startYear: z.null(),
+  startMonth: z.null(),
+  endYear: z
+    .int({ message: "School year is required." })
+    .gte(FROM_YEAR)
+    .lte(CURRENT_YEAR),
+  endMonth: z.null(),
+})
+
+const higherEducationActionSchema = z
+  .object({
+    qualification: z.enum(HIGHER_QUALIFICATION_ENUM, {
+      message: "Education level is required.",
+    }),
+    institution: z.string().min(1, "Institution name is required."),
+    fieldOfStudy: z.enum(FIELD_OF_STUDY_ENUM, {
+      message: "Field of study is required.",
+    }),
+    startYear: z
+      .int({ message: "Start year is required." })
+      .gte(FROM_YEAR)
+      .lte(CURRENT_YEAR)
+      .nullable(),
+    startMonth: z.int().gte(1).lte(12).nullable(),
+    endYear: z
+      .int({ message: "End year is required." })
+      .gte(FROM_YEAR)
+      .lte(CURRENT_YEAR + 10),
+    endMonth: z.int().gte(1).lte(12).nullable(),
+  })
+  .refine(
+    (data) => {
+      if (!data.startYear || !data.endYear) return true
+      return (
+        data.startYear * 100 + (data.startMonth ?? 0) <=
+        data.endYear * 100 + (data.endMonth ?? 0)
+      )
+    },
+    {
+      message: "Start date must be on or before the end date.",
+      path: ["endYear"],
+    }
+  )
+
+export const addMemberEducationActionSchema = z.discriminatedUnion(
+  "qualification",
+  [secondaryEducationActionSchema, higherEducationActionSchema],
+  { message: "Education level/Programme is required." }
+)
+
+// ── Profession (experience) payload schema ───────────────────────────────────
+
+export const addMemberProfessionActionSchema = z
+  .object({
+    jobTitle: z.string().min(1, "Title is required."),
+    employer: z.string().min(1, "Organization name is required."),
+    location: z.string(),
+    employmentType: z.enum(EMPLOYMENT_TYPE_ENUM, {
+      message: "Employment type is required.",
+    }),
+    isCurrent: z.boolean(),
+    startYear: z
+      .int({ message: "Start year is required" })
+      .gte(FROM_YEAR)
+      .lte(CURRENT_YEAR),
+    startMonth: z.int({ message: "Start month is required" }).gte(1).lte(12),
+    endYear: z.int().gte(FROM_YEAR).lte(CURRENT_YEAR).nullable(),
+    endMonth: z.int().gte(1).lte(12).nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.isCurrent) {
+      if (!data.endYear) {
+        ctx.addIssue({
+          code: "custom",
+          message: "End year is required.",
+          path: ["endYear"],
+        })
+      }
+      if (!data.endMonth) {
+        ctx.addIssue({
+          code: "custom",
+          message: "End month is required.",
+          path: ["endMonth"],
+        })
+      }
+    }
+  })
+  .refine(
+    (data) => {
+      if (!data.isCurrent && data.startYear && data.endYear) {
+        const from = data.startYear * 100 + (data.startMonth ?? 0)
+        const to = data.endYear * 100 + (data.endMonth ?? 0)
+        return from <= to
+      } else return true
+    },
+    {
+      message: "Start date must be on or before the end date.",
+      path: ["endYear"],
+    }
+  )
+
 const optionalTrimmed = z
   .string()
   .trim()

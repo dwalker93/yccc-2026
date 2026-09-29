@@ -1,4 +1,8 @@
-import { getMemberProfile } from "@/services/member-service"
+import { notFound } from "next/navigation"
+import {
+  getMemberProfile,
+  MemberNotFoundError,
+} from "@/services/member-service"
 import { toMemberId } from "@/utils/member"
 
 import { MemberDeleteCard } from "./_components/member-delete-card"
@@ -15,7 +19,14 @@ export default async function MemberSettingsPage({
 }: MemberSettingsPageProps) {
   const { id: rawId } = await params
   const memberId = toMemberId(rawId)
-  const member = await getMemberProfile(memberId)
+
+  let member
+  try {
+    member = await getMemberProfile(memberId)
+  } catch (err) {
+    if (err instanceof MemberNotFoundError) notFound()
+    throw err
+  }
 
   return (
     <div className="space-y-4">

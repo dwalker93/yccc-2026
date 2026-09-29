@@ -884,12 +884,32 @@ export async function getMemberProfile(id: string) {
   }
 }
 
-/** Projection mapping fields for `getActiveSubscription`. */
+/**
+ * Projection mapping fields for `getActiveSubscription`.
+ *
+ * - `startDate` is read directly from the joined active subscription row.
+ * - `endDate` uses a subquery to find the latest paid period end, which may
+ *   come from a `scheduled` successor (prepaid renewal) rather than the
+ *   current active row.
+ */
 const getActiveSubscriptionProjections = {
   plan: plans.name,
   subscriptionStatus: subscriptions.status,
   startDate: subscriptions.currentPeriodStart,
-  endDate: subscriptions.currentPeriodEnd,
+  endDate: sql<Date>`(
+    SELECT s.current_period_end::timestamp
+    FROM ${subscriptions} s
+    WHERE s.member_id = ${members}.id
+      AND s.status IN ('active', 'scheduled')
+      AND EXISTS (
+        SELECT 1
+        FROM ${invoices} i
+        WHERE i.subscription_id = s.id
+          AND i.invoice_status = 'paid'
+      )
+    ORDER BY s.current_period_end DESC
+    LIMIT 1
+  )`,
 }
 
 /**
@@ -897,20 +917,23 @@ const getActiveSubscriptionProjections = {
  *
  * @param id - Unique member identifier.
  * @returns Active subscription details object.
- * @throws {Error} If no active subscription plan is found for the member.
+ * @throws {PlanNotFoundError} If no active subscription plan is found for the member.
  */
-async function getActiveSubscription(id: string) {
+export async function getActiveSubscription(id: string) {
   try {
     const [result] = await appdb
       .select(getActiveSubscriptionProjections)
       .from(members)
-      .leftJoin(plans, eq(members.currentPlanId, plans.id))
-      .leftJoin(subscriptions, eq(subscriptions.memberId, id))
+      .innerJoin(plans, eq(members.currentPlanId, plans.id))
+      .innerJoin(
+        subscriptions,
+        and(eq(subscriptions.memberId, id), eq(subscriptions.status, "active"))
+      )
       .where(eq(members.id, id))
+      .orderBy(desc(subscriptions.createdAt))
       .limit(1)
 
-    if (!result?.plan)
-      throw new PlanNotFoundError(id)
+    if (!result) throw new PlanNotFoundError(id)
 
     return result
   } catch (error) {
@@ -944,7 +967,13 @@ const getMemberFinancialsProjections = {
   SELECT ${subscriptions}.current_period_end
   FROM ${subscriptions}
   WHERE ${subscriptions}.member_id = ${members}.id
-  AND ${subscriptions}.status NOT IN ('expired', 'scheduled')
+  AND ${subscriptions}.status IN ('active', 'scheduled')
+  AND EXISTS (
+    SELECT 1 FROM ${invoices}
+    WHERE ${invoices}.subscription_id = ${subscriptions}.id
+    AND ${invoices}.invoice_status = 'paid'
+  )
+  ORDER BY ${subscriptions}.created_at DESC
   LIMIT 1
 )`,
 }
@@ -1111,15 +1140,50 @@ export async function updateMemberPersonalInformationService(
 }
 
 /**
- * Deletes a member.
+ * Deletes a member and cascades deletion of all dependent records
+ * (refunds, payments, invoices, subscriptions, education, profession, status history).
  *
  * @param id - Unique member identifier.
  * @throws {MemberNotFoundError} If the member does not exist.
- * @throws {Error} If deleting member fails for other database/system errors.
+ * @throws {ServiceError} If deleting member fails for other database/system errors.
  */
 export async function deleteMemberService(id: string) {
   try {
     return await appdb.transaction(async (tx) => {
+      const [existingMember] = await tx
+        .select({ id: members.id, email: members.email })
+        .from(members)
+        .where(eq(members.id, id))
+        .limit(1)
+
+      if (!existingMember) throw new MemberNotFoundError(id)
+
+      // 1. Delete refunds associated with member payments
+      const memberPayments = await tx
+        .select({ id: payments.id })
+        .from(payments)
+        .where(eq(payments.memberId, id))
+
+      if (memberPayments.length > 0) {
+        await tx.delete(refunds).where(
+          inArray(
+            refunds.paymentId,
+            memberPayments.map((p) => p.id)
+          )
+        )
+      }
+
+      // 2. Cascade delete dependent child records
+      await tx.delete(payments).where(eq(payments.memberId, id))
+      await tx.delete(invoices).where(eq(invoices.memberId, id))
+      await tx.delete(subscriptions).where(eq(subscriptions.memberId, id))
+      await tx.delete(memberEducation).where(eq(memberEducation.memberId, id))
+      await tx.delete(memberProfession).where(eq(memberProfession.memberId, id))
+      await tx
+        .delete(memberStatusHistory)
+        .where(eq(memberStatusHistory.memberId, id))
+
+      // 3. Delete member record
       const [result] = await tx
         .delete(members)
         .where(eq(members.id, id))

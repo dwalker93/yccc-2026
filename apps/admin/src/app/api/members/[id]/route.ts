@@ -15,7 +15,15 @@ export const PUT = withAuth(
     const { id } = await params
     const memberId = toMemberId(id)
 
-    const body = await request.json()
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      )
+    }
 
     const validation = memberPersonalInformationUpdateSchema.safeParse(body)
 

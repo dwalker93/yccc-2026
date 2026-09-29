@@ -81,7 +81,24 @@ export class NoMembersSelectedError extends ValidationError {
   }
 }
 
+/** 409 Conflict Errors */
+export class ConflictError extends ServiceError {
+  constructor(message: string, code: string = "CONFLICT") {
+    super(message, 409, code)
+  }
+}
+
+export class MemberHasDependenciesError extends ConflictError {
+  constructor(
+    message: string = "Cannot delete member with existing dependent records",
+    code: string = "MEMBER_HAS_DEPENDENCIES"
+  ) {
+    super(message, code)
+  }
+}
+
 /** Type guard to check if an error is a ServiceError */
 export function isServiceError(error: unknown): error is ServiceError {
   return error instanceof ServiceError
 }
+

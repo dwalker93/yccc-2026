@@ -12,6 +12,7 @@ export function FormInput({
   description,
   optionalField,
   requiredIcon,
+  optionalLabel,
   ...inputProps
 }: FormInputProps) {
   const field = useFieldContext<string>()
@@ -22,6 +23,7 @@ export function FormInput({
       description={description}
       optionalField={optionalField}
       requiredIcon={requiredIcon}
+      optionalLabel={optionalLabel}
     >
       <Input
         {...inputProps}

@@ -1,15 +1,19 @@
+import {
+  EducationNotFoundError,
+  ServiceError,
+  ValidationError,
+} from "@/services/errors"
 import { count, desc, eq, sql } from "drizzle-orm"
 
 import {
-  actorType,
   FieldOfStudy,
+  invoices,
   memberEducation,
   Qualification,
 } from "@workspace/shared/schemas"
 import { generateId, IdPrefix } from "@workspace/shared/utils/generate-id"
 
 import { appdb } from "@/lib/db"
-import { EducationNotFoundError, ServiceError } from "@/services/errors"
 
 /** Projection mapping fields for `getMemberEducationService`. */
 export const getMemberEducationProjections = {
@@ -154,7 +158,7 @@ export async function addMemberEducationService({
         endYear,
         endMonth,
         createdBy,
-        createdByType: actorType.enumValues[1],
+        createdByType: "admin",
       })
       .returning(getMemberEducationProjections)
 
@@ -204,16 +208,41 @@ export async function updateMemberEducationService({
     endMonth,
   } = educationData
   try {
+    const [existing] = await appdb
+      .select()
+      .from(memberEducation)
+      .where(eq(memberEducation.id, educationId))
+      .limit(1)
+
+    if (!existing) {
+      throw new EducationNotFoundError(educationId)
+    }
+
+    const mergedStartYear =
+      startYear !== undefined ? startYear : existing.startYear
+    const mergedStartMonth =
+      startMonth !== undefined ? startMonth : existing.startMonth
+    const mergedEndYear = endYear !== undefined ? endYear : existing.endYear
+    const mergedEndMonth = endMonth !== undefined ? endMonth : existing.endMonth
+
+    if (mergedStartYear != null && mergedEndYear != null) {
+      const startVal = mergedStartYear * 100 + (mergedStartMonth ?? 1)
+      const endVal = mergedEndYear * 100 + (mergedEndMonth ?? 12)
+      if (startVal > endVal) {
+        throw new ValidationError("Start date cannot be after end date")
+      }
+    }
+
     const [updated] = await appdb
       .update(memberEducation)
       .set({
-        institution,
-        qualification: qualification,
-        fieldOfStudy: fieldOfStudy,
-        startYear,
-        startMonth,
-        endYear,
-        endMonth,
+        ...(institution !== undefined && { institution }),
+        ...(qualification !== undefined && { qualification }),
+        ...(fieldOfStudy !== undefined && { fieldOfStudy }),
+        ...(startYear !== undefined && { startYear }),
+        ...(startMonth !== undefined && { startMonth }),
+        ...(endYear !== undefined && { endYear }),
+        ...(endMonth !== undefined && { endMonth }),
         updatedAt: new Date(),
       })
       .where(eq(memberEducation.id, educationId))
@@ -256,4 +285,3 @@ export async function deleteMemberEducationService(
     throw new ServiceError("Failed to delete member education record")
   }
 }
-

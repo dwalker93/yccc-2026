@@ -9,7 +9,11 @@ export async function MemberEmailCard({ email }: { email: string }) {
   return (
     <MemberProfileCard title="Email">
       <Field className="max-w-4xl">
-        <Input readOnly defaultValue={email} />
+        <Input
+          aria-label="Member's email address"
+          readOnly
+          defaultValue={email}
+        />
         <FieldDescription>
           To change the member's email address, please contact the root
           administrator.

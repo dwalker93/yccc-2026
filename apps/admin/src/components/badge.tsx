@@ -1,5 +1,6 @@
 import { cva } from "class-variance-authority"
 
+import { InvoiceStatus, PaymentStatus } from "@workspace/shared/schemas"
 import { Badge } from "@workspace/ui/components/badge"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -165,6 +166,90 @@ export function NoBadge() {
         dark:text-red-400"
     >
       ✗ No
+    </Badge>
+  )
+}
+
+const invoiceStatusVariants = cva(
+  `flex items-center justify-center text-[0.6875rem] font-light tracking-wide capitalize`,
+  {
+    variants: {
+      status: {
+        open: "bg-yellow-200 text-yellow-700 dark:bg-yellow-700/20 dark:text-yellow-400",
+        paid: "bg-emerald-200 text-emerald-700 dark:bg-green-700/20 dark:text-green-400",
+        void: "bg-gray-200 text-gray-700 dark:bg-gray-700/20 dark:text-gray-400",
+        uncollectible:
+          "bg-slate-200 text-slate-700 dark:bg-slate-700/20 dark:text-slate-400",
+      },
+    },
+    defaultVariants: {
+      status: "open",
+    },
+  }
+)
+
+type InvoiceStatusBadgeProps = React.ComponentProps<typeof Badge> & {
+  status: InvoiceStatus
+}
+
+export function InvoiceStatusBadge({
+  status,
+  className,
+  ...props
+}: InvoiceStatusBadgeProps) {
+  return (
+    <Badge
+      className={cn(invoiceStatusVariants({ status }), className)}
+      {...props}
+    >
+      <span
+        data-icon="inline-start"
+        className="inline-block size-1.25 rounded-full bg-current"
+      />
+      {status}
+    </Badge>
+  )
+}
+
+const paymentStatusVariants = cva(
+  `flex items-center justify-center text-[0.6875rem] font-light tracking-wide capitalize`,
+  {
+    variants: {
+      status: {
+        success:
+          "bg-emerald-200 text-emerald-700 dark:bg-green-700/20 dark:text-green-400",
+        pending:
+          "bg-yellow-200 text-yellow-700 dark:bg-yellow-700/20 dark:text-yellow-400",
+        failed: "bg-red-200 text-red-700 dark:bg-red-700/20 dark:text-red-400",
+        refunded:
+          "bg-slate-200 text-slate-700 dark:bg-slate-700/20 dark:text-slate-400",
+      },
+    },
+    defaultVariants: {
+      status: "pending",
+    },
+  }
+)
+
+type PaymentStatusBadgeProps = React.ComponentProps<typeof Badge> & {
+  status: PaymentStatus
+}
+
+export function PaymentStatusBadge({
+  status,
+  className,
+  ...props
+}: PaymentStatusBadgeProps) {
+  return (
+    <Badge
+      className={cn(paymentStatusVariants({ status }), className)}
+      {...props}
+    >
+      <span
+        data-icon="inline-start"
+        className="inline-block size-1.25 rounded-full bg-current"
+      />
+      {status}
     </Badge>
   )
 }

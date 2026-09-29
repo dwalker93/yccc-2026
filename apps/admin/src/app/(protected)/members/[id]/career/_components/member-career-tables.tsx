@@ -10,12 +10,17 @@ import { toast } from "sonner"
 
 import { Button } from "@workspace/ui/components/button"
 
+import { useDeleteMemberEducationMutation } from "@/hooks/members/delete-member-education-mutation"
+import { useDeleteMemberProfessionMutation } from "@/hooks/members/delete-member-profession-mutation"
+import { memberKeys } from "@/hooks/members/keys"
+import { useUpdateMemberEducationMutation } from "@/hooks/members/update-member-education-mutation"
+import { useUpdateMemberProfessionMutation } from "@/hooks/members/update-member-profession-mutation"
 import { CreateEducationDialog } from "@/components/create-education-dialog"
 import { CreateExperienceDialog } from "@/components/create-experience-dialog"
 import { SimpleTable } from "@/components/simple-table/simple-table"
 
 import { getEducationColumns } from "./member-education-table-columns"
-import { workHistoryColumns } from "./member-work-history-table-columns"
+import { getWorkHistoryColumns } from "./member-work-history-table-columns"
 
 export function MemberCareerTables({ memberId }: { memberId: string }) {
   const queryClient = useQueryClient()
@@ -26,7 +31,11 @@ export function MemberCareerTables({ memberId }: { memberId: string }) {
   const [isPending, startTransition] = useTransition()
 
   const { data: educationData } = useQuery({
-    queryKey: ["member-education", memberId, { page: educationPage, pageSize }],
+    queryKey: memberKeys.education({
+      id: memberId,
+      pageIndex: educationPage,
+      pageSize,
+    }),
     queryFn: () =>
       fetch(
         `/api/members/${memberId}/education?page=${educationPage}&pageSize=${pageSize}`
@@ -35,16 +44,32 @@ export function MemberCareerTables({ memberId }: { memberId: string }) {
   })
 
   const { data: professionData } = useQuery({
-    queryKey: [
-      "member-profession",
-      memberId,
-      { page: professionPage, pageSize },
-    ],
+    queryKey: memberKeys.professional({
+      id: memberId,
+      pageIndex: professionPage,
+      pageSize,
+    }),
     queryFn: () =>
       fetch(
         `/api/members/${memberId}/profession?page=${professionPage}&pageSize=${pageSize}`
       ).then((r) => r.json()),
   })
+
+  const {
+    mutateAsync: updateMemberEducation,
+    isPending: isUpdatingMemberEducation,
+  } = useUpdateMemberEducationMutation({ memberId })
+
+  const {
+    mutateAsync: updateMemberProfession,
+    isPending: isUpdatingMemberProfession,
+  } = useUpdateMemberProfessionMutation({ memberId })
+
+  const { mutateAsync: deleteMemberEducation } =
+    useDeleteMemberEducationMutation({ memberId })
+
+  const { mutateAsync: deleteMemberProfession } =
+    useDeleteMemberProfessionMutation({ memberId })
 
   return (
     <div className="flex flex-col gap-4">
@@ -83,7 +108,11 @@ export function MemberCareerTables({ memberId }: { memberId: string }) {
                 const res = await addMemberEducationAction(memberId, payload)
                 if (res?.success) {
                   queryClient.invalidateQueries({
-                    queryKey: ["member-education", memberId],
+                    queryKey: memberKeys.education({
+                      id: memberId,
+                      pageIndex: educationPage,
+                      pageSize,
+                    }),
                   })
                   toast.success("Education added successfully")
                 } else {
@@ -95,7 +124,12 @@ export function MemberCareerTables({ memberId }: { memberId: string }) {
         }
         data={educationData?.records ?? []}
         emptyMessage="No education records found."
-        columns={getEducationColumns(memberId)}
+        columns={getEducationColumns({
+          memberId,
+          updateMemberEducation,
+          isUpdatingMemberEducation,
+          deleteMemberEducation,
+        })}
       />
       <SimpleTable
         title="Work History"
@@ -111,8 +145,13 @@ export function MemberCareerTables({ memberId }: { memberId: string }) {
                 const res = await addMemberProfessionAction(memberId, data)
                 if (res?.success) {
                   queryClient.invalidateQueries({
-                    queryKey: ["member-profession", memberId],
+                    queryKey: memberKeys.professional({
+                      id: memberId,
+                      pageIndex: professionPage,
+                      pageSize,
+                    }),
                   })
+
                   toast.success("Profession added successfully")
                 } else {
                   toast.error(res?.error ?? "Failed to add profession")
@@ -124,7 +163,12 @@ export function MemberCareerTables({ memberId }: { memberId: string }) {
         }
         data={professionData?.records ?? []}
         emptyMessage="No work history records found."
-        columns={workHistoryColumns}
+        columns={getWorkHistoryColumns({
+          memberId,
+          updateMemberProfession,
+          isUpdatingMemberProfession,
+          deleteMemberProfession,
+        })}
       />
     </div>
   )
